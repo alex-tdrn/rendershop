@@ -1,3 +1,5 @@
-﻿x64
-.vs
-imgui.ini
+﻿/x64
+/.vs
+/renderdeck-ui/x64
+/renderdeck/x64
+/renderdeck/lib
