@@ -15,7 +15,6 @@ int main(int argc, char** argv)
 #ifdef _DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
-
 	
 	GLFWwindow* window = glfwCreateWindow(200, 300, "renderdeck", nullptr, nullptr);
 	if(!window)
@@ -38,12 +37,13 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
+	glClearColor(0, 0, 0, 1);
 	while(!glfwWindowShouldClose(window))
 	{
 		while(glfwPollEvents(), !glfwGetWindowAttrib(window, GLFW_FOCUSED))
 			std::this_thread::yield();
-
+		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();
