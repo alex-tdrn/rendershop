@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Profiler.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\renderdeck\Profiler.h" />
+    <ClInclude Include="include\renderdeck\Color.h" />
+    <ClInclude Include="include\renderdeck\RandomColorSource.h" />
+    <ClInclude Include="include\renderdeck\Sink.h" />
+    <ClInclude Include="include\renderdeck\Source.h" />
+    <ClInclude Include="include\renderdeck\Timestamp.h" />
+    <ClInclude Include="include\renderdeck\Resource.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -52,10 +54,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>../third party/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectDir)lib\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>../third party/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
