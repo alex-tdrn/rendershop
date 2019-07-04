@@ -1,3 +1,5 @@
+#include "renderdeck/RandomColorSource.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -36,13 +38,21 @@ int main(int argc, char** argv)
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
 #endif
-
+	
 	glfwSwapInterval(1);
-	glClearColor(0, 0, 0, 1);
+	RandomColorSource backgroundColorSource;
+	glm::vec3 bgColor = static_cast<Color const*>(backgroundColorSource.get(RandomColorSource::Output::Color))->getChannels();
+	glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
 	while(!glfwWindowShouldClose(window))
 	{
 		while(glfwPollEvents(), !glfwGetWindowAttrib(window, GLFW_FOCUSED))
 			std::this_thread::yield();
+		static int ct = 0;
+		ct++;
+		if(ct%30 == 0)
+			backgroundColorSource.update();
+		bgColor = static_cast<Color const*>(backgroundColorSource.get(RandomColorSource::Output::Color))->getChannels();
+		glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(window);
 	}
