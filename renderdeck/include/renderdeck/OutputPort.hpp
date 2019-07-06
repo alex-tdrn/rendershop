@@ -1,65 +1,79 @@
 #pragma once
-#include "renderdeck/Timestamp.hpp"
+#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/InputPort.hpp"
+
+#include <set>
+#include <algorithm>
 
 template<typename T>
-class OutputPort final
+class InputPort;
+
+template<typename T>
+class OutputPort
 {
-public:
-	class ModificationGuard
-	{
-	private:
-		OutputPort<T>& port;
-
-	public:
-		T& value;
-
-	public:
-		ModificationGuard() = delete;
-		ModificationGuard(OutputPort<T>& port, T& value)
-			: port(port), value(value)
-		{
-
-		}
-		~ModificationGuard()
-		{
-			port.lastModificationTime.update();
-		}
-	};
-
 private:
+	AbstractSource* parent;
 	T value;
-	Timestamp lastModificationTime;
+	std::set<InputPort<T>*> connections;
 
 public:
 	OutputPort() = default;
 	OutputPort(OutputPort const&) = delete;
-	OutputPort(OutputPort&& that)
-	{
-		this->value = std::move(that.value);
-	}
+	OutputPort(OutputPort&&) = delete;
 	OutputPort& operator=(OutputPort const& that) = delete;
-	OutputPort& operator=(OutputPort&& that)
-	{
-		this->value = std::move(that.value);
-		lastModificationTime.update();
-		return *this;
-	}
+	OutputPort& operator=(OutputPort&&) = delete;
 	~OutputPort() = default;
 
 public:
-	OutputPort<T>::ModificationGuard getModificationGuard()
+	void setParent(AbstractSource* parent)
 	{
-		return { *this, value };
+		this->parent = parent;
 	}
 
-	T const& getValue() const
+	void connect(InputPort<T>* port)
+	{
+		if(connections.find(port) == connections.end())
+			return;
+		connections.insert(port);
+		port->connect(this);
+	}
+
+	void disconnect(InputPort<T>* port)
+	{
+		if(connections.find(port) == connections.end())
+			return;
+		connections.erase(port);
+		port->disconnect();
+	}
+
+	void disconnectAll()
+	{
+		while(!connections.empty())
+		{
+			disconnect(*connections.begin());
+		}
+	}
+
+	Timestamp const* getLastModificationTime() const
+	{
+		return parent->getLastModificationTime();
+	}
+
+	T& getMutableValue()
 	{
 		return value;
 	}
 
-	bool isInitialized() const
+	T const& getValue() const
 	{
-		return !lastModificationTime.isReset();
+		parent->updateOutputsIfNeeded();
+		return value;
+	}
+
+	Timestamp const& getTimestamp() const
+	{
+		parent->updateOutputsIfNeeded();
+		return parent->getTimestamp();
 	}
 
 };

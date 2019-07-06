@@ -14,19 +14,11 @@ public:
 		};
 	};
 
-public:
-	RandomColorSource() = default;
-	RandomColorSource(RandomColorSource const&) = delete;
-	RandomColorSource(RandomColorSource&&) = delete;
-	RandomColorSource& operator=(RandomColorSource const&) = delete;
-	RandomColorSource& operator=(RandomColorSource&&) = delete;
-	~RandomColorSource() = default;
-
-public:
+protected:
 	void update() const override 
 	{
-		auto m = getModificationGuard<OutputPort::Color>();
-		m.value = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
+		auto& color = getOutputPort<OutputPort::Color>().getMutableValue();
+		color = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
 
 };

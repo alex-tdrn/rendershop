@@ -1,13 +1,15 @@
 #pragma once
-#include "renderdeck/Connection.hpp"
+#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/InputPort.hpp"
+#include "renderdeck/Utility.hpp"
 
-#include <vector>
-#include <memory>
+#include <tuple>
 
-class Sink
+template<typename... InputTypes>
+class Sink : public virtual AbstractSink
 {
-private:
-	std::vector<std::shared_ptr<Connection>> connections;
+protected:
+	mutable std::tuple<InputPort<InputTypes>...> inputs;
 
 public:
 	Sink() = default;
@@ -18,6 +20,10 @@ public:
 	virtual ~Sink() = default;
 
 public:
-	virtual void update() const = 0;
+	template<int inputIndex>
+	auto& getInputPort() const
+	{
+		return std::get<inputIndex>(inputs);
+	}
 
 };

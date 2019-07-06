@@ -5,7 +5,7 @@ class Timestamp
 {
 private:
 	using chrono = std::chrono::steady_clock;
-	chrono::time_point timestamp = chrono::now();
+	chrono::time_point timestamp = chrono::time_point::min();
 
 public:
 	Timestamp() = default;
