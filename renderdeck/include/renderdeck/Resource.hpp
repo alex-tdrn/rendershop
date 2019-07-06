@@ -1,5 +1,5 @@
 #pragma once
-#include "renderdeck/Timestamp.h"
+#include "renderdeck/Timestamp.hpp"
 
 class Resource
 {

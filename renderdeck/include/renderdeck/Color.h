@@ -1,5 +1,6 @@
 #pragma once
-#include "renderdeck/Resource.h"
+#include "renderdeck/Resource.hpp"
+
 #include <glm/glm.hpp>
 
 class Color : public Resource
