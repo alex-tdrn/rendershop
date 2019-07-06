@@ -7,23 +7,23 @@ class OutputPort final
 public:
 	class ModificationGuard
 	{
-		private:
-			OutputPort<T>& port;
+	private:
+		OutputPort<T>& port;
 
-		public:
-			T& value;
+	public:
+		T& value;
 
-		public:
-			ModificationGuard() = delete;
-			ModificationGuard(OutputPort<T>& port, T& value)
-				: port(port), value(value)
-			{
+	public:
+		ModificationGuard() = delete;
+		ModificationGuard(OutputPort<T>& port, T& value)
+			: port(port), value(value)
+		{
 
-			}
-			~ModificationGuard()
-			{
-				port.lastModificationTime.update();
-			}
+		}
+		~ModificationGuard()
+		{
+			port.lastModificationTime.update();
+		}
 	};
 
 private:
@@ -49,7 +49,7 @@ public:
 public:
 	OutputPort<T>::ModificationGuard getModificationGuard()
 	{
-		return {*this, value};
+		return { *this, value };
 	}
 
 	T const& getValue() const
@@ -57,9 +57,9 @@ public:
 		return value;
 	}
 
-	Timestamp const& getLastModificationTime() const 
+	bool isInitialized() const
 	{
-		return lastModificationTime;
+		return !lastModificationTime.isReset();
 	}
 
 };

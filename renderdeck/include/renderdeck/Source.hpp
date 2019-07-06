@@ -1,13 +1,14 @@
 #pragma once
-#include "Resource.hpp"
+#include "renderdeck/OutputPort.hpp"
+#include "renderdeck/Utility.hpp"
 
-#include <array>
+#include <tuple>
 
-template<std::size_t N>
+template<typename... OutputTypes>
 class Source
 {
-protected:
-	mutable std::array<Resource, N> outputs;
+private:
+	mutable std::tuple<OutputPort<OutputTypes>...> outputs;
 	
 public:
 	Source() = default;
@@ -17,19 +18,33 @@ public:
 	Source& operator=(Source&&) = delete;
 	virtual ~Source() = default;
 
-public:
-	Resource const& get(int outputIndex) const
+private:
+	void checkOutputs() const
 	{
-		for(auto const& output : outputs)
-		{
-			if(output.getLastModificationTime().isReset())
-			{
-				update();
-				break;
-			}
-		}
-		return outputs[outputIndex];
+		bool outputsOutdated = false;
+		static_for(outputs, [&outputsOutdated](auto const& output) {
+			if(!output.isInitialized())
+				outputsOutdated = true;
+		});
+		if(outputsOutdated)
+			update();
 	}
+
+protected:
+	template<int outputIndex>
+	auto getModificationGuard() const
+	{
+		return std::get<outputIndex>(outputs).getModificationGuard();
+	}
+
+public:
+	template<int outputIndex>
+	auto const& getValue() const
+	{
+		checkOutputs();
+		return std::get<outputIndex>(outputs).getValue();
+	}
+
 	virtual void update() const = 0;
 
 };

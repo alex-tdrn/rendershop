@@ -1,8 +1,9 @@
 #pragma once
-#include "Source.hpp"
-#include "Color.h"
+#include "renderdeck/Source.hpp"
 
-class RandomColorSource : public Source<1>
+#include <glm/glm.hpp>
+
+class RandomColorSource : public Source<glm::vec3>
 {	
 public:
 	struct OutputPort
@@ -24,12 +25,8 @@ public:
 public:
 	void update() const override 
 	{
-		Color& color = static_cast<Color&>(outputs[OutputPort::Color]);
-		color = Color({rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 });
-	}
-	Color const& getOutputColor() const
-	{
-		return static_cast<Color const&>(get(OutputPort::Color));
+		auto m = getModificationGuard<OutputPort::Color>();
+		m.value = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
 
 };

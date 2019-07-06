@@ -1,5 +1,5 @@
 #pragma once
-#include "Connection.hpp"
+#include "renderdeck/Connection.hpp"
 
 #include <vector>
 #include <memory>

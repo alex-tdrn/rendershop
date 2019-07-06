@@ -39,9 +39,9 @@ int main(int argc, char** argv)
 	}
 #endif
 	
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	RandomColorSource backgroundColorSource;
-	glm::vec3 bgColor = backgroundColorSource.getOutputColor().getChannels();
+	glm::vec3 bgColor = backgroundColorSource.getValue<RandomColorSource::OutputPort::Color>();
 	glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
 	while(!glfwWindowShouldClose(window))
 	{
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 		ct++;
 		if(ct%30 == 0)
 			backgroundColorSource.update();
-		bgColor = static_cast<Color const&>(backgroundColorSource.getOutputColor()).getChannels();
+		bgColor = backgroundColorSource.getValue<RandomColorSource::OutputPort::Color>();
 		glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwSwapBuffers(window);
