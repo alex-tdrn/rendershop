@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\renderdeck\Color.h" />
+    <ClInclude Include="include\renderdeck\Connection.hpp" />
+    <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\RandomColorSource.h" />
-    <ClInclude Include="include\renderdeck\Sink.h" />
-    <ClInclude Include="include\renderdeck\Source.h" />
-    <ClInclude Include="include\renderdeck\Timestamp.h" />
-    <ClInclude Include="include\renderdeck\Resource.h" />
+    <ClInclude Include="include\renderdeck\Sink.hpp" />
+    <ClInclude Include="include\renderdeck\Source.hpp" />
+    <ClInclude Include="include\renderdeck\Timestamp.hpp" />
+    <ClInclude Include="include\renderdeck\OutputPort.hpp" />
+    <ClInclude Include="include\renderdeck\Utility.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -73,6 +75,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -96,6 +99,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

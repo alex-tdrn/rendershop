@@ -1,11 +1,12 @@
 #pragma once
-#include "Source.h"
-#include "Color.h"
+#include "renderdeck/Source.hpp"
 
-class RandomColorSource : public Source
+#include <glm/glm.hpp>
+
+class RandomColorSource : public Source<glm::vec3>
 {	
 public:
-	struct Output
+	struct OutputPort
 	{
 		enum
 		{
@@ -14,10 +15,7 @@ public:
 	};
 
 public:
-	RandomColorSource()
-	{
-		outputs.emplace_back(std::make_unique<Color>());
-	}
+	RandomColorSource() = default;
 	RandomColorSource(RandomColorSource const&) = delete;
 	RandomColorSource(RandomColorSource&&) = delete;
 	RandomColorSource& operator=(RandomColorSource const&) = delete;
@@ -27,7 +25,8 @@ public:
 public:
 	void update() const override 
 	{
-		Color* color = static_cast<Color*>(outputs[Output::Color].get());
-		*color = Color({rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 });
+		auto m = getModificationGuard<OutputPort::Color>();
+		m.value = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
+
 };

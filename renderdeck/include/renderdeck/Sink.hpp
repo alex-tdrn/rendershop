@@ -1,12 +1,13 @@
 #pragma once
-#include "renderdeck/Resource.h"
+#include "renderdeck/Connection.hpp"
 
+#include <vector>
 #include <memory>
 
-class Sink : public Resource
+class Sink
 {
-protected:
-	std::unique_ptr<Resource> input;
+private:
+	std::vector<std::shared_ptr<Connection>> connections;
 
 public:
 	Sink() = default;
@@ -16,5 +17,7 @@ public:
 	Sink& operator=(Sink&&) = delete;
 	virtual ~Sink() = default;
 
+public:
+	virtual void update() const = 0;
 
 };

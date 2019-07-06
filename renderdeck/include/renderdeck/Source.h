@@ -1,13 +1,17 @@
 #pragma once
-#include "renderdeck/Resource.h"
+#include "Connection.h"
 
 #include <vector>
 #include <memory>
 
-class Source : public Resource
+
+class Source
 {
+private:
+	std::vector<std::vector<std::shared_ptr<Connection>>> connections;
+
 protected:
-	std::vector<std::unique_ptr<Resource>> outputs;
+	std::vector<Resource> outputs;
 	
 public:
 	Source() = default;
@@ -16,6 +20,12 @@ public:
 	Source& operator=(Source const&) = delete;
 	Source& operator=(Source&&) = delete;
 	virtual ~Source() = default;
+
+public:
+	void setNumberOfOutputPorts(int n)
+	{
+		
+	}
 
 public:
 	Resource const* get(int outputIndex) const
