@@ -1,4 +1,5 @@
 #include "renderdeck/RandomColorSource.h"
+#include "renderdeck/ClearBackgroundSink.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -39,10 +40,12 @@ int main(int argc, char** argv)
 	}
 #endif
 	
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	RandomColorSource backgroundColorSource;
-	glm::vec3 bgColor = backgroundColorSource.getValue<RandomColorSource::OutputPort::Color>();
-	glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
+	ClearBackgroundSink clearBackgroundSink;
+
+	auto& inputPort = clearBackgroundSink.getInputPort<ClearBackgroundSink::InputPort::Color>();
+	inputPort.connect(&backgroundColorSource.getOutputPort<RandomColorSource::OutputPort::Color>());
 	while(!glfwWindowShouldClose(window))
 	{
 		while(glfwPollEvents(), !glfwGetWindowAttrib(window, GLFW_FOCUSED))
@@ -50,10 +53,11 @@ int main(int argc, char** argv)
 		static int ct = 0;
 		ct++;
 		if(ct%30 == 0)
-			backgroundColorSource.update();
-		bgColor = backgroundColorSource.getValue<RandomColorSource::OutputPort::Color>();
-		glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		{
+			//backgroundColorSource.update();
+		}
+		
+		clearBackgroundSink.update();
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

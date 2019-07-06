@@ -4,10 +4,13 @@
     <ClInclude Include="include\renderdeck\RandomColorSource.h" />
     <ClInclude Include="include\renderdeck\Source.hpp" />
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />
-    <ClInclude Include="include\renderdeck\Connection.hpp" />
     <ClInclude Include="include\renderdeck\Sink.hpp" />
     <ClInclude Include="include\renderdeck\OutputPort.hpp" />
     <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\Utility.hpp" />
+    <ClInclude Include="include\renderdeck\ClearBackgroundSink.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\ClearBackgroundSink.cpp" />
   </ItemGroup>
 </Project>

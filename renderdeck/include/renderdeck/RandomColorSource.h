@@ -15,14 +15,6 @@ public:
 	};
 
 public:
-	RandomColorSource() = default;
-	RandomColorSource(RandomColorSource const&) = delete;
-	RandomColorSource(RandomColorSource&&) = delete;
-	RandomColorSource& operator=(RandomColorSource const&) = delete;
-	RandomColorSource& operator=(RandomColorSource&&) = delete;
-	~RandomColorSource() = default;
-
-public:
 	void update() const override 
 	{
 		auto m = getModificationGuard<OutputPort::Color>();

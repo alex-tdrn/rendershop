@@ -5,13 +5,18 @@
 #include <tuple>
 
 template<typename... OutputTypes>
-class Source
+class Source : public SourceTypeErased
 {
 private:
 	mutable std::tuple<OutputPort<OutputTypes>...> outputs;
 	
 public:
-	Source() = default;
+	Source()
+	{
+		static_for(outputs, [&](auto& output) {
+			output.setParent(this);
+		});
+	}
 	Source(Source const&) = delete;
 	Source(Source&&) = delete;
 	Source& operator=(Source const&) = delete;
@@ -39,10 +44,9 @@ protected:
 
 public:
 	template<int outputIndex>
-	auto const& getValue() const
+	auto& getOutputPort() const
 	{
-		checkOutputs();
-		return std::get<outputIndex>(outputs).getValue();
+		return std::get<outputIndex>(outputs);
 	}
 
 	virtual void update() const = 0;
