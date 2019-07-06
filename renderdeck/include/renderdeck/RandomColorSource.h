@@ -5,7 +5,7 @@
 class RandomColorSource : public Source
 {	
 public:
-	struct Output
+	struct OutputPort
 	{
 		enum
 		{
@@ -27,7 +27,12 @@ public:
 public:
 	void update() const override 
 	{
-		Color* color = static_cast<Color*>(outputs[Output::Color].get());
+		Color* color = static_cast<Color*>(outputs[OutputPort::Color].get());
 		*color = Color({rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 });
 	}
+	Color const* getOutputColor() const
+	{
+		return static_cast<Color const*>(get(RandomColorSource::OutputPort::Color));
+	}
+
 };
