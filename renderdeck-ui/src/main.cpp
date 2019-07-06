@@ -1,11 +1,14 @@
 #include "renderdeck/RandomColorSource.h"
 #include "renderdeck/ClearBackgroundSink.h"
 #include "renderdeck/GrayscaleColorPipe.h"
+#include "renderdeck/Timer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <thread>
+#include <vector>
+
 
 void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
@@ -40,8 +43,10 @@ int main(int argc, char** argv)
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
 #endif
-	
+
+	using namespace std::chrono_literals;
 	glfwSwapInterval(1);
+
 	RandomColorSource source;
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
@@ -52,19 +57,20 @@ int main(int argc, char** argv)
 	pipe.getInputPort<GrayscaleColorPipe::InputPort::Color>()
 		.connect(&source.getOutputPort<RandomColorSource::OutputPort::Color>());
 	
-	glEnable(GL_FRAMEBUFFER_SRGB);
+	std::vector<Timer> timers(2);
+	timers[0].setInterval(1s);
+	timers[0].addSource(&source);
+	timers[1].setInterval(1s / 50);
+	timers[1].addSink(&sink);
+
 	while(!glfwWindowShouldClose(window))
 	{
 		while(glfwPollEvents(), !glfwGetWindowAttrib(window, GLFW_FOCUSED))
 			std::this_thread::yield();
-		static int ct = 0;
-		ct++;
-		if(ct%30 == 0)
-		{
-			source.queueUpdate();
-		}
 		
-		sink.trigger();
+		for(auto& timer : timers)
+			timer.poll();
+
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();
