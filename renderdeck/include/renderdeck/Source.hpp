@@ -1,11 +1,12 @@
 #pragma once
+#include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/OutputPort.hpp"
 #include "renderdeck/Utility.hpp"
 
 #include <tuple>
 
 template<typename... OutputTypes>
-class Source : public SourceTypeErased
+class Source : public AbstractSource
 {
 private:
 	mutable std::tuple<OutputPort<OutputTypes>...> outputs;
@@ -24,22 +25,11 @@ public:
 	virtual ~Source() = default;
 
 private:
-	void checkOutputs() const
+	void updateOutputsIfNeeded() const
 	{
-		bool outputsOutdated = false;
-		static_for(outputs, [&outputsOutdated](auto const& output) {
-			if(!output.isInitialized())
-				outputsOutdated = true;
-		});
-		if(outputsOutdated)
+		if(isUpdateQueued())
 			update();
-	}
-
-protected:
-	template<int outputIndex>
-	auto getModificationGuard() const
-	{
-		return std::get<outputIndex>(outputs).getModificationGuard();
+		timestamp.update();
 	}
 
 public:
@@ -48,7 +38,5 @@ public:
 	{
 		return std::get<outputIndex>(outputs);
 	}
-
-	virtual void update() const = 0;
 
 };

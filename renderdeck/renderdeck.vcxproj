@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\renderdeck\AbstractPipeline.hpp" />
     <ClInclude Include="include\renderdeck\ClearBackgroundSink.h" />
     <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\RandomColorSource.h" />

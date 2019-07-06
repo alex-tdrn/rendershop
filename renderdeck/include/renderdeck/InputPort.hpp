@@ -1,5 +1,4 @@
 #pragma once
-#include "renderdeck/Timestamp.hpp"
 #include "renderdeck/OutputPort.hpp"
 
 template<typename T>
@@ -9,7 +8,6 @@ template<typename T>
 class InputPort
 {
 private:
-	Timestamp lastModificationTime;
 	OutputPort<T>* connection = nullptr;
 
 public:
@@ -41,9 +39,9 @@ public:
 		}
 	}
 
-	T const& getValue() const
+	std::pair<T const&, Timestamp const&> getValueAndTimestamp() const
 	{
-		return connection->getValue();
+		return connection->getValueAndTimestamp();
 	}
 
 };

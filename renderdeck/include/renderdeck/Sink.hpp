@@ -1,11 +1,12 @@
 #pragma once
+#include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/InputPort.hpp"
 #include "renderdeck/Utility.hpp"
 
 #include <tuple>
 
 template<typename... InputTypes>
-class Sink
+class Sink : public AbstractSink
 {
 private:
 	mutable std::tuple<InputPort<InputTypes>...> inputs;
@@ -24,7 +25,5 @@ public:
 	{
 		return std::get<inputIndex>(inputs);
 	}
-
-	virtual void update() const = 0;
 
 };

@@ -54,10 +54,10 @@ int main(int argc, char** argv)
 		ct++;
 		if(ct%30 == 0)
 		{
-			//backgroundColorSource.update();
+			backgroundColorSource.queueUpdate();
 		}
 		
-		clearBackgroundSink.update();
+		clearBackgroundSink.trigger();
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

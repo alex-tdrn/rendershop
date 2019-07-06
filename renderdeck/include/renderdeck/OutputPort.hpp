@@ -1,15 +1,9 @@
 #pragma once
-#include "renderdeck/Timestamp.hpp"
+#include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/InputPort.hpp"
 
 #include <set>
 #include <algorithm>
-
-class SourceTypeErased
-{
-public:
-	virtual void update() const = 0;
-};
 
 template<typename T>
 class InputPort;
@@ -17,55 +11,25 @@ class InputPort;
 template<typename T>
 class OutputPort
 {
-public:
-	class ModificationGuard
-	{
-	private:
-		OutputPort<T>& port;
-
-	public:
-		T& value;
-
-	public:
-		ModificationGuard() = delete;
-		ModificationGuard(OutputPort<T>& port, T& value)
-			: port(port), value(value)
-		{
-
-		}
-		~ModificationGuard()
-		{
-			port.lastModificationTime.update();
-		}
-	};
-
 private:
-	SourceTypeErased* parent;
+	AbstractSource* parent;
 	T value;
-	Timestamp lastModificationTime;
 	std::set<InputPort<T>*> connections;
 
 public:
 	OutputPort() = default;
 	OutputPort(OutputPort const&) = delete;
-	OutputPort(OutputPort&& that)
-	{
-		this->value = std::move(that.value);
-	}
+	OutputPort(OutputPort&&) = delete;
 	OutputPort& operator=(OutputPort const& that) = delete;
-	OutputPort& operator=(OutputPort&& that)
-	{
-		this->value = std::move(that.value);
-		lastModificationTime.update();
-		return *this;
-	}
+	OutputPort& operator=(OutputPort&&) = delete;
 	~OutputPort() = default;
 
 public:
-	void setParent(SourceTypeErased* parent)
+	void setParent(AbstractSource* parent)
 	{
 		this->parent = parent;
 	}
+
 	void connect(InputPort<T>* port)
 	{
 		if(connections.find(port) == connections.end())
@@ -84,23 +48,26 @@ public:
 
 	void disconnectAll()
 	{
-
+		while(!connections.empty())
+		{
+			disconnect(*connections.begin());
+		}
 	}
 
-	OutputPort<T>::ModificationGuard getModificationGuard()
+	Timestamp const* getLastModificationTime() const
 	{
-		return { *this, value };
+		return parent->getLastModificationTime();
 	}
 
-	T const& getValue() const
+	T& getValue()
 	{
-		parent->update();
 		return value;
 	}
 
-	bool isInitialized() const
+	std::pair<T const&, Timestamp const&> getValueAndTimestamp() const
 	{
-		return !lastModificationTime.isReset();
+		parent->updateOutputsIfNeeded();
+		return std::make_pair(value, parent->getTimestamp());
 	}
 
 };

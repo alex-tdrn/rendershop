@@ -14,7 +14,8 @@ public:
 		};
 	};
 
-public:
+protected:
 	void update() const override;
+
 };
 
