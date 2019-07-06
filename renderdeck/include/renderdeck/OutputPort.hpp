@@ -59,15 +59,21 @@ public:
 		return parent->getLastModificationTime();
 	}
 
-	T& getValue()
+	T& getMutableValue()
 	{
 		return value;
 	}
 
-	std::pair<T const&, Timestamp const&> getValueAndTimestamp() const
+	T const& getValue() const
 	{
 		parent->updateOutputsIfNeeded();
-		return std::make_pair(value, parent->getTimestamp());
+		return value;
+	}
+
+	Timestamp const& getTimestamp() const
+	{
+		parent->updateOutputsIfNeeded();
+		return parent->getTimestamp();
 	}
 
 };

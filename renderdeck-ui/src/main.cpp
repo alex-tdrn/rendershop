@@ -1,5 +1,6 @@
 #include "renderdeck/RandomColorSource.h"
 #include "renderdeck/ClearBackgroundSink.h"
+#include "renderdeck/GrayscaleColorPipe.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -41,11 +42,17 @@ int main(int argc, char** argv)
 #endif
 	
 	glfwSwapInterval(1);
-	RandomColorSource backgroundColorSource;
-	ClearBackgroundSink clearBackgroundSink;
+	RandomColorSource source;
+	GrayscaleColorPipe pipe;
+	ClearBackgroundSink sink;
 
-	auto& inputPort = clearBackgroundSink.getInputPort<ClearBackgroundSink::InputPort::Color>();
-	inputPort.connect(&backgroundColorSource.getOutputPort<RandomColorSource::OutputPort::Color>());
+	sink.getInputPort<ClearBackgroundSink::InputPort::Color>()
+		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>());
+
+	pipe.getInputPort<GrayscaleColorPipe::InputPort::Color>()
+		.connect(&source.getOutputPort<RandomColorSource::OutputPort::Color>());
+	
+	glEnable(GL_FRAMEBUFFER_SRGB);
 	while(!glfwWindowShouldClose(window))
 	{
 		while(glfwPollEvents(), !glfwGetWindowAttrib(window, GLFW_FOCUSED))
@@ -54,10 +61,10 @@ int main(int argc, char** argv)
 		ct++;
 		if(ct%30 == 0)
 		{
-			backgroundColorSource.queueUpdate();
+			source.queueUpdate();
 		}
 		
-		clearBackgroundSink.trigger();
+		sink.trigger();
 		glfwSwapBuffers(window);
 	}
 	glfwTerminate();

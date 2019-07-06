@@ -39,9 +39,14 @@ public:
 		}
 	}
 
-	std::pair<T const&, Timestamp const&> getValueAndTimestamp() const
+	T const& getValue() const
 	{
-		return connection->getValueAndTimestamp();
+		return connection->getValue();
+	}
+
+	Timestamp const& getTimestamp() const
+	{
+		return connection->getTimestamp();
 	}
 
 };

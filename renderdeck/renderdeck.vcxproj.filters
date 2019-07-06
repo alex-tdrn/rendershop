@@ -10,6 +10,8 @@
     <ClInclude Include="include\renderdeck\Utility.hpp" />
     <ClInclude Include="include\renderdeck\ClearBackgroundSink.h" />
     <ClInclude Include="include\renderdeck\AbstractPipeline.hpp" />
+    <ClInclude Include="include\renderdeck\GrayscaleColorPipe.h" />
+    <ClInclude Include="include\renderdeck\Pipe.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ClearBackgroundSink.cpp" />

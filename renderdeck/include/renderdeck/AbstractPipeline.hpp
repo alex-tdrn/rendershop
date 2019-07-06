@@ -8,10 +8,14 @@ protected:
 
 };
 
-class AbstractSource : public AbstractPipelineElement
+class AbstractSource : public virtual AbstractPipelineElement
 {
 protected:
 	mutable Timestamp timestamp;
+
+public:
+	AbstractSource() = default;
+	virtual ~AbstractSource() = default;
 
 protected:
 	bool isUpdateQueued() const
@@ -34,7 +38,7 @@ public:
 
 };
 
-class AbstractSink : public AbstractPipelineElement
+class AbstractSink : public virtual AbstractPipelineElement
 {
 public:
 	virtual void trigger() const

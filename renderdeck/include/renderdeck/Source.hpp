@@ -6,7 +6,7 @@
 #include <tuple>
 
 template<typename... OutputTypes>
-class Source : public AbstractSource
+class Source : public virtual AbstractSource
 {
 private:
 	mutable std::tuple<OutputPort<OutputTypes>...> outputs;
@@ -24,12 +24,14 @@ public:
 	Source& operator=(Source&&) = delete;
 	virtual ~Source() = default;
 
-private:
-	void updateOutputsIfNeeded() const
+protected:
+	void updateOutputsIfNeeded() const override
 	{
 		if(isUpdateQueued())
+		{
 			update();
-		timestamp.update();
+			timestamp.update();
+		}
 	}
 
 public:

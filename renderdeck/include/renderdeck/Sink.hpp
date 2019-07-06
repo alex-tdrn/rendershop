@@ -6,9 +6,9 @@
 #include <tuple>
 
 template<typename... InputTypes>
-class Sink : public AbstractSink
+class Sink : public virtual AbstractSink
 {
-private:
+protected:
 	mutable std::tuple<InputPort<InputTypes>...> inputs;
 
 public:
