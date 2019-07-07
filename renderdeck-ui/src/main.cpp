@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <imgui_node_editor.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -28,7 +29,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
 	
-	GLFWwindow* window = glfwCreateWindow(200, 400, "renderdeck", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(1920, 1080, "renderdeck", nullptr, nullptr);
 	if(!window)
 		throw "Failed to create GLFW window\n";
 
@@ -74,6 +75,7 @@ int main(int argc, char** argv)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	ax::NodeEditor::EditorContext* nodeEditorContext = ax::NodeEditor::CreateEditor();
 
 	//ImGuiCorporateGreyStyle();
 	ImGuiCherryStyle();
@@ -88,6 +90,7 @@ int main(int argc, char** argv)
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 420");
 
+	ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
@@ -104,11 +107,71 @@ int main(int argc, char** argv)
 		glViewport(0, 0, display_w, display_h);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
-		ImGui::SetNextWindowPos(ImVec2(wind_x, wind_y));
-		ImGui::SetNextWindowSize(ImVec2(display_w, display_h));
+		//if(ImGui::Begin("Pipeline Canvas", nullptr))
+		{
+			ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
+			int uniqueId = 1;
+			// Start drawing nodes.
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+			ax::NodeEditor::EndNode();
 
-		if(ImGui::Begin("Pipeline", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus))
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+			ax::NodeEditor::EndNode();
+
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+			ax::NodeEditor::EndNode();
+
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+			ax::NodeEditor::EndNode();
+
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("Node A");
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+			ax::NodeEditor::EndNode();
+			ax::NodeEditor::End();
+
+		}
+		//ImGui::End();
+
+		if(ImGui::Begin("Pipeline", nullptr))
 		{
 			{
 				ImGui::Text("RandomColorSource");
@@ -121,6 +184,13 @@ int main(int argc, char** argv)
 				glm::vec3 output = pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>().getCachedValue();
 				ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
 			}
+
+		}
+		ImGui::End();
+
+		if(ImGui::Begin("Log", nullptr))
+		{
+			ImGui::Text("...");
 
 		}
 		ImGui::End();
@@ -143,6 +213,7 @@ int main(int argc, char** argv)
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
+	ax::NodeEditor::DestroyEditor(nodeEditorContext);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
