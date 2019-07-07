@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		if(ImGui::Begin("Pipeline", &showWindowPipeline))
+		if(ImGui::Begin("Pipeline", &showWindowPipeline); showWindowPipeline)
 		{
 			{
 				ImGui::Text("RandomColorSource");
@@ -113,8 +113,8 @@ int main(int argc, char** argv)
 				ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
 			}
 
-			ImGui::End();
 		}
+		ImGui::End();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
