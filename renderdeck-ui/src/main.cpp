@@ -78,7 +78,6 @@ int main(int argc, char** argv)
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 420");
 
-	ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
@@ -102,89 +101,55 @@ int main(int argc, char** argv)
 			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoBringToFrontOnFocus
 		);
+
+		ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
 		ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
+
 		int uniqueId = 1;
-		// Start drawing nodes.
-		ax::NodeEditor::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-		ImGui::Text("-> In");
-		ax::NodeEditor::EndPin();
-		ImGui::SameLine();
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
-		ax::NodeEditor::EndNode();
 
-		ax::NodeEditor::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-		ImGui::Text("-> In");
-		ax::NodeEditor::EndPin();
-		ImGui::SameLine();
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
-		ax::NodeEditor::EndNode();
 
-		ax::NodeEditor::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-		ImGui::Text("-> In");
-		ax::NodeEditor::EndPin();
-		ImGui::SameLine();
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
-		ax::NodeEditor::EndNode();
+		{
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("RandomColorSource");
+			
+			glm::vec3 output = source.getOutputPort<RandomColorSource::OutputPort::Color>().getCachedValue();
+			ImVec2 w = ImGui::CalcTextSize("RandomColorSource");
+			ImGui::Dummy({w.x - 32, w.y});
+			ImGui::SameLine();
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
+			ax::NodeEditor::PinPivotSize({0, 0});
 
-		ax::NodeEditor::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-		ImGui::Text("-> In");
-		ax::NodeEditor::EndPin();
-		ImGui::SameLine();
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
-		ax::NodeEditor::EndNode();
+			ax::NodeEditor::EndPin();
 
-		ax::NodeEditor::BeginNode(uniqueId++);
-		ImGui::Text("Node A");
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-		ImGui::Text("-> In");
-		ax::NodeEditor::EndPin();
-		ImGui::SameLine();
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
-		ax::NodeEditor::EndNode();
+			ax::NodeEditor::EndNode();
+		}
+
+		{
+			ax::NodeEditor::BeginNode(uniqueId++);
+			ImGui::Text("GrayscaleColorPipe");
+			
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("->");
+			ax::NodeEditor::EndPin();
+
+			ImGui::SameLine();
+
+			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+			glm::vec3 output = pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>().getCachedValue();
+			//ImGui::Text("Color");
+			ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
+
+			ax::NodeEditor::EndPin();
+
+			ax::NodeEditor::EndNode();
+		}
+
+		ax::NodeEditor::Link(uniqueId++, 2, 4);
+		//ax::NodeEditor::Flow(uniqueId - 1);
+
 		ax::NodeEditor::End();
 
-		ImGui::End();
-
-		if(ImGui::Begin("Pipeline", nullptr))
-		{
-			{
-				ImGui::Text("RandomColorSource");
-				glm::vec3 output = source.getOutputPort<RandomColorSource::OutputPort::Color>().getCachedValue();
-				ImGui::ColorButton("RandomColorSource", { output.r, output.g, output.b, 1}, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
-			}
-
-			{
-				ImGui::Text("GrayscaleColorPipe");
-				glm::vec3 output = pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>().getCachedValue();
-				ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
-			}
-
-		}
-		ImGui::End();
-
-		if(ImGui::Begin("Log", nullptr))
-		{
-			ImGui::Text("...");
-
-		}
 		ImGui::End();
 
 		ImGui::Render();
