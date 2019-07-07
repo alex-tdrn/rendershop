@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 420");
-	bool show_demo_window = true;
+	bool showWindowPipeline = true;
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -96,7 +96,23 @@ int main(int argc, char** argv)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::ShowDemoWindow(&show_demo_window);
+
+		if(ImGui::Begin("Pipeline", &showWindowPipeline))
+		{
+			{
+				ImGui::Text("RandomColorSource");
+				glm::vec3 output = source.getOutputPort<RandomColorSource::OutputPort::Color>().getCachedValue();
+				ImGui::ColorButton("RandomColorSource", { output.r, output.g, output.b, 1}, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
+			}
+
+			{
+				ImGui::Text("GrayscaleColorPipe");
+				glm::vec3 output = pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>().getCachedValue();
+				ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoInputs, ImVec2(100, 100));
+			}
+
+			ImGui::End();
+		}
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
