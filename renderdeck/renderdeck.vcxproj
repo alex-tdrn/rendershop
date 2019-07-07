@@ -19,6 +19,7 @@
     <ClInclude Include="include\renderdeck\RandomColorSource.h" />
     <ClInclude Include="include\renderdeck\Sink.hpp" />
     <ClInclude Include="include\renderdeck\Source.hpp" />
+    <ClInclude Include="include\renderdeck\Timer.hpp" />
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />
     <ClInclude Include="include\renderdeck\OutputPort.hpp" />
     <ClInclude Include="include\renderdeck\Utility.hpp" />
@@ -61,13 +62,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)lib\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>../third party/include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)third party/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)lib\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>../third party/include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)\lib\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)third party/include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -96,7 +97,6 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -104,8 +104,11 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>None</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

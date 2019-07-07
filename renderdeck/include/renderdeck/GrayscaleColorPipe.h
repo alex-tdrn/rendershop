@@ -25,7 +25,7 @@ public:
 public:
 	void update() const override
 	{
-		auto const& inputColor = getInputPort<InputPort::Color>().getValue();
+		auto const& inputColor = getInputPort<InputPort::Color>().getCachedValue();
 		auto& outputColor = getOutputPort<OutputPort::Color>().getMutableValue();
 		const glm::vec3 linearGrayscale = glm::vec3(0.2126, 0.7152, 0.0722);
 		outputColor = glm::vec3(glm::dot(linearGrayscale, inputColor));

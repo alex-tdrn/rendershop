@@ -40,9 +40,13 @@ public:
 
 class AbstractSink : public virtual AbstractPipelineElement
 {
+protected:
+	virtual void updateAllInputs() const = 0;
+
 public:
 	virtual void trigger() const
 	{
+		updateAllInputs();
 		update();
 	}
 };

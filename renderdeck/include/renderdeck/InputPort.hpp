@@ -39,14 +39,19 @@ public:
 		}
 	}
 
-	T const& getValue() const
+	void update() const
 	{
-		return connection->getValue();
+		connection->update();
 	}
 
-	Timestamp const& getTimestamp() const
+	T const& getCachedValue() const
 	{
-		return connection->getTimestamp();
+		return connection->getCachedValue();
+	}
+
+	Timestamp const& getCachedTimestamp() const
+	{
+		return connection->getCachedTimestamp();
 	}
 
 };
