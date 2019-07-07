@@ -54,25 +54,24 @@ public:
 		}
 	}
 
-	Timestamp const* getLastModificationTime() const
-	{
-		return parent->getLastModificationTime();
-	}
 
 	T& getMutableValue()
 	{
 		return value;
 	}
 
-	T const& getValue() const
+	void update() const
 	{
 		parent->updateOutputsIfNeeded();
+	}
+
+	T const& getCachedValue() const
+	{
 		return value;
 	}
 
-	Timestamp const& getTimestamp() const
+	Timestamp const& getCachedTimestamp() const
 	{
-		parent->updateOutputsIfNeeded();
 		return parent->getTimestamp();
 	}
 

@@ -19,6 +19,14 @@ public:
 	Sink& operator=(Sink&&) = delete;
 	virtual ~Sink() = default;
 
+protected:
+	void updateAllInputs() const override final
+	{
+		static_for(inputs, [](auto const& input) {
+			input.update();
+		});
+	}
+
 public:
 	template<int inputIndex>
 	auto& getInputPort() const

@@ -25,13 +25,16 @@ private:
 	{
 		if(this->isUpdateQueued())
 		{
+			this->updateAllInputs();
 			trigger();
 		}
 		else
 		{
+			this->updateAllInputs();
+
 			bool outputsOutdated = false;
 			static_for(this->inputs, [&](auto const& input) {
-				if(input.getTimestamp().isNewerThan(this->timestamp))
+				if(input.getCachedTimestamp().isNewerThan(this->timestamp))
 					outputsOutdated = true;
 			});
 
