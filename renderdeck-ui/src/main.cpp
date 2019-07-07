@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
 	
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "renderdeck", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(200, 400, "renderdeck", nullptr, nullptr);
 	if(!window)
 		throw "Failed to create GLFW window\n";
 
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 #endif
 
 	using namespace std::chrono_literals;
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	RandomColorSource source;
 	GrayscaleColorPipe pipe;
