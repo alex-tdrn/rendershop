@@ -87,7 +87,6 @@ int main(int argc, char** argv)
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 420");
-	bool showWindowPipeline = true;
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -99,7 +98,17 @@ int main(int argc, char** argv)
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		if(ImGui::Begin("Pipeline", &showWindowPipeline); showWindowPipeline)
+		int wind_x, wind_y;
+		int display_w, display_h;
+		glfwGetFramebufferSize(window, &display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		glfwGetWindowPos(window, &wind_x, &wind_y);
+
+		ImGui::SetNextWindowPos(ImVec2(wind_x, wind_y));
+		ImGui::SetNextWindowSize(ImVec2(display_w, display_h));
+
+		if(ImGui::Begin("Pipeline", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus))
 		{
 			{
 				ImGui::Text("RandomColorSource");
@@ -119,9 +128,6 @@ int main(int argc, char** argv)
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		int display_w, display_h;
-		glfwGetFramebufferSize(window, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
 
 		if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
