@@ -72,20 +72,10 @@ int main(int argc, char** argv)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	ax::NodeEditor::EditorContext* nodeEditorContext = ax::NodeEditor::CreateEditor();
 
 	//ImGuiCorporateGreyStyle();
 	ImGuiCherryStyle();
-
-	ImGuiStyle& style = ImGui::GetStyle();
-	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 420");
@@ -107,69 +97,73 @@ int main(int argc, char** argv)
 		glViewport(0, 0, display_w, display_h);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
-		//if(ImGui::Begin("Pipeline Canvas", nullptr))
-		{
-			ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
-			int uniqueId = 1;
-			// Start drawing nodes.
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("Node A");
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-			ax::NodeEditor::EndNode();
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::SetNextWindowSize(io.DisplaySize);
+		ImGui::Begin("Pipeline Canvas", nullptr, 
+			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoBringToFrontOnFocus
+		);
+		ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
+		int uniqueId = 1;
+		// Start drawing nodes.
+		ax::NodeEditor::BeginNode(uniqueId++);
+		ImGui::Text("Node A");
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
+		ImGui::SameLine();
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
+		ax::NodeEditor::EndNode();
 
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("Node A");
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-			ax::NodeEditor::EndNode();
+		ax::NodeEditor::BeginNode(uniqueId++);
+		ImGui::Text("Node A");
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
+		ImGui::SameLine();
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
+		ax::NodeEditor::EndNode();
 
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("Node A");
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-			ax::NodeEditor::EndNode();
+		ax::NodeEditor::BeginNode(uniqueId++);
+		ImGui::Text("Node A");
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
+		ImGui::SameLine();
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
+		ax::NodeEditor::EndNode();
 
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("Node A");
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-			ax::NodeEditor::EndNode();
+		ax::NodeEditor::BeginNode(uniqueId++);
+		ImGui::Text("Node A");
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
+		ImGui::SameLine();
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
+		ax::NodeEditor::EndNode();
 
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("Node A");
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-			ax::NodeEditor::EndNode();
-			ax::NodeEditor::End();
+		ax::NodeEditor::BeginNode(uniqueId++);
+		ImGui::Text("Node A");
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
+		ImGui::SameLine();
+		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
+		ax::NodeEditor::EndNode();
+		ax::NodeEditor::End();
 
-		}
-		//ImGui::End();
+		ImGui::End();
 
 		if(ImGui::Begin("Pipeline", nullptr))
 		{
@@ -197,15 +191,6 @@ int main(int argc, char** argv)
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
-		if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-			glfwMakeContextCurrent(backup_current_context);
-		}
 
 		glfwSwapBuffers(window);
 	}
