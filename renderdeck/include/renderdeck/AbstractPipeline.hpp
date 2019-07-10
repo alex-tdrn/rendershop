@@ -1,9 +1,24 @@
 #pragma once
 #include "renderdeck/Timestamp.hpp"
 
+#include <string>
+#include <vector>
+
+class TypeTag
+{
+
+};
+
+class AbstractPort
+{
+
+};
+
 class AbstractPipelineElement
 {
 protected:
+	virtual std::vector<AbstractPort> const& getPorts() const = 0;
+	virtual std::string const& getName() const = 0;
 	virtual void update() const = 0;	
 
 };

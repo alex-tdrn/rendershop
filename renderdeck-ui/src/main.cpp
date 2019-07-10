@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 
 
 		{
-			ax::NodeEditor::BeginNode(uniqueId++);
+			ax::NodeEditor::BeginNode(uniqueId);
 			ImGui::Text("RandomColorSource");
 			
 			glm::vec3 output = source.getOutputPort<RandomColorSource::OutputPort::Color>().getCachedValue();
@@ -124,6 +124,7 @@ int main(int argc, char** argv)
 
 			ax::NodeEditor::EndNode();
 		}
+		
 
 		{
 			ax::NodeEditor::BeginNode(uniqueId++);
@@ -131,6 +132,8 @@ int main(int argc, char** argv)
 			
 			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
 			ImGui::Text("->");
+			ax::NodeEditor::PinPivotSize({ 0, 0 });
+
 			ax::NodeEditor::EndPin();
 
 			ImGui::SameLine();
@@ -145,12 +148,59 @@ int main(int argc, char** argv)
 			ax::NodeEditor::EndNode();
 		}
 
+
+
+		ax::NodeEditor::NodeId id = 0;
+		ax::NodeEditor::Suspend();
+		if(ax::NodeEditor::ShowNodeContextMenu(&id))
+			ImGui::OpenPopup("Node Context Menu");
+		else if (ax::NodeEditor::ShowBackgroundContextMenu())
+			ImGui::OpenPopup("Create New Node");
+
+		if(ImGui::BeginPopup("Node Context Menu"))
+		{
+			ImGui::TextUnformatted("Node Context Menu");
+			ImGui::Separator();
+			ImGui::MenuItem("Delete");
+			ImGui::EndPopup();
+		}
+
+		if(ImGui::BeginPopup("Create New Node"))
+		{
+			ImGui::Text("Create New Node");
+			ImGui::Separator();
+			if(ImGui::BeginMenu("Source"))
+			{
+				ImGui::MenuItem("Random Color");
+				ImGui::EndMenu();
+			}
+			if(ImGui::BeginMenu("Pipe"))
+			{
+				ImGui::MenuItem("Grayscale Color");
+				ImGui::EndMenu();
+			}
+			if(ImGui::BeginMenu("Sink"))
+			{
+				ImGui::MenuItem("Background Color");
+				ImGui::EndMenu();
+			}
+			ImGui::EndPopup();
+		}
+		ax::NodeEditor::Resume();
+
+		if(ax::NodeEditor::BeginCreate())
+		{
+		}
+		ax::NodeEditor::EndCreate();
+
 		ax::NodeEditor::Link(uniqueId++, 2, 4);
-		//ax::NodeEditor::Flow(uniqueId - 1);
+		ax::NodeEditor::Flow(uniqueId - 1);
 
 		ax::NodeEditor::End();
 
 		ImGui::End();
+
+		ImGui::ShowDemoWindow();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
