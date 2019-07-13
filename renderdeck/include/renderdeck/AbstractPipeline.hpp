@@ -11,14 +11,26 @@ class TypeTag
 
 class AbstractPort
 {
+public:
+	virtual int getUnderlyingTypeTag() const = 0;
 
+};
+
+//TODO dynamic connection functions
+class AbstractInputPort : public AbstractPort
+{
+};
+
+class AbstractOutputPort : public AbstractPort
+{
 };
 
 class AbstractPipelineElement
 {
 protected:
-	virtual std::vector<AbstractPort> const& getPorts() const = 0;
-	virtual std::string const& getName() const = 0;
+	virtual std::vector<AbstractInputPort*> const& getInputPorts() const = 0;
+	virtual std::vector<AbstractOutputPort*> const& getOutputPorts() const = 0;
+	//virtual std::string const& getName() const = 0;
 	virtual void update() const = 0;	
 
 };

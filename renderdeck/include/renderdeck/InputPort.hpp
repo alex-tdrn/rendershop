@@ -1,5 +1,6 @@
 #pragma once
 #include "renderdeck/OutputPort.hpp"
+#include "renderdeck/TypeTag.hpp"
 
 template<typename T>
 class OutputPort;
@@ -19,6 +20,11 @@ public:
 	~InputPort() = default;
 
 public:
+	int getUnderlyingTypeTag() const override
+	{
+		return typeTag<T>();
+	}
+
 	void connect(OutputPort<T>* port)
 	{
 		if(connection != port)

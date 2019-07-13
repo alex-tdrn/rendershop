@@ -22,6 +22,7 @@
     <ClInclude Include="include\renderdeck\Timer.hpp" />
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />
     <ClInclude Include="include\renderdeck\OutputPort.hpp" />
+    <ClInclude Include="include\renderdeck\TypeTag.hpp" />
     <ClInclude Include="include\renderdeck\Utility.hpp" />
   </ItemGroup>
   <ItemGroup>

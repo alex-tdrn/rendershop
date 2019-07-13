@@ -25,6 +25,11 @@ public:
 	~OutputPort() = default;
 
 public:
+	int getUnderlyingTypeTag() const override
+	{
+		return typeTag<T>();
+	}
+
 	void setParent(AbstractSource* parent)
 	{
 		this->parent = parent;

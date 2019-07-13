@@ -13,6 +13,7 @@
     <ClInclude Include="include\renderdeck\GrayscaleColorPipe.h" />
     <ClInclude Include="include\renderdeck\Pipe.hpp" />
     <ClInclude Include="include\renderdeck\Timer.hpp" />
+    <ClInclude Include="include\renderdeck\TypeTag.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ClearBackgroundSink.cpp" />
