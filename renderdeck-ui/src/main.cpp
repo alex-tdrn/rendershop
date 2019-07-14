@@ -69,11 +69,11 @@ int main(int argc, char** argv)
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
 
-	sink.getInputPort<ClearBackgroundSink::InputPort::Color>()
-		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>());
+	sink.getInputPort<ClearBackgroundSink::InputPorts::Color>()
+		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPorts::Color>());
 
-	pipe.getInputPort<GrayscaleColorPipe::InputPort::Color>()
-		.connect(&source.getOutputPort<RandomColorSource::OutputPort::Color>());
+	pipe.getInputPort<GrayscaleColorPipe::InputPorts::Color>()
+		.connect(&source.getOutputPort<RandomColorSource::OutputPorts::Color>());
 	
 	std::vector<Timer> timers(2);
 	timers[0].setInterval(1s);

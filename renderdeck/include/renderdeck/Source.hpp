@@ -20,11 +20,9 @@ private:
 public:
 	Source()
 	{
-		static_for(outputs.list, [&](auto& output) {
+		static_for_index(outputs.list, [&](auto& output, int index) {
 			output.setParent(this);
-		});
-
-		static_for(outputs.list, [&](auto& output) {
+			output.setName(ConcreteSource::OutputPorts::names[index]);
 			abstractOutputPorts.push_back(&output);
 		});
 	}

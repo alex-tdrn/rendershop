@@ -4,7 +4,7 @@
 
 void ClearBackgroundSink::update() const
 {
-	auto const& color = getInputPort<InputPort::Color>().getCachedValue();
+	auto const& color = getInputPort<InputPorts::Color>().getCachedValue();
 	glClearColor(color.r, color.g, color.b, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 }

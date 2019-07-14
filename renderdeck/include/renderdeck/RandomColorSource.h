@@ -2,25 +2,28 @@
 #include "renderdeck/Source.hpp"
 
 #include <glm/glm.hpp>
-#include <string>
+#include <array>
 
 class RandomColorSource : public Source<RandomColorSource, OutputList<glm::vec3>>
 {	
 public:
-	struct OutputPort
+	static inline std::string const name = "Random Color Source";
+	struct OutputPorts
 	{
+		static inline std::array names = {
+			"Color"
+		};
 		enum
 		{
 			Color
 		};
 	};
-	static inline std::string const name = "Random Color Source";
 
 protected:
 
 	void update() const override 
 	{
-		auto& color = getOutputPort<OutputPort::Color>().getMutableValue();
+		auto& color = getOutputPort<OutputPorts::Color>().getMutableValue();
 		color = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
 

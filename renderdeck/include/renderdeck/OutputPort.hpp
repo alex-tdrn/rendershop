@@ -31,6 +31,11 @@ public:
 		return typeTag<T>();
 	}
 
+	void setName(std::string name)
+	{
+		this->portName = name;
+	}
+
 	void setParent(AbstractSource* parent)
 	{
 		this->parent = parent;

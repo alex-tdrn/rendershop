@@ -11,10 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\OutputPin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\InputPin.h" />
+    <ClInclude Include="include\OutputPin.h" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Node.h" />
   </ItemGroup>

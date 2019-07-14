@@ -21,8 +21,10 @@ protected:
 public:
 	Sink()
 	{
-		static_for(inputs.list, [&](auto& input) {
+		static_for_index(inputs.list, [&](auto& input, int index) {
 			abstractInputPorts.push_back(&input);
+			input.setName(ConcreteSink::InputPorts::names[index]);
+
 		});
 	}
 	Sink(Sink const&) = delete;

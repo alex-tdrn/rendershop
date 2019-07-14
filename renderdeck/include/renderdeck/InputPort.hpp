@@ -26,6 +26,11 @@ public:
 		return typeTag<T>();
 	}
 
+	void setName(std::string name)
+	{
+		this->portName = name;
+	}
+
 	void connect(OutputPort<T>* port)
 	{
 		if(connection != port)

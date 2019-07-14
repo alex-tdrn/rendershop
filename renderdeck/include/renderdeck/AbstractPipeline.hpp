@@ -6,7 +6,14 @@
 
 class AbstractPort
 {
+protected:
+	std::string portName = "Unnamed";
+
 public:
+	std::string const& getPortName() const
+	{
+		return portName;
+	}
 	virtual int getUnderlyingTypeTag() const = 0;
 
 };
