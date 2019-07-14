@@ -2,6 +2,7 @@
 #include "renderdeck/RandomColorSource.h"
 #include "renderdeck/ClearBackgroundSink.h"
 #include "renderdeck/GrayscaleColorPipe.h"
+#include "renderdeck/MixColors.h"
 #include "renderdeck/Timer.hpp"
 
 #include <imgui.h>
@@ -68,6 +69,7 @@ int main(int argc, char** argv)
 	RandomColorSource source;
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
+	MixColors mixColors;
 
 	sink.getInputPort<ClearBackgroundSink::InputPorts::Color>()
 		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPorts::Color>());
@@ -85,6 +87,7 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&source);
 	nodes.emplace_back(&pipe);
 	nodes.emplace_back(&sink);
+	nodes.emplace_back(&mixColors);
 
 	while(!glfwWindowShouldClose(window))
 	{
