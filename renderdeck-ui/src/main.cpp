@@ -4,6 +4,8 @@
 #include "renderdeck/GrayscaleColorPipe.h"
 #include "renderdeck/MixColors.h"
 #include "renderdeck/Timer.hpp"
+#include "renderdeck/DecomposeColor.h"
+#include "renderdeck/ValueToColor.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -51,7 +53,7 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 
 	IMGUI_CHECKVERSION();
@@ -70,6 +72,8 @@ int main(int argc, char** argv)
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
 	MixColors mixColors;
+	DecomposeColor decomposeColor;
+	ValueToColor valueToColor;
 
 	sink.getInputPort<ClearBackgroundSink::InputPorts::Color>()
 		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPorts::Color>());
@@ -88,6 +92,8 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&pipe);
 	nodes.emplace_back(&sink);
 	nodes.emplace_back(&mixColors);
+	nodes.emplace_back(&decomposeColor);
+	nodes.emplace_back(&valueToColor);
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -169,7 +175,8 @@ int main(int argc, char** argv)
 		ax::NodeEditor::End();
 
 		ImGui::End();
-
+		
+		ImGui::ShowDemoWindow();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

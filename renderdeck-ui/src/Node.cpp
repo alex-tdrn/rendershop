@@ -5,7 +5,9 @@
 
 void Node::initialize()
 {
-	spacing = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
+	float titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
+	float contentsWidth = minimumSpacing;
+	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 
 	if(pipelineElement->getAbstractInputPorts().size() > 0)
 	{
@@ -16,8 +18,7 @@ void Node::initialize()
 			inputPins.emplace_back(inputPort);
 			inputsGroupWidth = std::max(inputsGroupWidth, inputPins.back().calculateSize().x);
 		}
-		spacing -= inputsGroupWidth;
-		spacing -= ImGui::GetStyle().ItemSpacing.x;
+		contentsWidth += inputsGroupWidth + itemSpacing;
 	}
 
 	if(pipelineElement->getAbstractOutputPorts().size() > 0)
@@ -29,12 +30,12 @@ void Node::initialize()
 			outputPins.emplace_back(outputPort);
 			outputsGroupWidth = std::max(outputsGroupWidth, outputPins.back().calculateSize().x);
 		}
-		spacing -= outputsGroupWidth;
-		spacing -= ImGui::GetStyle().ItemSpacing.x;
+		contentsWidth += outputsGroupWidth + itemSpacing;
 	}
 
-	if(spacing < 0)
-		spacing = 0;
+	spacing = std::max(titleWidth - contentsWidth, minimumSpacing);
+	contentsWidth += spacing - minimumSpacing;
+	titleOffset = (contentsWidth - titleWidth) / 2 - itemSpacing;
 
 	initialized = true;
 }
@@ -44,16 +45,25 @@ void Node::draw()
 	if(!initialized)
 		initialize();
 	ax::NodeEditor::BeginNode(id);
-	ImGui::Text(pipelineElement->getTypeName().c_str());
+	
+	//if(titleOffset > 0)
+	/*{
+		ImGui::Dummy({ titleOffset, 0 });
+		ImGui::SameLine();
+	}*/
 
+	ImGui::Text(pipelineElement->getTypeName().c_str());
+	
 	ImGui::BeginGroup();
 	for(auto& inputPin : inputPins)
 		inputPin.draw();
 	ImGui::EndGroup();
 
-	ImGui::SameLine();
+	if(!inputPins.empty())
+		ImGui::SameLine();
 	ImGui::Dummy({spacing, 0});
-	ImGui::SameLine();
+	if(!outputPins.empty())
+		ImGui::SameLine();
 
 	ImGui::BeginGroup();
 	for(auto& outputPin : outputPins)

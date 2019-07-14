@@ -13,11 +13,13 @@
   <ItemGroup>
     <ClInclude Include="include\renderdeck\AbstractPipeline.hpp" />
     <ClInclude Include="include\renderdeck\ClearBackgroundSink.h" />
+    <ClInclude Include="include\renderdeck\DecomposeColor.h" />
     <ClInclude Include="include\renderdeck\GrayscaleColorPipe.h" />
     <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\MixColors.h" />
     <ClInclude Include="include\renderdeck\Pipe.hpp" />
     <ClInclude Include="include\renderdeck\RandomColorSource.h" />
+    <ClInclude Include="include\renderdeck\ValueToColor.h" />
     <ClInclude Include="include\renderdeck\Sink.hpp" />
     <ClInclude Include="include\renderdeck\Source.hpp" />
     <ClInclude Include="include\renderdeck\Timer.hpp" />

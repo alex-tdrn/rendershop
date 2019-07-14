@@ -12,7 +12,9 @@ class Node
 {
 private:
 	bool initialized = false;
-	float spacing = 10;
+	float titleOffset = 0;
+	float const minimumSpacing = 20;
+	float spacing = 0;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipelineElement* pipelineElement = nullptr;
 	std::vector<InputPin> inputPins;
