@@ -6,5 +6,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Node.h" />
+    <ClInclude Include="include\UniqueID.hpp" />
   </ItemGroup>
 </Project>

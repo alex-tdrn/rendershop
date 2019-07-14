@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-class ClearBackgroundSink : public Sink<glm::vec3>
+class ClearBackgroundSink : public Sink<ClearBackgroundSink, InputList<glm::vec3>>
 {
 public:
 	struct InputPort
@@ -13,6 +13,7 @@ public:
 			Color
 		};
 	};
+	static inline std::string const name = "Clear Background Sink";
 
 protected:
 	void update() const override;

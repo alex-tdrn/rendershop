@@ -2,8 +2,9 @@
 #include "renderdeck/Source.hpp"
 
 #include <glm/glm.hpp>
+#include <string>
 
-class RandomColorSource : public Source<glm::vec3>
+class RandomColorSource : public Source<RandomColorSource, OutputList<glm::vec3>>
 {	
 public:
 	struct OutputPort
@@ -13,8 +14,10 @@ public:
 			Color
 		};
 	};
+	static inline std::string const name = "Random Color Source";
 
 protected:
+
 	void update() const override 
 	{
 		auto& color = getOutputPort<OutputPort::Color>().getMutableValue();

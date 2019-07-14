@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-class GrayscaleColorPipe : public Pipe<Sink<glm::vec3>, Source<glm::vec3>>
+class GrayscaleColorPipe : public Pipe<GrayscaleColorPipe, InputList<glm::vec3>, OutputList<glm::vec3>>
 {
 public:
 	struct InputPort
@@ -21,6 +21,7 @@ public:
 			Color
 		};
 	};
+	static inline std::string const name = "Grayscale Color Pipe";
 
 public:
 	void update() const override

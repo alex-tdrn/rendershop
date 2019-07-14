@@ -4,11 +4,6 @@
 #include <string>
 #include <vector>
 
-class TypeTag
-{
-
-};
-
 class AbstractPort
 {
 public:
@@ -28,10 +23,23 @@ class AbstractOutputPort : public AbstractPort
 class AbstractPipelineElement
 {
 protected:
-	virtual std::vector<AbstractInputPort*> const& getInputPorts() const = 0;
-	virtual std::vector<AbstractOutputPort*> const& getOutputPorts() const = 0;
-	//virtual std::string const& getName() const = 0;
+	std::vector<AbstractInputPort*> abstractInputPorts;
+	std::vector<AbstractOutputPort*> abstractOutputPorts;
+
+protected:
 	virtual void update() const = 0;	
+
+public:
+	virtual std::string const& getTypeName() const = 0;
+	std::vector<AbstractInputPort*> const& getAbstractInputPorts() const
+	{
+		return abstractInputPorts;
+	}
+
+	std::vector<AbstractOutputPort*> const& getAbstractOutputPorts() const
+	{
+		return abstractOutputPorts;
+	}
 
 };
 

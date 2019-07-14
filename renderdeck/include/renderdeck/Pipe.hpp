@@ -3,8 +3,8 @@
 #include "renderdeck/Sink.hpp"
 #include "renderdeck/Utility.hpp"
 
-template<typename Si, typename So>
-class Pipe : public Si, public So
+template<typename ConcretePipe, typename InputList, typename OutputList>
+class Pipe : virtual public Sink<ConcretePipe, InputList>, virtual public Source<ConcretePipe, OutputList>
 {
 public:
 	Pipe() = default;
@@ -15,6 +15,11 @@ public:
 	virtual ~Pipe() = default;
 
 private:
+	std::string const& getTypeName() const override
+	{
+		return ConcretePipe::name;
+	}
+
 	void trigger() const override
 	{
 		this->update();
@@ -33,7 +38,7 @@ private:
 			this->updateAllInputs();
 
 			bool outputsOutdated = false;
-			static_for(this->inputs, [&](auto const& input) {
+			static_for(this->inputs.list, [&](auto const& input) {
 				if(input.getCachedTimestamp().isNewerThan(this->timestamp))
 					outputsOutdated = true;
 			});

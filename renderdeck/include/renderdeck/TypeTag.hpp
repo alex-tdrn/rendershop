@@ -2,7 +2,7 @@
 
 namespace detail
 {
-	static inline int tag = 0;
+	inline int tag = 0;
 }
 
 template <typename T>

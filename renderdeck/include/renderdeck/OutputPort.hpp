@@ -1,6 +1,7 @@
 #pragma once
 #include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/InputPort.hpp"
+#include "renderdeck/TypeTag.hpp"
 
 #include <set>
 #include <algorithm>
@@ -9,7 +10,7 @@ template<typename T>
 class InputPort;
 
 template<typename T>
-class OutputPort
+class OutputPort : public AbstractOutputPort
 {
 private:
 	AbstractSource* parent;

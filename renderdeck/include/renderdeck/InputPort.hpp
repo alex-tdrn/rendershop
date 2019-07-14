@@ -1,4 +1,5 @@
 #pragma once
+#include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/OutputPort.hpp"
 #include "renderdeck/TypeTag.hpp"
 
@@ -6,7 +7,7 @@ template<typename T>
 class OutputPort;
 
 template<typename T>
-class InputPort
+class InputPort : public AbstractInputPort
 {
 private:
 	OutputPort<T>* connection = nullptr;

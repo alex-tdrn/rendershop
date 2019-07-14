@@ -5,17 +5,27 @@
 
 #include <tuple>
 
-template<typename... OutputTypes>
+template<typename... O>
+struct OutputList
+{
+	std::tuple<OutputPort<O>...> list;
+};
+
+template<typename ConcreteSource, typename OutputList>
 class Source : public virtual AbstractSource
 {
 private:
-	mutable std::tuple<OutputPort<OutputTypes>...> outputs;
+	mutable OutputList outputs;
 	
 public:
 	Source()
 	{
-		static_for(outputs, [&](auto& output) {
+		static_for(outputs.list, [&](auto& output) {
 			output.setParent(this);
+		});
+
+		static_for(outputs.list, [&](auto& output) {
+			abstractOutputPorts.push_back(&output);
 		});
 	}
 	Source(Source const&) = delete;
@@ -35,10 +45,15 @@ protected:
 	}
 
 public:
+	std::string const& getTypeName() const override final
+	{
+		return ConcreteSource::name;
+	}
+
 	template<int outputIndex>
 	auto& getOutputPort() const
 	{
-		return std::get<outputIndex>(outputs);
+		return std::get<outputIndex>(outputs.list);
 	}
 
 };

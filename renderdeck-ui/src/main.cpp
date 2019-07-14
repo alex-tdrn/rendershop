@@ -1,9 +1,11 @@
+#include "Node.h"
 #include "renderdeck/RandomColorSource.h"
 #include "renderdeck/ClearBackgroundSink.h"
 #include "renderdeck/GrayscaleColorPipe.h"
 #include "renderdeck/Timer.hpp"
 
 #include <imgui.h>
+#include <imgui_node_editor.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <glad/glad.h>
@@ -48,9 +50,21 @@ int main(int argc, char** argv)
 	}
 #endif
 
-	using namespace std::chrono_literals;
 	glfwSwapInterval(0);
 
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ax::NodeEditor::EditorContext* nodeEditorContext = ax::NodeEditor::CreateEditor();
+
+	ImGuiCherryStyle();
+
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 420");
+
+	
+	using namespace std::chrono_literals;
 	RandomColorSource source;
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
@@ -67,15 +81,10 @@ int main(int argc, char** argv)
 	timers[1].setInterval(1s / 50);
 	timers[1].addSink(&sink);
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	ax::NodeEditor::EditorContext* nodeEditorContext = ax::NodeEditor::CreateEditor();
-
-	ImGuiCherryStyle();
-
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 420");
+	std::vector<Node> nodes;
+	nodes.emplace_back(&source);
+	nodes.emplace_back(&pipe);
+	nodes.emplace_back(&sink);
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -104,52 +113,14 @@ int main(int argc, char** argv)
 		ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
 		ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
 
-		int uniqueId = 1;
-
-
+		for(auto& node : nodes)
 		{
-			ax::NodeEditor::BeginNode(uniqueId);
-			ImGui::Text("RandomColorSource");
-			
-			glm::vec3 output = source.getOutputPort<RandomColorSource::OutputPort::Color>().getCachedValue();
-			ImVec2 w = ImGui::CalcTextSize("RandomColorSource");
-			ImGui::Dummy({w.x - 32, w.y});
-			ImGui::SameLine();
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
-			ax::NodeEditor::PinPivotSize({0, 0});
-
-			ax::NodeEditor::EndPin();
-
-			ax::NodeEditor::EndNode();
-		}
-		
-
-		{
-			ax::NodeEditor::BeginNode(uniqueId++);
-			ImGui::Text("GrayscaleColorPipe");
-			
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("->");
-			ax::NodeEditor::PinPivotSize({ 0, 0 });
-
-			ax::NodeEditor::EndPin();
-
-			ImGui::SameLine();
-
-			ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-			glm::vec3 output = pipe.getOutputPort<GrayscaleColorPipe::OutputPort::Color>().getCachedValue();
-			//ImGui::Text("Color");
-			ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
-
-			ax::NodeEditor::EndPin();
-
-			ax::NodeEditor::EndNode();
+			node.draw();
 		}
 
+		int uniqueId = 100;
 
-
-		ax::NodeEditor::NodeId id = 0;
+		/*ax::NodeEditor::NodeId id = 0;
 		ax::NodeEditor::Suspend();
 		if(ax::NodeEditor::ShowNodeContextMenu(&id))
 			ImGui::OpenPopup("Node Context Menu");
@@ -190,16 +161,11 @@ int main(int argc, char** argv)
 		if(ax::NodeEditor::BeginCreate())
 		{
 		}
-		ax::NodeEditor::EndCreate();
-
-		ax::NodeEditor::Link(uniqueId++, 2, 4);
-		ax::NodeEditor::Flow(uniqueId - 1);
+		ax::NodeEditor::EndCreate();*/
 
 		ax::NodeEditor::End();
 
 		ImGui::End();
-
-		ImGui::ShowDemoWindow();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
