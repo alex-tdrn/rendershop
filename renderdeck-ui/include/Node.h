@@ -15,6 +15,7 @@ private:
 	float titleOffset = 0;
 	float const minimumSpacing = 20;
 	float spacing = 0;
+	ImVec4 titleRect;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipelineElement* pipelineElement = nullptr;
 	std::vector<InputPin> inputPins;
