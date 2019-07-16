@@ -171,11 +171,35 @@ int main(int argc, char** argv)
 			ImGui::EndPopup();
 		}
 		ax::NodeEditor::Resume();
+		*/
+
 
 		if(ax::NodeEditor::BeginCreate())
 		{
+			ax::NodeEditor::PinId startPinId = 0, endPinId = 0;
+			//if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId))
+			//{
+			//}
+
+			//ax::NodeEditor::PinId pinId = 0;
+			//if(ax::NodeEditor::QueryNewNode(&pinId))
+			//{
+			//	newLinkPin = FindPin(pinId);
+			//	if(newLinkPin)
+			//		showLabel("+ Create Node", ImColor(32, 45, 32, 180));
+
+			//	if(ax::NodeEditor::AcceptNewItem())
+			//	{
+			//		createNewNode = true;
+			//		newNodeLinkPin = FindPin(pinId);
+			//		newLinkPin = nullptr;
+			//		ax::NodeEditor::Suspend();
+			//		ImGui::OpenPopup("Create New Node");
+			//		ax::NodeEditor::Resume();
+			//	}
+			//}
 		}
-		ax::NodeEditor::EndCreate();*/
+		ax::NodeEditor::EndCreate();
 
 		ax::NodeEditor::End();
 
