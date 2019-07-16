@@ -6,15 +6,14 @@
 
 void Node::initialize()
 {
-	static float const minimumPinGroupSpacing = 20;
-
-	float contentsWidth = minimumPinGroupSpacing;
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
+	float const minimumCenterSpacing = 20;
+	float contentsWidth = 0;
 
 	auto initializePinGroup = [&](auto& uiPins, auto& logicalPins) {
+		float pinGroupWidth = 0;
 		if(logicalPins.size() > 0)
 		{
-			float pinGroupWidth = 0;
 			uiPins.reserve(logicalPins.size());
 			for(auto inputPort : logicalPins)
 			{
@@ -23,32 +22,35 @@ void Node::initialize()
 			}
 			contentsWidth += pinGroupWidth + itemSpacing;
 		}
+		return pinGroupWidth;
 	};
 
-	initializePinGroup(inputPins, pipelineElement->getAbstractInputPorts());
-	initializePinGroup(outputPins, pipelineElement->getAbstractOutputPorts());
+	float const inputGroupWidth = initializePinGroup(inputPins, pipelineElement->getAbstractInputPorts());
+	float const outputGroupWidth = initializePinGroup(outputPins, pipelineElement->getAbstractOutputPorts());
+	float const titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
 
-	float titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
-	pinGroupSpacing = std::max(titleWidth - contentsWidth, minimumPinGroupSpacing);
-	contentsWidth += pinGroupSpacing - minimumPinGroupSpacing;
-	titleOffset = (contentsWidth - titleWidth) / 2 - itemSpacing;
+	if(titleWidth > contentsWidth + minimumCenterSpacing)
+	{
+		centerSpacing = titleWidth - contentsWidth;
+	}
+	else
+	{
+		centerSpacing = minimumCenterSpacing;
+		titleOffset = (contentsWidth + centerSpacing - titleWidth) / 2;
+	}
 
 	initialized = true;
 }
 
 void Node::drawTitle()
 {
-	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
+	if(titleOffset > 0)
+		ImGui::Indent(titleOffset);
+
+	ImGui::Text(pipelineElement->getTypeName().c_str());
 
 	if(titleOffset > 0)
-	{
-		drawRect(drawList, ImGui::GetCursorPos(), titleOffset);
-		ImGui::Dummy({ titleOffset, 0 });
-		ImGui::SameLine();
-		drawSpacingRect(drawList);
-	}
-	ImGui::Text(pipelineElement->getTypeName().c_str());
-	drawItemRect(drawList);
+		ImGui::Unindent(titleOffset);
 }
 
 void Node::drawInputs()
@@ -77,26 +79,27 @@ void Node::draw()
 	drawTitle();
 
 	drawInputs();
-	drawItemRect(drawList);
+	debug::drawItemRect(drawList);
 
 	if(!inputPins.empty())
 	{
 		ImGui::SameLine();
-		drawSpacingRect(drawList);
+		debug::drawSpacingRect(drawList);
 	}
 
-	ImGui::Dummy({pinGroupSpacing, 0});
-	drawItemRect(drawList);
+	ImGui::Dummy({centerSpacing, 0});
+	debug::drawItemRect(drawList);
 
 	if(!outputPins.empty())
 	{
 		ImGui::SameLine();
-		drawSpacingRect(drawList);
+		debug::drawSpacingRect(drawList);
 	}
 
 	drawOutputs();
-	drawItemRect(drawList);
+	debug::drawItemRect(drawList);
 
 	ax::NodeEditor::EndNode();
-	drawItemRect(drawList);
+	debug::drawItemRect(drawList);
+
 }

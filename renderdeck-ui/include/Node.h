@@ -13,7 +13,7 @@ class Node
 private:
 	bool initialized = false;
 	float titleOffset = 0;
-	float pinGroupSpacing = 0;
+	float centerSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipelineElement* pipelineElement = nullptr;
 	std::vector<InputPin> inputPins;
