@@ -3,6 +3,7 @@
 
 static inline void drawItemRect(ImDrawList* drawList)
 {
+#ifdef DEBUG
 	auto min = ImGui::GetItemRectMin();
 	auto max = ImGui::GetItemRectMax();
 	
@@ -13,10 +14,12 @@ static inline void drawItemRect(ImDrawList* drawList)
 		max.y = min.y + minSize;
 
 	drawList->AddRect(min, max, ImGui::GetColorU32(ImVec4{ 1, 0, 1, 1 }));
+#endif
 }
 
 static inline void drawSpacingRect(ImDrawList* drawList)
 {
+#ifdef DEBUG
 	auto cursor = ImGui::GetCursorPos();
 	drawList->AddRect(
 		{
@@ -27,20 +30,25 @@ static inline void drawSpacingRect(ImDrawList* drawList)
 			cursor.y + ImGui::GetTextLineHeight() + ImGui::GetStyle().ItemSpacing.y
 		}, ImGui::GetColorU32(ImVec4{ 1, 1, 0, 1 }))
 	;
+#endif
 }
 
 static inline void drawRect(ImDrawList* drawList, ImVec2 start, float w)
 {
+#ifdef DEBUG
 	drawList->AddRect(start, {
 			start.x + w,
 			start.y + ImGui::GetTextLineHeight() + ImGui::GetStyle().ItemSpacing.y
 		}, ImGui::GetColorU32(ImVec4{0, 1, 1, 1 }));
+#endif
 }
 
 static inline void drawRect(ImDrawList* drawList, ImVec2 start, float w, float h)
 {
+#ifdef DEBUG
 	drawList->AddRect(start, {
 		start.x + w,
 		start.y + h
 		}, ImGui::GetColorU32(ImVec4{ 0, 1, 1, 1 }));
+#endif
 }

@@ -6,38 +6,31 @@
 
 void Node::initialize()
 {
-	static float const minimumInputOutputSpacing = 20;
+	static float const minimumPinGroupSpacing = 20;
 
-	float titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
-	float contentsWidth = minimumInputOutputSpacing;
+	float contentsWidth = minimumPinGroupSpacing;
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 
-	if(pipelineElement->getAbstractInputPorts().size() > 0)
-	{
-		float inputsGroupWidth = 0;
-		inputPins.reserve(pipelineElement->getAbstractInputPorts().size());
-		for(auto inputPort : pipelineElement->getAbstractInputPorts())
+	auto initializePinGroup = [&](auto& uiPins, auto& logicalPins) {
+		if(logicalPins.size() > 0)
 		{
-			inputPins.emplace_back(inputPort);
-			inputsGroupWidth = std::max(inputsGroupWidth, inputPins.back().calculateSize().x);
+			float pinGroupWidth = 0;
+			uiPins.reserve(logicalPins.size());
+			for(auto inputPort : logicalPins)
+			{
+				uiPins.emplace_back(inputPort);
+				pinGroupWidth = std::max(pinGroupWidth, uiPins.back().calculateSize().x);
+			}
+			contentsWidth += pinGroupWidth + itemSpacing;
 		}
-		contentsWidth += inputsGroupWidth + itemSpacing;
-	}
+	};
 
-	if(pipelineElement->getAbstractOutputPorts().size() > 0)
-	{
-		float outputsGroupWidth = 0;
-		outputPins.reserve(pipelineElement->getAbstractOutputPorts().size());
-		for(auto outputPort : pipelineElement->getAbstractOutputPorts())
-		{
-			outputPins.emplace_back(outputPort);
-			outputsGroupWidth = std::max(outputsGroupWidth, outputPins.back().calculateSize().x);
-		}
-		contentsWidth += outputsGroupWidth + itemSpacing;
-	}
+	initializePinGroup(inputPins, pipelineElement->getAbstractInputPorts());
+	initializePinGroup(outputPins, pipelineElement->getAbstractOutputPorts());
 
-	centralSpacing = std::max(titleWidth - contentsWidth, minimumInputOutputSpacing);
-	contentsWidth += centralSpacing - minimumInputOutputSpacing;
+	float titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
+	pinGroupSpacing = std::max(titleWidth - contentsWidth, minimumPinGroupSpacing);
+	contentsWidth += pinGroupSpacing - minimumPinGroupSpacing;
 	titleOffset = (contentsWidth - titleWidth) / 2 - itemSpacing;
 
 	initialized = true;
@@ -92,7 +85,7 @@ void Node::draw()
 		drawSpacingRect(drawList);
 	}
 
-	ImGui::Dummy({centralSpacing, 0});
+	ImGui::Dummy({pinGroupSpacing, 0});
 	drawItemRect(drawList);
 
 	if(!outputPins.empty())
