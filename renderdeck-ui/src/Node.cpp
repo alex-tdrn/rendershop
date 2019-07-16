@@ -6,8 +6,10 @@
 
 void Node::initialize()
 {
+	static float const minimumInputOutputSpacing = 20;
+
 	float titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
-	float contentsWidth = minimumSpacing;
+	float contentsWidth = minimumInputOutputSpacing;
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 
 	if(pipelineElement->getAbstractInputPorts().size() > 0)
@@ -34,50 +36,55 @@ void Node::initialize()
 		contentsWidth += outputsGroupWidth + itemSpacing;
 	}
 
-	spacing = std::max(titleWidth - contentsWidth, minimumSpacing);
-	contentsWidth += spacing - minimumSpacing;
+	centralSpacing = std::max(titleWidth - contentsWidth, minimumInputOutputSpacing);
+	contentsWidth += centralSpacing - minimumInputOutputSpacing;
 	titleOffset = (contentsWidth - titleWidth) / 2 - itemSpacing;
 
-	ImVec2 padding = {ax::NodeEditor::GetStyle().NodePadding.x, ax::NodeEditor::GetStyle().NodePadding.y};
-	//padding.x += ImGui::GetStyle().FramePadding.x;
-	//padding.y += ImGui::GetStyle().FramePadding.y;
-	//padding.x += ax::NodeEditor::GetStyle().NodePadding.x;
-	//padding.y += ax::NodeEditor::GetStyle().NodePadding.y;
-	titleRect = {
-		ImGui::GetCursorPosX() - padding.x,
-		ImGui::GetCursorPosY() - padding.y,
-		ImGui::GetCursorPosX() + titleOffset,
-		ImGui::GetCursorPosY() + 1.25f * ImGui::GetTextLineHeight()
-	};
 	initialized = true;
 }
 
-void Node::draw()
+void Node::drawTitle()
 {
-	ax::NodeEditor::BeginNode(id);
-	if(!initialized)
-		initialize();
 	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
+
 	if(titleOffset > 0)
 	{
-		//drawRectAtCursor(id, 0, 1, 1, titleOffset);
+		drawRect(drawList, ImGui::GetCursorPos(), titleOffset);
 		ImGui::Dummy({ titleOffset, 0 });
 		ImGui::SameLine();
 		drawSpacingRect(drawList);
 	}
 	ImGui::Text(pipelineElement->getTypeName().c_str());
-	drawItemRect(drawList, 1, 0, 1);
+	drawItemRect(drawList);
+}
 
-	/*ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRectFilled({titleRect.x, titleRect.y}, { titleRect.z, titleRect.w }, 
-		ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive]), ax::NodeEditor::GetStyle().NodeRounding,
-		ImDrawCornerFlags_Top);*/
-
+void Node::drawInputs()
+{
 	ImGui::BeginGroup();
 	for(auto& inputPin : inputPins)
 		inputPin.draw();
 	ImGui::EndGroup();
+}
 
-	drawItemRect(drawList, 1, 0, 0);
+void Node::drawOutputs()
+{
+	ImGui::BeginGroup();
+	for(auto& outputPin : outputPins)
+		outputPin.draw();
+	ImGui::EndGroup();
+}
+
+void Node::draw()
+{
+	ax::NodeEditor::BeginNode(id);
+	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
+	if(!initialized)
+		initialize();
+
+	drawTitle();
+
+	drawInputs();
+	drawItemRect(drawList);
 
 	if(!inputPins.empty())
 	{
@@ -85,9 +92,8 @@ void Node::draw()
 		drawSpacingRect(drawList);
 	}
 
-	//drawRectAtCursor(id, 0, 1, 1, spacing);
-	ImGui::Dummy({spacing, 0});
-	drawItemRect(drawList, 1, 0, 1);
+	ImGui::Dummy({centralSpacing, 0});
+	drawItemRect(drawList);
 
 	if(!outputPins.empty())
 	{
@@ -95,14 +101,9 @@ void Node::draw()
 		drawSpacingRect(drawList);
 	}
 
-	ImGui::BeginGroup();
-	for(auto& outputPin : outputPins)
-		outputPin.draw();
-
-	ImGui::EndGroup();
-	drawItemRect(drawList, 0, 1, 0);
+	drawOutputs();
+	drawItemRect(drawList);
 
 	ax::NodeEditor::EndNode();
-	drawItemRect(drawList, 0, 0, 0.5);
-	
+	drawItemRect(drawList);
 }

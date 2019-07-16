@@ -13,9 +13,7 @@ class Node
 private:
 	bool initialized = false;
 	float titleOffset = 0;
-	float const minimumSpacing = 20;
-	float spacing = 0;
-	ImVec4 titleRect;
+	float centralSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipelineElement* pipelineElement = nullptr;
 	std::vector<InputPin> inputPins;
@@ -35,6 +33,9 @@ public:
 
 private:
 	void initialize();
+	void drawTitle();
+	void drawInputs();
+	void drawOutputs();
 
 public:
 	void draw();
