@@ -86,4 +86,13 @@ public:
 		return parent->getTimestamp();
 	}
 
+
+	std::vector<AbstractInputPort*> getConnectedPorts() const override
+	{
+		std::vector<AbstractInputPort*> ports;
+		for(auto port : connections)
+			ports.push_back(port);
+		return ports;
+	}
+
 };

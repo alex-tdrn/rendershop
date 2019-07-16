@@ -5,12 +5,14 @@
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
+    <ClCompile Include="Link.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\OutputPin.h" />
-    <ClInclude Include="include\UIUtilities.hpp" />
+    <ClInclude Include="include\UIDebug.hpp" />
+    <ClInclude Include="include\Link.h" />
   </ItemGroup>
 </Project>

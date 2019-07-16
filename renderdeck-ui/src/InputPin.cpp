@@ -1,5 +1,24 @@
 #include "InputPin.h"
+#include "UniqueID.hpp"
 #include "renderdeck/AbstractPipeline.hpp"
+
+InputPin::InputPin(AbstractInputPort* port)
+	: port(port), id(uniqueID())
+{
+	portMap[port] = id;
+}
+
+InputPin::~InputPin()
+{
+	portMap.erase(port);
+}
+
+ax::NodeEditor::PinId InputPin::getIDForPort(AbstractInputPort const* port)
+{
+	if(portMap.find(port) != portMap.end())
+		return portMap[port];
+	return -1;
+}
 
 void InputPin::draw()
 {

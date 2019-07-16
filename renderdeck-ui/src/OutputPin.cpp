@@ -1,5 +1,25 @@
 #include "OutputPin.h"
+#include "UniqueID.hpp"
+
 #include "renderdeck/AbstractPipeline.hpp"
+
+OutputPin::OutputPin(AbstractOutputPort* port)
+	: port(port), id(uniqueID())
+{
+	portMap[port] = id;
+}
+
+OutputPin::~OutputPin()
+{
+	portMap.erase(port);
+}
+
+ax::NodeEditor::PinId OutputPin::getIDForPort(AbstractOutputPort const* port)
+{
+	if(portMap.find(port) != portMap.end())
+		return portMap[port];
+	return -1;
+}
 
 void OutputPin::draw()
 {

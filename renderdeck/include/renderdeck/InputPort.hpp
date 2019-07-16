@@ -66,4 +66,9 @@ public:
 		return connection->getCachedTimestamp();
 	}
 
+	AbstractOutputPort* getConnectedPort() const override
+	{
+		return connection;
+	}
+
 };

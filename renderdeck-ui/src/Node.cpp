@@ -1,32 +1,38 @@
 #include "Node.h"
-#include "UIUtilities.hpp"
+#include "UIDebug.hpp"
 #include "renderdeck/AbstractPipeline.hpp"
 
 #include <algorithm>
 
-void Node::initialize()
+Node::Node(AbstractPipelineElement* element)
+	: pipelineElement(element), id(uniqueID())
+{
+	for(auto inputPort : pipelineElement->getAbstractInputPorts())
+		inputPins.emplace_back(inputPort);
+
+	for(auto outputPin : pipelineElement->getAbstractOutputPorts())
+		outputPins.emplace_back(outputPin);
+}
+
+void Node::initializeLayout()
 {
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 	float const minimumCenterSpacing = 20;
 	float contentsWidth = 0;
 
-	auto initializePinGroup = [&](auto& uiPins, auto& logicalPins) {
+	auto measurePinGroup = [&](auto& pins) {
 		float pinGroupWidth = 0;
-		if(logicalPins.size() > 0)
+		if(pins.size() > 0)
 		{
-			uiPins.reserve(logicalPins.size());
-			for(auto inputPort : logicalPins)
-			{
-				uiPins.emplace_back(inputPort);
-				pinGroupWidth = std::max(pinGroupWidth, uiPins.back().calculateSize().x);
-			}
+			for(auto const& pin : pins)
+				pinGroupWidth = std::max(pinGroupWidth, pin.calculateSize().x);
 			contentsWidth += pinGroupWidth + itemSpacing;
 		}
 		return pinGroupWidth;
 	};
 
-	float const inputGroupWidth = initializePinGroup(inputPins, pipelineElement->getAbstractInputPorts());
-	float const outputGroupWidth = initializePinGroup(outputPins, pipelineElement->getAbstractOutputPorts());
+	float const inputGroupWidth = measurePinGroup(inputPins);
+	float const outputGroupWidth = measurePinGroup(outputPins);
 	float const titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
 
 	if(titleWidth > contentsWidth + minimumCenterSpacing)
@@ -39,7 +45,6 @@ void Node::initialize()
 		titleOffset = (contentsWidth + centerSpacing - titleWidth) / 2;
 	}
 
-	initialized = true;
 }
 
 void Node::drawTitle()
@@ -55,6 +60,8 @@ void Node::drawTitle()
 
 void Node::drawInputs()
 {
+	if(inputPins.empty())
+		return;
 	ImGui::BeginGroup();
 	for(auto& inputPin : inputPins)
 		inputPin.draw();
@@ -63,6 +70,8 @@ void Node::drawInputs()
 
 void Node::drawOutputs()
 {
+	if(outputPins.empty())
+		return;
 	ImGui::BeginGroup();
 	for(auto& outputPin : outputPins)
 		outputPin.draw();
@@ -73,13 +82,15 @@ void Node::draw()
 {
 	ax::NodeEditor::BeginNode(id);
 	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
-	if(!initialized)
-		initialize();
+
+	if(!layoutInitialized)
+		initializeLayout();
 
 	drawTitle();
 
 	drawInputs();
-	debug::drawItemRect(drawList);
+	if(!inputPins.empty())
+		debug::drawItemRect(drawList);
 
 	if(!inputPins.empty())
 	{
@@ -97,9 +108,20 @@ void Node::draw()
 	}
 
 	drawOutputs();
-	debug::drawItemRect(drawList);
+	if(!outputPins.empty())
+		debug::drawItemRect(drawList);
 
 	ax::NodeEditor::EndNode();
 	debug::drawItemRect(drawList);
 
+}
+
+std::vector<Link> Node::getInputLinks() const
+{
+	std::vector<Link> links;
+
+	for(auto const& inputPin : inputPins)
+		links.emplace_back(inputPin.getPort(), inputPin.getPort()->getConnectedPort());
+
+	return links;
 }

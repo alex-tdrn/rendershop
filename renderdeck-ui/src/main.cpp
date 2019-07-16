@@ -1,4 +1,3 @@
-#include "Node.h"
 #include "renderdeck/RandomColorSource.h"
 #include "renderdeck/ClearBackgroundSink.h"
 #include "renderdeck/GrayscaleColorPipe.h"
@@ -6,6 +5,8 @@
 #include "renderdeck/Timer.hpp"
 #include "renderdeck/DecomposeColor.h"
 #include "renderdeck/ValueToColor.h"
+#include "Node.h"
+#include "Link.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -95,6 +96,11 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&decomposeColor);
 	nodes.emplace_back(&valueToColor);
 
+	std::vector<Link> links;
+	for(auto const& node : nodes)
+		for(auto& link : node.getInputLinks())
+			links.push_back(std::move(link));
+
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
@@ -123,11 +129,10 @@ int main(int argc, char** argv)
 		ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
 
 		for(auto& node : nodes)
-		{
 			node.draw();
-		}
 
-		int uniqueId = 100;
+		for(auto& link : links)
+			link.draw();
 
 		/*ax::NodeEditor::NodeId id = 0;
 		ax::NodeEditor::Suspend();

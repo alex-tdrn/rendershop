@@ -18,13 +18,21 @@ public:
 
 };
 
+class AbstractOutputPort;
+
 //TODO dynamic connection functions
 class AbstractInputPort : public AbstractPort
 {
+public:
+	virtual AbstractOutputPort* getConnectedPort() const = 0;
+
 };
 
 class AbstractOutputPort : public AbstractPort
 {
+public:
+	virtual std::vector<AbstractInputPort*> getConnectedPorts() const = 0;
+
 };
 
 class AbstractPipelineElement
