@@ -19,6 +19,7 @@
   <ItemGroup>
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\OutputPin.h" />
+    <ClInclude Include="include\UIUtilities.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Node.h" />
   </ItemGroup>

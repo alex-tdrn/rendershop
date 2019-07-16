@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "UIUtilities.hpp"
 #include "renderdeck/AbstractPipeline.hpp"
 
 #include <algorithm>
@@ -51,54 +52,21 @@ void Node::initialize()
 	initialized = true;
 }
 
-static void drawItemRect(ax::NodeEditor::NodeId id, float r, float g, float b)
-{
-	ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(),
-		ImGui::GetColorU32(ImVec4{r, g, b, 1}));	
-}
-
-static void drawItemSpacing(ax::NodeEditor::NodeId id)
-{
-	ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRect(
-		{
-			ImGui::GetCursorPosX() - ImGui::GetStyle().ItemSpacing.x,
-			ImGui::GetCursorPosY(),
-		}, {
-			ImGui::GetCursorPosX(),
-			ImGui::GetCursorPosY() + ImGui::GetTextLineHeight() + ImGui::GetStyle().ItemSpacing.y
-		},
-		ImGui::GetColorU32(ImVec4{ 1, 1, 0, 1 }))
-		;
-}
-
-static void drawRectAtCursor(ax::NodeEditor::NodeId id, float r, float g, float b, float w)
-{
-	ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRect(
-		{
-			ImGui::GetCursorPosX(),
-			ImGui::GetCursorPosY(),
-		}, {
-			ImGui::GetCursorPosX() + w,
-			ImGui::GetCursorPosY() + ImGui::GetTextLineHeight()
-		},
-		ImGui::GetColorU32(ImVec4{ r, g, b, 1 }))
-	;
-}
-
 void Node::draw()
 {
 	ax::NodeEditor::BeginNode(id);
 	if(!initialized)
 		initialize();
+	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
 	if(titleOffset > 0)
 	{
-		drawRectAtCursor(id, 0, 1, 1, titleOffset);
+		//drawRectAtCursor(id, 0, 1, 1, titleOffset);
 		ImGui::Dummy({ titleOffset, 0 });
 		ImGui::SameLine();
-		drawItemSpacing(id);
+		drawSpacingRect(drawList);
 	}
 	ImGui::Text(pipelineElement->getTypeName().c_str());
-	drawItemRect(id, 0, 0, 1);
+	drawItemRect(drawList, 1, 0, 1);
 
 	/*ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRectFilled({titleRect.x, titleRect.y}, { titleRect.z, titleRect.w }, 
 		ImGui::GetColorU32(ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive]), ax::NodeEditor::GetStyle().NodeRounding,
@@ -108,44 +76,33 @@ void Node::draw()
 	for(auto& inputPin : inputPins)
 		inputPin.draw();
 	ImGui::EndGroup();
-	drawItemRect(id, 1, 0, 0);
+
+	drawItemRect(drawList, 1, 0, 0);
 
 	if(!inputPins.empty())
 	{
 		ImGui::SameLine();
-		drawItemSpacing(id);
+		drawSpacingRect(drawList);
 	}
-	drawRectAtCursor(id, 0, 1, 1, spacing);
+
+	//drawRectAtCursor(id, 0, 1, 1, spacing);
 	ImGui::Dummy({spacing, 0});
+	drawItemRect(drawList, 1, 0, 1);
+
 	if(!outputPins.empty())
 	{
 		ImGui::SameLine();
-		drawItemSpacing(id);
+		drawSpacingRect(drawList);
 	}
 
 	ImGui::BeginGroup();
 	for(auto& outputPin : outputPins)
 		outputPin.draw();
-	ImGui::EndGroup();
-	drawItemRect(id, 0, 1, 0);
 
-	/*ImGui::Dummy({ w.x - 32, w.y });
-	ImGui::SameLine();
-	ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-	ImGui::ColorButton("GrayscaleColorPipe", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
-	ax::NodeEditor::PinPivotSize({ 0, 0 });*/
-	//ax::NodeEditor::EndPin();
+	ImGui::EndGroup();
+	drawItemRect(drawList, 0, 1, 0);
 
 	ax::NodeEditor::EndNode();
-	drawItemRect(id, 0, 0, 0.5);
-	ax::NodeEditor::GetNodeBackgroundDrawList(id)->AddRect(
-		{
-			ImGui::GetItemRectMin().x + ax::NodeEditor::GetStyle().NodePadding.x,
-			ImGui::GetItemRectMin().y + ax::NodeEditor::GetStyle().NodePadding.y,
-		},{	
-			ImGui::GetItemRectMax().x - ax::NodeEditor::GetStyle().NodePadding.x,
-			ImGui::GetItemRectMax().y - ax::NodeEditor::GetStyle().NodePadding.y,
-		},
-		ImGui::GetColorU32(ImVec4{ 0, 0, 0.75, 1 })
-	);
+	drawItemRect(drawList, 0, 0, 0.5);
+	
 }
