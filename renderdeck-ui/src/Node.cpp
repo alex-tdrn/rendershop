@@ -53,9 +53,9 @@ void Node::drawTitle()
 	auto const& nodeEditorStyle = ax::NodeEditor::GetStyle();
 	ImVec2 min = ImGui::GetCursorPos();
 	ImVec2 max = min;
-	min.x -= nodeEditorStyle.NodePadding.x;
-	min.y -= nodeEditorStyle.NodePadding.y;
-	max.x += nodeEditorStyle.NodePadding.z;
+	min.x -= nodeEditorStyle.NodePadding.x - nodeEditorStyle.NodeBorderWidth;
+	min.y -= nodeEditorStyle.NodePadding.y - nodeEditorStyle.NodeBorderWidth;
+	max.x += nodeEditorStyle.NodePadding.z - nodeEditorStyle.NodeBorderWidth;
 
 	auto const& coreStyle = ImGui::GetStyle();
 	max.x += contentsWidth;
