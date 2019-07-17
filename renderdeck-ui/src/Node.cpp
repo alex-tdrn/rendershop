@@ -18,7 +18,6 @@ void Node::initializeLayout()
 {
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 	float const minimumCenterSpacing = 20;
-	float contentsWidth = 0;
 
 	auto measurePinGroup = [&](auto& pins) {
 		float pinGroupWidth = 0;
@@ -44,11 +43,27 @@ void Node::initializeLayout()
 		centerSpacing = minimumCenterSpacing;
 		titleOffset = (contentsWidth + centerSpacing - titleWidth) / 2;
 	}
+	contentsWidth += centerSpacing;
 
+	layoutInitialized = true;
 }
 
 void Node::drawTitle()
 {
+	auto const& nodeEditorStyle = ax::NodeEditor::GetStyle();
+	ImVec2 min = ImGui::GetCursorPos();
+	ImVec2 max = min;
+	min.x -= nodeEditorStyle.NodePadding.x;
+	min.y -= nodeEditorStyle.NodePadding.y;
+	max.x += nodeEditorStyle.NodePadding.z;
+
+	auto const& coreStyle = ImGui::GetStyle();
+	max.x += contentsWidth;
+	max.y += ImGui::GetTextLineHeight();
+	auto color = ImGui::GetColorU32(coreStyle.Colors[ImGuiCol_TitleBgActive]);
+	auto drawList = ax::NodeEditor::GetNodeBackgroundDrawList(id);
+	drawList->AddRectFilled(min, max, color, nodeEditorStyle.NodeRounding, ImDrawCornerFlags_Top);
+
 	if(titleOffset > 0)
 		ImGui::Indent(titleOffset);
 

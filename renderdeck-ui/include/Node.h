@@ -13,6 +13,7 @@ class Node
 {
 private:
 	bool layoutInitialized = false;
+	float contentsWidth = 0;
 	float titleOffset = 0;
 	float centerSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
