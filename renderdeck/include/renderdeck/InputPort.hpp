@@ -20,27 +20,29 @@ public:
 	~InputPort() = default;
 
 public:
-	bool connect(OutputPort<T>* port)
+	void connect(OutputPort<T>* port)
 	{
 		if(connection != port)
 		{
 			disconnect();
 			connection = port;
-			if(!port->connect(this))
-				connection = nullptr;
-			else 
-				return true;
+			port->connect(this);
 		}
-		return true;
 	}
 
-	bool connect(ResourcePort<T>* port) final override
+	void connect(AbstractPort* port) final override
 	{
-		auto concretePort = dynamic_cast<OutputPort<T>*>(port);
-		if(!concretePort)
+		if(!canConnect(port))
+			return;
+		connect(static_cast<OutputPort<T>*>(port));
+	}
+
+	bool canConnect(AbstractPort* port) final override
+	{
+		if(!dynamic_cast<OutputPort<T>*>(port))
 			return false;
 		else
-			return connect(concretePort);
+			return true;
 	}
 
 	void disconnect() final override

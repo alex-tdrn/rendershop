@@ -76,12 +76,6 @@ int main(int argc, char** argv)
 	DecomposeColor decomposeColor;
 	ValueToColor valueToColor;
 
-	sink.getInputPort<ClearBackgroundSink::InputPorts::Color>()
-		.connect(&pipe.getOutputPort<GrayscaleColorPipe::OutputPorts::Color>());
-
-	pipe.getInputPort<GrayscaleColorPipe::InputPorts::Color>()
-		.connect(&source.getOutputPort<RandomColorSource::OutputPorts::Color>());
-	
 	std::vector<Timer> timers(2);
 	timers[0].setInterval(1s);
 	timers[0].addSource(&source);
@@ -98,9 +92,7 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&valueToColor);
 
 	std::vector<Link> links;
-	for(auto const& node : nodes)
-		for(auto& link : node.getInputLinks())
-			links.push_back(std::move(link));
+
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -119,9 +111,9 @@ int main(int argc, char** argv)
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize(io.DisplaySize);
+		//ImGui::SetNextWindowSize(io.DisplaySize);
 		ImGui::Begin("Pipeline Canvas", nullptr, 
-			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoTitleBar | /*ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
 			ImGuiWindowFlags_NoBringToFrontOnFocus
 		);
@@ -138,20 +130,23 @@ int main(int argc, char** argv)
 		if(ax::NodeEditor::BeginCreate())
 		{
 			ax::NodeEditor::PinId startPinId = 0, endPinId = 0;
-			if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId))
+			if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId) && startPinId != endPinId)
 			{
 				auto startPin = AbstractPin::getPinForID(startPinId);
 				auto endPin = AbstractPin::getPinForID(endPinId);
 				if(startPin->connect(endPin))
-					ax::NodeEditor::AcceptNewItem();
-				else
-					ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
-
-				if(ax::NodeEditor::AcceptNewItem())
 				{
-					ax::NodeEditor::Suspend();
-					ImGui::OpenPopup("<<Create New Link>>");
-					ax::NodeEditor::Resume();
+					if(ax::NodeEditor::AcceptNewItem({ 0, 1, 0, 1, }, 2))
+					{
+						ax::NodeEditor::Suspend();
+						ImGui::OpenPopup("<<Create New Link>>");
+						ax::NodeEditor::Resume();
+						links.push_back(Link(startPin->getPort(), endPin->getPort()));
+					}
+				}
+				else
+				{
+					ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
 				}
 			}
 

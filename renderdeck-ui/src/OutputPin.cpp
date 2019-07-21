@@ -1,27 +1,13 @@
 #include "OutputPin.h"
 #include "InputPin.h"
-#include "UniqueID.hpp"
 
 #include "renderdeck/AbstractPipeline.hpp"
 #include "renderdeck/OutputPort.hpp"
 #include <glm/glm.hpp>
 
 OutputPin::OutputPin(AbstractResourcePort* port)
-	: AbstractPin(uniqueID()), port(port)
+	: AbstractPin(port)
 {
-	portMap[port] = id;
-}
-
-OutputPin::~OutputPin()
-{
-	portMap.erase(port);
-}
-
-ax::NodeEditor::PinId OutputPin::getIDForPort(AbstractResourcePort const* port)
-{
-	if(portMap.find(port) != portMap.end())
-		return portMap[port];
-	return -1;
 }
 
 void OutputPin::draw()
@@ -47,15 +33,4 @@ void OutputPin::draw()
 ImVec2 OutputPin::calculateSize() const
 {
 	return ImGui::CalcTextSize(port->getName().c_str());
-}
-
-bool OutputPin::connect(AbstractPin const* otherPin) const
-{
-	auto input = dynamic_cast<InputPin const*>(otherPin);
-	if(input == nullptr)
-		return false;
-
-	auto inputPort = input->getPort();
-
-	return false;
 }

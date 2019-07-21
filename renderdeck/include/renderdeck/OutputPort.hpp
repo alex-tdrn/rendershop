@@ -25,29 +25,27 @@ public:
 	~OutputPort() = default;
 
 public:
-	bool connect(InputPort<T>* port)
+	void connect(InputPort<T>* port)
 	{
 		if(connections.find(port) != connections.end())
-			return true;
+			return;
 		connections.insert(port);
-		if(!port->connect(this))
-		{
-			connections.erase(port);
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		port->connect(this);
 	}
 
-	bool connect(ResourcePort<T>* port) final override
+	void connect(AbstractPort* port) final override
 	{
-		auto concretePort = dynamic_cast<InputPort<T>*>(port);
-		if(!concretePort)
+		if(!canConnect(port))
+			return;
+		connect(static_cast<InputPort<T>*>(port));
+	}
+
+	bool canConnect(AbstractPort* port) final override
+	{
+		if(!dynamic_cast<InputPort<T>*>(port))
 			return false;
 		else
-			connect(concretePort);
+			return true;
 	}
 
 	void disconnect(InputPort<T>* port)

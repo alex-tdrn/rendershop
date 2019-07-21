@@ -22,14 +22,5 @@ public:
 	}
 
 	virtual T const& getResource() const = 0;
-	virtual bool connect(ResourcePort<T>* port) = 0;
-	bool connect(AbstractPort* port) final override
-	{
-		auto concretePort = dynamic_cast<ResourcePort<T>*>(port);
-		if(!concretePort)
-			return false;
-		else 
-			return connect(concretePort);
-	}
 
 };

@@ -1,24 +1,9 @@
 #include "InputPin.h"
-#include "OutputPin.h"
-#include "UniqueID.hpp"
 #include "renderdeck/ResourcePort.hpp"
 
 InputPin::InputPin(AbstractResourcePort* port)
-	: AbstractPin(uniqueID()), port(port)
+	: AbstractPin(port)
 {
-	portMap[port] = id;
-}
-
-InputPin::~InputPin()
-{
-	portMap.erase(port);
-}
-
-ax::NodeEditor::PinId InputPin::getIDForPort(AbstractResourcePort const* port)
-{
-	if(portMap.find(port) != portMap.end())
-		return portMap[port];
-	return -1;
 }
 
 void InputPin::draw()
@@ -36,15 +21,4 @@ void InputPin::draw()
 ImVec2 InputPin::calculateSize() const
 {
 	return ImGui::CalcTextSize(port->getName().c_str());
-}
-
-bool InputPin::connect(AbstractPin const* otherPin) const
-{
-	auto output = dynamic_cast<OutputPin const*>(otherPin);
-	if(output == nullptr)
-		return false;
-
-	auto outputPort = output->getPort();
-
-	return false;
 }
