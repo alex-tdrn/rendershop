@@ -7,6 +7,8 @@
 Node::Node(AbstractPipelineElement* element)
 	: pipelineElement(element), id(uniqueID())
 {
+	inputPins.reserve(100);
+	outputPins.reserve(100);
 	for(auto inputPort : pipelineElement->getAbstractInputPorts())
 		inputPins.emplace_back(inputPort);
 

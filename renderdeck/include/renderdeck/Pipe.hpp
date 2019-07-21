@@ -28,6 +28,9 @@ private:
 
 	void updateOutputsIfNeeded() const override
 	{
+		if(!this->allInputsConnected())
+			return;
+
 		if(this->isUpdateQueued())
 		{
 			this->updateAllInputs();

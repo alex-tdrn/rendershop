@@ -3,13 +3,13 @@
 #include "renderdeck/ResourcePort.hpp"
 
 #include <imgui_node_editor.h>
-#include <map>
+#include <unordered_map>
 
 class AbstractPin
 {
 private:
-	static inline std::map<unsigned long long, AbstractPin*> pinMap;
-	static inline std::map<AbstractResourcePort const*, ax::NodeEditor::PinId> portMap;
+	static inline std::unordered_map<unsigned long long, AbstractPin*> pinMap;
+	static inline std::unordered_map<AbstractResourcePort const*, ax::NodeEditor::PinId> portMap;
 	
 protected:
 	ax::NodeEditor::PinId id = -1;

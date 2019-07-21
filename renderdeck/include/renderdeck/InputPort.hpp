@@ -36,6 +36,11 @@ public:
 			return;
 		connect(static_cast<OutputPort<T>*>(port));
 	}
+	
+	bool isConnected() const
+	{
+		return connection != nullptr;
+	}
 
 	bool canConnect(AbstractPort* port) final override
 	{

@@ -64,8 +64,13 @@ protected:
 	virtual void updateAllInputs() const = 0;
 
 public:
+	virtual bool allInputsConnected() const = 0;
+
 	virtual void trigger() const
 	{
+		if(!allInputsConnected())
+			return;
+
 		updateAllInputs();
 		update();
 	}
