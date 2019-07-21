@@ -23,7 +23,7 @@ protected:
 
 	void update() const override 
 	{
-		auto& color = getOutputPort<OutputPorts::Color>().getMutableValue();
+		auto& color = getOutputPort<OutputPorts::Color>().getMutableResource();
 		color = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
 

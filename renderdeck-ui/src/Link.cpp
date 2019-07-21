@@ -3,7 +3,7 @@
 #include "InputPin.h"
 #include "OutputPin.h"
 
-Link::Link(AbstractInputPort const* inputPort, AbstractOutputPort const* outputPort)
+Link::Link(AbstractResourcePort const* inputPort, AbstractResourcePort const* outputPort)
 	: inputPort(inputPort), outputPort(outputPort), id(uniqueID())
 {
 	inputPinID = InputPin::getIDForPort(inputPort);

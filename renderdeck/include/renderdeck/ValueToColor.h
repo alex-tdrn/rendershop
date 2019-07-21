@@ -33,8 +33,8 @@ public:
 public:
 	void update() const override
 	{
-		auto& value = getInputPort<InputPorts::Value>().getCachedValue();
-		auto& color = getOutputPort<OutputPorts::Color>().getMutableValue();
+		auto& value = getInputPort<InputPorts::Value>().getResource();
+		auto& color = getOutputPort<OutputPorts::Color>().getMutableResource();
 
 		color = {value, value, value};
 	}

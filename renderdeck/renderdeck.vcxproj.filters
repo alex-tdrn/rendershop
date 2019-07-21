@@ -17,6 +17,8 @@
     <ClInclude Include="include\renderdeck\MixColors.h" />
     <ClInclude Include="include\renderdeck\DecomposeColor.h" />
     <ClInclude Include="include\renderdeck\ValueToColor.h" />
+    <ClInclude Include="include\renderdeck\ResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ClearBackgroundSink.cpp" />

@@ -39,7 +39,7 @@ private:
 
 			bool outputsOutdated = false;
 			static_for(this->inputs.list, [&](auto const& input) {
-				if(input.getCachedTimestamp().isNewerThan(this->timestamp))
+				if(input.getTimestamp().isNewerThan(this->timestamp))
 					outputsOutdated = true;
 			});
 

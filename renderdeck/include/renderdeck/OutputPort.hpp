@@ -1,7 +1,6 @@
 #pragma once
-#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/ResourcePort.hpp"
 #include "renderdeck/InputPort.hpp"
-#include "renderdeck/TypeTag.hpp"
 
 #include <set>
 #include <algorithm>
@@ -10,12 +9,12 @@ template<typename T>
 class InputPort;
 
 template<typename T>
-class OutputPort : public AbstractOutputPort
+class OutputPort : public ResourcePort<T>
 {
 private:
-	AbstractSource* parent;
-	T value;
 	std::set<InputPort<T>*> connections;
+	AbstractSource* parent;
+	T resource;
 
 public:
 	OutputPort() = default;
@@ -26,27 +25,29 @@ public:
 	~OutputPort() = default;
 
 public:
-	int getUnderlyingTypeTag() const override
+	bool connect(InputPort<T>* port)
 	{
-		return typeTag<T>();
-	}
-
-	void setName(std::string name)
-	{
-		this->portName = name;
-	}
-
-	void setParent(AbstractSource* parent)
-	{
-		this->parent = parent;
-	}
-
-	void connect(InputPort<T>* port)
-	{
-		if(connections.find(port) == connections.end())
-			return;
+		if(connections.find(port) != connections.end())
+			return true;
 		connections.insert(port);
-		port->connect(this);
+		if(!port->connect(this))
+		{
+			connections.erase(port);
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	bool connect(ResourcePort<T>* port) final override
+	{
+		auto concretePort = dynamic_cast<InputPort<T>*>(port);
+		if(!concretePort)
+			return false;
+		else
+			connect(concretePort);
 	}
 
 	void disconnect(InputPort<T>* port)
@@ -57,7 +58,7 @@ public:
 		port->disconnect();
 	}
 
-	void disconnectAll()
+	void disconnect() final override
 	{
 		while(!connections.empty())
 		{
@@ -65,34 +66,29 @@ public:
 		}
 	}
 
-
-	T& getMutableValue()
-	{
-		return value;
-	}
-
-	void update() const
-	{
-		parent->updateOutputsIfNeeded();
-	}
-
-	T const& getCachedValue() const
-	{
-		return value;
-	}
-
-	Timestamp const& getCachedTimestamp() const
+	Timestamp const& getTimestamp() const final override
 	{
 		return parent->getTimestamp();
 	}
 
-
-	std::vector<AbstractInputPort*> getConnectedPorts() const override
+	void setParent(AbstractSource* parent)
 	{
-		std::vector<AbstractInputPort*> ports;
-		for(auto port : connections)
-			ports.push_back(port);
-		return ports;
+		this->parent = parent;
+	}
+
+	T& getMutableResource()
+	{
+		return resource;
+	}
+
+	T const& getResource() const final override
+	{
+		return resource;
+	}
+
+	void update() const final override
+	{
+		parent->updateOutputsIfNeeded();
 	}
 
 };

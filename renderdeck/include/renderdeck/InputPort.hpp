@@ -1,13 +1,12 @@
 #pragma once
-#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/ResourcePort.hpp"
 #include "renderdeck/OutputPort.hpp"
-#include "renderdeck/TypeTag.hpp"
 
 template<typename T>
 class OutputPort;
 
 template<typename T>
-class InputPort : public AbstractInputPort
+class InputPort : public ResourcePort<T>
 {
 private:
 	OutputPort<T>* connection = nullptr;
@@ -21,27 +20,30 @@ public:
 	~InputPort() = default;
 
 public:
-	int getUnderlyingTypeTag() const override
-	{
-		return typeTag<T>();
-	}
-
-	void setName(std::string name)
-	{
-		this->portName = name;
-	}
-
-	void connect(OutputPort<T>* port)
+	bool connect(OutputPort<T>* port)
 	{
 		if(connection != port)
 		{
 			disconnect();
 			connection = port;
-			port->connect(this);
+			if(!port->connect(this))
+				connection = nullptr;
+			else 
+				return true;
 		}
+		return true;
 	}
 
-	void disconnect()
+	bool connect(ResourcePort<T>* port) final override
+	{
+		auto concretePort = dynamic_cast<OutputPort<T>*>(port);
+		if(!concretePort)
+			return false;
+		else
+			return connect(concretePort);
+	}
+
+	void disconnect() final override
 	{
 		if(connection != nullptr)
 		{
@@ -51,24 +53,20 @@ public:
 		}
 	}
 
-	void update() const
+	Timestamp const& getTimestamp() const final override
 	{
-		connection->update();
+		return connection->getTimestamp();
 	}
 
-	T const& getCachedValue() const
+	void update() const final override
 	{
-		return connection->getCachedValue();
+		if(connection)
+			connection->update();
 	}
 
-	Timestamp const& getCachedTimestamp() const
+	T const& getResource() const final override
 	{
-		return connection->getCachedTimestamp();
-	}
-
-	AbstractOutputPort* getConnectedPort() const override
-	{
-		return connection;
+		return connection->getResource();
 	}
 
 };

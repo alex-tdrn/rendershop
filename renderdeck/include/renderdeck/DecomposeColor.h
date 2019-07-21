@@ -37,10 +37,10 @@ public:
 public:
 	void update() const override
 	{
-		auto& color = getInputPort<InputPorts::Color>().getCachedValue();
-		auto& r = getOutputPort<OutputPorts::R>().getMutableValue();
-		auto& g = getOutputPort<OutputPorts::G>().getMutableValue();
-		auto& b = getOutputPort<OutputPorts::B>().getMutableValue();
+		auto& color = getInputPort<InputPorts::Color>().getResource();
+		auto& r = getOutputPort<OutputPorts::R>().getMutableResource();
+		auto& g = getOutputPort<OutputPorts::G>().getMutableResource();
+		auto& b = getOutputPort<OutputPorts::B>().getMutableResource();
 
 		r = color.r;
 		g = color.g;

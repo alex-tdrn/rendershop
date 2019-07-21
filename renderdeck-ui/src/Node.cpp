@@ -135,8 +135,8 @@ std::vector<Link> Node::getInputLinks() const
 {
 	std::vector<Link> links;
 
-	for(auto const& inputPin : inputPins)
-		links.emplace_back(inputPin.getPort(), inputPin.getPort()->getConnectedPort());
+	//for(auto const& inputPin : inputPins)
+		//links.emplace_back(inputPin.getPort(), inputPin.getPort()->getConnectedPort());
 
 	return links;
 }
