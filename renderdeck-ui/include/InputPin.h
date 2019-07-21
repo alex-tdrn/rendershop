@@ -1,17 +1,18 @@
 #pragma once
+#include "AbstractPin.hpp"
+
 #include <imgui_node_editor.h>
 #include <map>
 
 class AbstractInputPort;
 class OutputPin;
 
-class InputPin
+class InputPin : AbstractPin
 {
 private:
 	static inline std::map<AbstractInputPort const*, ax::NodeEditor::PinId> portMap;
 
 private:
-	ax::NodeEditor::PinId id = -1;
 	AbstractInputPort* port = nullptr;
 
 public:
@@ -25,15 +26,12 @@ public:
 
 public:
 	static ax::NodeEditor::PinId getIDForPort(AbstractInputPort const* port);
-	ax::NodeEditor::PinId getID() const
-	{
-		return id;
-	}
-	void draw();
-	ImVec2 calculateSize() const;
+	void draw() override;
+	ImVec2 calculateSize() const override;
 	AbstractInputPort const* getPort() const
 	{
 		return port;
 	}
 
+	bool connect(AbstractPin const* otherPin) const override;
 };

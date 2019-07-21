@@ -89,6 +89,7 @@ int main(int argc, char** argv)
 	timers[1].addSink(&sink);
 
 	std::vector<Node> nodes;
+	nodes.reserve(100);
 	nodes.emplace_back(&source);
 	nodes.emplace_back(&pipe);
 	nodes.emplace_back(&sink);
@@ -134,74 +135,58 @@ int main(int argc, char** argv)
 		for(auto& link : links)
 			link.draw();
 
-		/*ax::NodeEditor::NodeId id = 0;
-		ax::NodeEditor::Suspend();
-		if(ax::NodeEditor::ShowNodeContextMenu(&id))
-			ImGui::OpenPopup("Node Context Menu");
-		else if (ax::NodeEditor::ShowBackgroundContextMenu())
-			ImGui::OpenPopup("Create New Node");
-
-		if(ImGui::BeginPopup("Node Context Menu"))
-		{
-			ImGui::TextUnformatted("Node Context Menu");
-			ImGui::Separator();
-			ImGui::MenuItem("Delete");
-			ImGui::EndPopup();
-		}
-
-		if(ImGui::BeginPopup("Create New Node"))
-		{
-			ImGui::Text("Create New Node");
-			ImGui::Separator();
-			if(ImGui::BeginMenu("Source"))
-			{
-				ImGui::MenuItem("Random Color");
-				ImGui::EndMenu();
-			}
-			if(ImGui::BeginMenu("Pipe"))
-			{
-				ImGui::MenuItem("Grayscale Color");
-				ImGui::EndMenu();
-			}
-			if(ImGui::BeginMenu("Sink"))
-			{
-				ImGui::MenuItem("Background Color");
-				ImGui::EndMenu();
-			}
-			ImGui::EndPopup();
-		}
-		ax::NodeEditor::Resume();
-		*/
-
-
 		if(ax::NodeEditor::BeginCreate())
 		{
 			ax::NodeEditor::PinId startPinId = 0, endPinId = 0;
-			//if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId))
-			//{
-			//}
+			if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId))
+			{
+				auto startPin = AbstractPin::getPinForID(startPinId);
+				auto endPin = AbstractPin::getPinForID(endPinId);
+				if(startPin->connect(endPin))
+					ax::NodeEditor::AcceptNewItem();
+				else
+					ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
 
-			//ax::NodeEditor::PinId pinId = 0;
-			//if(ax::NodeEditor::QueryNewNode(&pinId))
-			//{
-			//	newLinkPin = FindPin(pinId);
-			//	if(newLinkPin)
-			//		showLabel("+ Create Node", ImColor(32, 45, 32, 180));
+				if(ax::NodeEditor::AcceptNewItem())
+				{
+					ax::NodeEditor::Suspend();
+					ImGui::OpenPopup("<<Create New Link>>");
+					ax::NodeEditor::Resume();
+				}
+			}
 
-			//	if(ax::NodeEditor::AcceptNewItem())
-			//	{
-			//		createNewNode = true;
-			//		newNodeLinkPin = FindPin(pinId);
-			//		newLinkPin = nullptr;
-			//		ax::NodeEditor::Suspend();
-			//		ImGui::OpenPopup("Create New Node");
-			//		ax::NodeEditor::Resume();
-			//	}
-			//}
+			ax::NodeEditor::PinId pinId = 0;
+			if(ax::NodeEditor::QueryNewNode(&pinId))
+			{
+				if(ax::NodeEditor::AcceptNewItem())
+				{
+					ax::NodeEditor::Suspend();
+					ImGui::OpenPopup("<<Create New Node>>");
+					ax::NodeEditor::Resume();
+				}
+			}
 		}
 		ax::NodeEditor::EndCreate();
 
+		ax::NodeEditor::Suspend();
+		if(ImGui::BeginPopup("<<Create New Link>>"))
+		{
+			ImGui::Text("<<< TEST >>>");
+			ImGui::Text("Create New Link");
+			
+			ImGui::EndPopup();
+		}
+
+		if(ImGui::BeginPopup("<<Create New Node>>"))
+		{
+			ImGui::Text("<<< TEST >>>");
+			ImGui::Text("Create New Node");
+			ImGui::EndPopup();
+		}
+		ax::NodeEditor::Resume();
+
 		ax::NodeEditor::End();
+
 
 		ImGui::End();
 

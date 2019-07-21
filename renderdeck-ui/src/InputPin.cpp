@@ -1,9 +1,10 @@
 #include "InputPin.h"
+#include "OutputPin.h"
 #include "UniqueID.hpp"
 #include "renderdeck/AbstractPipeline.hpp"
 
 InputPin::InputPin(AbstractInputPort* port)
-	: port(port), id(uniqueID())
+	: AbstractPin(uniqueID()), port(port)
 {
 	portMap[port] = id;
 }
@@ -35,4 +36,15 @@ void InputPin::draw()
 ImVec2 InputPin::calculateSize() const
 {
 	return ImGui::CalcTextSize(port->getPortName().c_str());
+}
+
+bool InputPin::connect(AbstractPin const* otherPin) const
+{
+	auto output = dynamic_cast<OutputPin const*>(otherPin);
+	if(output == nullptr)
+		return false;
+
+	auto outputPort = output->getPort();
+
+	return false;
 }
