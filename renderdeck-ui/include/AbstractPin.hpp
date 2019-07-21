@@ -57,17 +57,8 @@ public:
 		return port;
 	}
 
-	bool connect(AbstractPin* otherPin)
-	{
-		auto otherPort = otherPin->getPort();
-
-		if(!otherPort->canConnect(port))
-			return false;
-
-		otherPort->connect(port);
-		return true;
-	}
-
+	virtual bool canConnect(AbstractPin* otherPin) = 0;
+	virtual void connect(AbstractPin* otherPin) = 0;
 	virtual void draw() = 0;
 	virtual ImVec2 calculateSize() const = 0;
 };

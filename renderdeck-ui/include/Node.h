@@ -2,7 +2,6 @@
 #include "UniqueID.hpp"
 #include "InputPin.h"
 #include "OutputPin.h"
-#include "Link.h"
 
 #include <imgui_node_editor.h>
 #include <vector>
@@ -38,6 +37,6 @@ private:
 
 public:
 	void draw();
-	std::vector<Link> getInputLinks() const;
+	void drawInputLinks();
 
 };

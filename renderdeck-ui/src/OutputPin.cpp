@@ -10,6 +10,20 @@ OutputPin::OutputPin(AbstractResourcePort* port)
 {
 }
 
+bool OutputPin::canConnect(AbstractPin* inputPin)
+{
+	if(!dynamic_cast<InputPin*>(inputPin))
+		return false;
+	return inputPin->canConnect(this);
+}
+
+void OutputPin::connect(AbstractPin* inputPin)
+{
+	assert(dynamic_cast<InputPin*>(inputPin));
+
+	static_cast<InputPin*>(inputPin)->connect(this);
+}
+
 void OutputPin::draw()
 {
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Output);

@@ -5,7 +5,6 @@
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
-    <ClCompile Include="src\Link.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Node.h" />
@@ -13,7 +12,6 @@
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\OutputPin.h" />
     <ClInclude Include="include\UIDebug.hpp" />
-    <ClInclude Include="include\Link.h" />
     <ClInclude Include="include\AbstractPin.hpp" />
   </ItemGroup>
 </Project>

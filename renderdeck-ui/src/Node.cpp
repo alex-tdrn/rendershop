@@ -133,12 +133,9 @@ void Node::draw()
 
 }
 
-std::vector<Link> Node::getInputLinks() const
+void Node::drawInputLinks()
 {
-	std::vector<Link> links;
-
-	//for(auto const& inputPin : inputPins)
-		//links.emplace_back(inputPin.getPort(), inputPin.getPort()->getConnectedPort());
-
-	return links;
+	for(auto& inputPin : inputPins)
+		inputPin.drawLink();
 }
+

@@ -13,6 +13,8 @@ public:
 	~OutputPin() = default;
 
 public:
+	bool canConnect(AbstractPin* inputPin) final override;
+	void connect(AbstractPin* inputPin) final override;
 	void draw() override;
 	ImVec2 calculateSize() const override;
 

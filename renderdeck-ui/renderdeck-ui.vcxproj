@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Link.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
@@ -24,7 +23,6 @@
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Node.h" />
-    <ClInclude Include="include\Link.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

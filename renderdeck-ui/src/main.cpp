@@ -6,7 +6,6 @@
 #include "renderdeck/DecomposeColor.h"
 #include "renderdeck/ValueToColor.h"
 #include "Node.h"
-#include "Link.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -91,9 +90,6 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&decomposeColor);
 	nodes.emplace_back(&valueToColor);
 
-	std::vector<Link> links;
-
-
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
@@ -123,25 +119,20 @@ int main(int argc, char** argv)
 
 		for(auto& node : nodes)
 			node.draw();
-
-		for(auto& link : links)
-			link.draw();
-
+		for(auto& node : nodes)
+			node.drawInputLinks();
 		if(ax::NodeEditor::BeginCreate())
 		{
-			ax::NodeEditor::PinId startPinId = 0, endPinId = 0;
-			if(ax::NodeEditor::QueryNewLink(&startPinId, &endPinId) && startPinId != endPinId)
+			ax::NodeEditor::PinId idPin1 = 0, idPin2 = 0;
+			if(ax::NodeEditor::QueryNewLink(&idPin1, &idPin2) && idPin1 != idPin2)
 			{
-				auto startPin = AbstractPin::getPinForID(startPinId);
-				auto endPin = AbstractPin::getPinForID(endPinId);
-				if(startPin->connect(endPin))
+				auto pin1 = AbstractPin::getPinForID(idPin1);
+				auto pin2 = AbstractPin::getPinForID(idPin2);
+				if(pin1->canConnect(pin2))
 				{
 					if(ax::NodeEditor::AcceptNewItem({ 0, 1, 0, 1, }, 2))
 					{
-						ax::NodeEditor::Suspend();
-						ImGui::OpenPopup("<<Create New Link>>");
-						ax::NodeEditor::Resume();
-						links.push_back(Link(startPin->getPort(), endPin->getPort()));
+						pin1->connect(pin2);
 					}
 				}
 				else
