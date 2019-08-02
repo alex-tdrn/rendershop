@@ -13,5 +13,6 @@
     <ClInclude Include="include\OutputPin.h" />
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
+    <ClInclude Include="include\AbstractNode.hpp" />
   </ItemGroup>
 </Project>

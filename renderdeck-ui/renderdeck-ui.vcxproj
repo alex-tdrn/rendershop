@@ -17,6 +17,7 @@
     <ClCompile Include="src\OutputPin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AbstractNode.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\OutputPin.h" />
