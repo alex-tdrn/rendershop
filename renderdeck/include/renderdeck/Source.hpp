@@ -16,7 +16,7 @@ class Source : public virtual AbstractSource
 {
 private:
 	mutable OutputList outputs;
-	
+
 public:
 	Source()
 	{

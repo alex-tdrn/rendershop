@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 
 	
 	using namespace std::chrono_literals;
-	RandomColorSource source;
+	auto source = AbstractSource::createSource(RandomColorSource::name);
 	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
 	MixColors mixColors;
@@ -77,13 +77,13 @@ int main(int argc, char** argv)
 
 	std::vector<Timer> timers(2);
 	timers[0].setInterval(1s);
-	timers[0].addSource(&source);
+	timers[0].addSource(source.get());
 	timers[1].setInterval(1s / 50);
 	timers[1].addSink(&sink);
 
 	std::vector<Node> nodes;
 	nodes.reserve(100);
-	nodes.emplace_back(&source);
+	nodes.emplace_back(source.get());
 	nodes.emplace_back(&pipe);
 	nodes.emplace_back(&sink);
 	nodes.emplace_back(&mixColors);
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		//ImGui::SetNextWindowSize(io.DisplaySize);
+		ImGui::SetNextWindowSize(io.DisplaySize);
 		ImGui::Begin("Pipeline Canvas", nullptr, 
 			ImGuiWindowFlags_NoTitleBar | /*ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
@@ -163,7 +163,7 @@ int main(int argc, char** argv)
 			ImGui::EndPopup();
 		}
 
-		if(ImGui::BeginPopup("<<Create New Node>>"))
+		if(ImGui::BeginPopup("Create New Node"))
 		{
 			ImGui::Text("<<< TEST >>>");
 			ImGui::Text("Create New Node");

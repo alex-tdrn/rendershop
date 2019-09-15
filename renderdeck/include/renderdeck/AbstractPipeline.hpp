@@ -4,6 +4,8 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <memory>
 
 class AbstractPipelineElement
 {
@@ -31,6 +33,7 @@ public:
 class AbstractSource : public virtual AbstractPipelineElement
 {
 protected:
+	static inline std::unordered_map<std::string, std::unique_ptr<AbstractSource>(*)()> sources;
 	mutable Timestamp timestamp;
 
 public:
@@ -56,13 +59,25 @@ public:
 
 	virtual void updateOutputsIfNeeded() const = 0;
 
+	static std::unordered_map<std::string, std::unique_ptr<AbstractSource>(*)()> const& getSourcesMap()
+	{
+		return sources;
+	}
+
+	static std::unique_ptr<AbstractSource> createSource(std::string const name)
+	{
+		if(sources.find(name) == sources.end())
+			return nullptr;
+		else
+			return sources[name]();
+	}
 };
 
 class AbstractSink : public virtual AbstractPipelineElement
 {
 protected:
 	virtual void updateAllInputs() const = 0;
-
+	
 public:
 	virtual bool allInputsConnected() const = 0;
 
