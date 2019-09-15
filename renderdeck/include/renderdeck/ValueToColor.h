@@ -7,7 +7,7 @@
 class ValueToColor : public Pipe<ValueToColor, InputList<float>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = "Value To Color";
+	static inline std::string const name = registerPipelineElement<ValueToColor>("Value To Color");
 
 	struct InputPorts
 	{

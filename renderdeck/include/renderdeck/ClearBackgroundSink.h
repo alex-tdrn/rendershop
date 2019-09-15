@@ -7,7 +7,7 @@
 class ClearBackgroundSink : public Sink<ClearBackgroundSink, InputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = "Clear Background Sink";
+	static inline std::string const name = registerPipelineElement<ClearBackgroundSink>("Clear Background Sink");
 	struct InputPorts
 	{
 		static inline std::array names = {

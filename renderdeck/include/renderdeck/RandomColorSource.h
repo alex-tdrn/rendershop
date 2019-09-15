@@ -7,14 +7,7 @@
 class RandomColorSource : public Source<RandomColorSource, OutputList<glm::vec3>>
 {	
 public:
-	static inline std::string const name = []() {
-		std::string name = "Random Color Source";
-		AbstractSource::sources[name] = []() {
-			std::unique_ptr<AbstractSource> ptr = std::make_unique<RandomColorSource>();
-			return ptr;
-		};
-		return name;
-	}();
+	static inline std::string const name = registerPipelineElement<RandomColorSource>("Random Color Source");
 
 	struct OutputPorts
 	{

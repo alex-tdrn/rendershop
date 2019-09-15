@@ -9,14 +9,38 @@
 
 class AbstractPipelineElement
 {
+private:
+	static inline std::unordered_map<std::string, std::unique_ptr<AbstractPipelineElement>(*)()> allPipelineElements;
+
 protected:
 	std::vector<AbstractResourcePort*> abstractInputPorts;
 	std::vector<AbstractResourcePort*> abstractOutputPorts;
 
 protected:
 	virtual void update() const = 0;
+	template <typename ConcretePipelineElement>
+	static std::string registerPipelineElement(std::string name)
+	{
+		allPipelineElements[name] = []() {
+			std::unique_ptr<AbstractPipelineElement> ptr = std::make_unique<ConcretePipelineElement>();
+			return ptr;
+		};
+		return name;
+	}
 
 public:
+	static std::unordered_map<std::string, std::unique_ptr<AbstractPipelineElement>(*)()> const& getSourcesMap()
+	{
+		return allPipelineElements;
+	}
+
+	static std::unique_ptr<AbstractPipelineElement> createSource(std::string const name)
+	{
+		if(allPipelineElements.find(name) == allPipelineElements.end())
+			return nullptr;
+		else
+			return allPipelineElements[name]();
+	}
 	virtual std::string const& getTypeName() const = 0;
 	std::vector<AbstractResourcePort*> const& getAbstractInputPorts() const
 	{
@@ -33,7 +57,6 @@ public:
 class AbstractSource : public virtual AbstractPipelineElement
 {
 protected:
-	static inline std::unordered_map<std::string, std::unique_ptr<AbstractSource>(*)()> sources;
 	mutable Timestamp timestamp;
 
 public:
@@ -59,18 +82,6 @@ public:
 
 	virtual void updateOutputsIfNeeded() const = 0;
 
-	static std::unordered_map<std::string, std::unique_ptr<AbstractSource>(*)()> const& getSourcesMap()
-	{
-		return sources;
-	}
-
-	static std::unique_ptr<AbstractSource> createSource(std::string const name)
-	{
-		if(sources.find(name) == sources.end())
-			return nullptr;
-		else
-			return sources[name]();
-	}
 };
 
 class AbstractSink : public virtual AbstractPipelineElement

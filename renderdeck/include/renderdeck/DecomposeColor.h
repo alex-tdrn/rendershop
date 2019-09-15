@@ -7,7 +7,7 @@
 class DecomposeColor : public Pipe<DecomposeColor, InputList<glm::vec3>, OutputList<float, float, float>>
 {
 public:
-	static inline std::string const name = "Decompose Colors";
+	static inline std::string const name = registerPipelineElement<DecomposeColor>("Decompose Colors");
 
 	struct InputPorts
 	{

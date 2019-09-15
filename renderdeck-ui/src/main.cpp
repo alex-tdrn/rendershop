@@ -68,27 +68,17 @@ int main(int argc, char** argv)
 
 	
 	using namespace std::chrono_literals;
-	auto source = AbstractSource::createSource(RandomColorSource::name);
-	GrayscaleColorPipe pipe;
 	ClearBackgroundSink sink;
-	MixColors mixColors;
-	DecomposeColor decomposeColor;
-	ValueToColor valueToColor;
 
 	std::vector<Timer> timers(2);
 	timers[0].setInterval(1s);
-	timers[0].addSource(source.get());
 	timers[1].setInterval(1s / 50);
 	timers[1].addSink(&sink);
 
 	std::vector<Node> nodes;
-	nodes.reserve(100);
-	nodes.emplace_back(source.get());
-	nodes.emplace_back(&pipe);
 	nodes.emplace_back(&sink);
-	nodes.emplace_back(&mixColors);
-	nodes.emplace_back(&decomposeColor);
-	nodes.emplace_back(&valueToColor);
+
+	std::vector<std::unique_ptr<AbstractPipelineElement>> dynamicElements;
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -147,7 +137,7 @@ int main(int argc, char** argv)
 				if(ax::NodeEditor::AcceptNewItem())
 				{
 					ax::NodeEditor::Suspend();
-					ImGui::OpenPopup("<<Create New Node>>");
+					ImGui::OpenPopup("Create New Node");
 					ax::NodeEditor::Resume();
 				}
 			}
@@ -165,8 +155,19 @@ int main(int argc, char** argv)
 
 		if(ImGui::BeginPopup("Create New Node"))
 		{
-			ImGui::Text("<<< TEST >>>");
-			ImGui::Text("Create New Node");
+			if(ImGui::BeginMenu("Sources"))
+			{
+				for(auto [name, constructor] : AbstractSource::getSourcesMap())
+				{
+					if(ImGui::MenuItem(name.c_str()))
+					{
+						auto source = constructor();
+						nodes.emplace_back(source.get());
+						dynamicElements.push_back(std::move(source));
+					}
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndPopup();
 		}
 		ax::NodeEditor::Resume();

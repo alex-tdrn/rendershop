@@ -7,7 +7,7 @@
 class GrayscaleColorPipe : public Pipe<GrayscaleColorPipe, InputList<glm::vec3>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = "Grayscale Color Pipe";
+	static inline std::string const name = registerPipelineElement<GrayscaleColorPipe>("Grayscale Color Pipe");
 	struct InputPorts
 	{
 		static inline std::array names = {
