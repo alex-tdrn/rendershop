@@ -11,16 +11,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\imgui.cpp" />
-    <ClCompile Include="src\imgui_demo.cpp" />
-    <ClCompile Include="src\imgui_draw.cpp" />
-    <ClCompile Include="src\imgui_impl_glfw.cpp" />
-    <ClCompile Include="src\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="src\imgui_widgets.cpp" />
+    <ClCompile Include="src\crude_json.cpp" />
+    <ClCompile Include="src\imgui_canvas.cpp" />
+    <ClCompile Include="src\imgui_node_editor.cpp" />
+    <ClCompile Include="src\imgui_node_editor_api.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\crude_json.h" />
+    <ClInclude Include="include\imgui_bezier_math.h" />
+    <ClInclude Include="include\imgui_canvas.h" />
+    <ClInclude Include="include\imgui_extra_math.h" />
+    <ClInclude Include="include\imgui_node_editor_internal.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\imgui_bezier_math.inl" />
+    <None Include="include\imgui_extra_math.inl" />
+    <None Include="include\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{CD84D226-7C03-4304-8B74-50E4AE876C35}</ProjectGuid>
+    <ProjectGuid>{236B3348-7FAD-450C-BFF4-D6BF6E38F16A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>renderdeck</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
