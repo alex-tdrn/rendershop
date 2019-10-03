@@ -1,20 +1,13 @@
 #pragma once
-#include "renderdeck/ResourcePort.hpp"
-#include "renderdeck/InputPort.hpp"
+#include "renderdeck/AbstractPort.hpp"
 
 #include <set>
-#include <algorithm>
 
-template<typename T>
-class InputPort;
-
-template<typename T>
-class OutputPort : public ResourcePort<T>
+template<typename InputPort>
+class OutputPort : public virtual AbstractPort
 {
 private:
-	std::set<InputPort<T>*> connections;
-	AbstractSource* parent;
-	T resource;
+	std::set<InputPort*> connections;
 
 public:
 	OutputPort() = default;
@@ -25,7 +18,7 @@ public:
 	~OutputPort() = default;
 
 public:
-	void connect(InputPort<T>* port)
+	void connect(InputPort* port)
 	{
 		if(connections.find(port) != connections.end())
 			return;
@@ -37,18 +30,18 @@ public:
 	{
 		if(!canConnect(port))
 			return;
-		connect(static_cast<InputPort<T>*>(port));
+		connect(static_cast<InputPort*>(port));
 	}
 
 	bool canConnect(AbstractPort* port) final override
 	{
-		if(!dynamic_cast<InputPort<T>*>(port))
+		if(!dynamic_cast<InputPort*>(port))
 			return false;
 		else
 			return true;
 	}
 
-	void disconnect(InputPort<T>* port)
+	void disconnect(InputPort* port)
 	{
 		if(connections.find(port) == connections.end())
 			return;
@@ -62,31 +55,6 @@ public:
 		{
 			disconnect(*connections.begin());
 		}
-	}
-
-	Timestamp const& getTimestamp() const final override
-	{
-		return parent->getTimestamp();
-	}
-
-	void setParent(AbstractSource* parent)
-	{
-		this->parent = parent;
-	}
-
-	T& getMutableResource()
-	{
-		return resource;
-	}
-
-	T const& getResource() const final override
-	{
-		return resource;
-	}
-
-	void update() const final override
-	{
-		parent->updateOutputsIfNeeded();
 	}
 
 };

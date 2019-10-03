@@ -1,9 +1,20 @@
 #pragma once
 #include "renderdeck/AbstractPort.hpp"
-#include "renderdeck/TypeTag.hpp"
 #include "renderdeck/Timestamp.hpp"
 
-class AbstractResourcePort : public AbstractPort
+namespace detail
+{
+	inline int tag = 0;
+}
+
+template <typename T>
+int typeTag()
+{
+	static int tag = detail::tag++;
+	return tag;
+}
+
+class AbstractResourcePort : public virtual AbstractPort
 {
 public:
 	virtual int getResourceTypeTag() const = 0;

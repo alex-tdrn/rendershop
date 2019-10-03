@@ -12,5 +12,9 @@
     <ClInclude Include="include\renderdeck\TypeTag.hpp" />
     <ClInclude Include="include\renderdeck\ResourcePort.hpp" />
     <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractPipe.hpp" />
+    <ClInclude Include="include\renderdeck\InputResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\OutputResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractResourcePort.hpp" />
   </ItemGroup>
 </Project>

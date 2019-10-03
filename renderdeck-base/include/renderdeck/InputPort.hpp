@@ -1,15 +1,11 @@
 #pragma once
-#include "renderdeck/ResourcePort.hpp"
-#include "renderdeck/OutputPort.hpp"
+#include "renderdeck/AbstractPort.hpp"
 
-template<typename T>
-class OutputPort;
-
-template<typename T>
-class InputPort : public ResourcePort<T>
+template<typename OutputPort>
+class InputPort : public virtual AbstractPort
 {
 private:
-	OutputPort<T>* connection = nullptr;
+	OutputPort* connection = nullptr;
 
 public:
 	InputPort() = default;
@@ -20,7 +16,7 @@ public:
 	~InputPort() = default;
 
 public:
-	void connect(OutputPort<T>* port)
+	void connect(OutputPort* port)
 	{
 		if(connection != port)
 		{
@@ -34,7 +30,7 @@ public:
 	{
 		if(!canConnect(port))
 			return;
-		connect(static_cast<OutputPort<T>*>(port));
+		connect(static_cast<OutputPort*>(port));
 	}
 	
 	bool isConnected() const
@@ -44,7 +40,7 @@ public:
 
 	bool canConnect(AbstractPort* port) final override
 	{
-		if(!dynamic_cast<OutputPort<T>*>(port))
+		if(!dynamic_cast<OutputPort*>(port))
 			return false;
 		else
 			return true;
@@ -60,20 +56,5 @@ public:
 		}
 	}
 
-	Timestamp const& getTimestamp() const final override
-	{
-		return connection->getTimestamp();
-	}
-
-	void update() const final override
-	{
-		if(connection)
-			connection->update();
-	}
-
-	T const& getResource() const final override
-	{
-		return connection->getResource();
-	}
-
 };
+
