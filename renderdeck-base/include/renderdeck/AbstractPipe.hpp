@@ -16,10 +16,18 @@ private:
 
 protected:
 	mutable Timestamp timestamp;
-	std::vector<AbstractResourcePort*> inputResourcePorts;
-	std::vector<AbstractResourcePort*> outputResourcePorts;
+	std::vector<AbstractResourcePort*> abstractInputResourcePorts;
+	std::vector<AbstractResourcePort*> abstractOutputResourcePorts;
 	std::vector<AbstractPort*> inputEventPorts;
 	std::vector<AbstractPort*> outputEventPorts;
+
+public:
+	AbstractPipe() = default;
+	AbstractPipe(AbstractPipe const&) = delete;
+	AbstractPipe(AbstractPipe&&) = delete;
+	AbstractPipe& operator=(AbstractPipe const&) = delete;
+	AbstractPipe& operator=(AbstractPipe&&) = delete;
+	virtual ~AbstractPipe() = default;
 
 protected:
 	virtual void update() const = 0;
@@ -55,12 +63,12 @@ public:
 
 	std::vector<AbstractResourcePort*> const& getInputResourcePorts() const
 	{
-		return inputResourcePorts;
+		return abstractInputResourcePorts;
 	}
 
 	std::vector<AbstractResourcePort*> const& getOutputResourcePorts() const
 	{
-		return outputResourcePorts;
+		return abstractOutputResourcePorts;
 	}
 
 	std::vector<AbstractPort*> const& getInputEventPorts() const
@@ -74,6 +82,7 @@ public:
 	}
 
 
+//TODO rethink this shit
 protected:
 	virtual void updateAllInputs() const = 0;
 

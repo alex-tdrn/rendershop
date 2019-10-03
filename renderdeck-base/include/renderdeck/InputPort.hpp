@@ -30,7 +30,7 @@ public:
 	{
 		if(!canConnect(port))
 			return;
-		connect(static_cast<OutputPort*>(port));
+		connect(dynamic_cast<OutputPort*>(port));
 	}
 	
 	bool isConnected() const

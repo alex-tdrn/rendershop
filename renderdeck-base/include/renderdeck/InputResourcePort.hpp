@@ -20,18 +20,21 @@ public:
 public:
 	Timestamp const& getTimestamp() const final override
 	{
-		return connection->getTimestamp();
+		//TODO
+		return {};//connection->getTimestamp();
 	}
 
 	void update() const final override
 	{
-		if(connection)
-			connection->update();
+		//TODO
+		/*if(connection)
+			connection->update();*/
 	}
 
 	Resource const& getResource() const final override
 	{
-		return connection->getResource();
+		//TODO
+		return{};// connection->getResource();
 	}
 
 };

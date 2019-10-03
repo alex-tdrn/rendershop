@@ -30,7 +30,7 @@ public:
 	{
 		if(!canConnect(port))
 			return;
-		connect(static_cast<InputPort*>(port));
+		connect(dynamic_cast<InputPort*>(port));
 	}
 
 	bool canConnect(AbstractPort* port) final override
@@ -39,6 +39,14 @@ public:
 			return false;
 		else
 			return true;
+	}
+
+	void disconnect(AbstractPort* port)
+	{
+		auto castedPort = dynamic_cast<InputPort*>(port);
+		if(!castedPort)
+			return;
+		disconnect(castedPort);
 	}
 
 	void disconnect(InputPort* port)
