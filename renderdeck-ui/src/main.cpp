@@ -68,14 +68,16 @@ int main(int argc, char** argv)
 
 	
 	using namespace std::chrono_literals;
+	RandomColorSource source;
 	ClearBackgroundSink sink;
 
 	std::vector<Timer> timers(2);
 	timers[0].setInterval(1s);
-	timers[1].setInterval(1s / 50);
-	timers[1].addSink(&sink);
+	timers[0].addSource(&source);
+	timers[0].addSink(&sink);
 
 	std::vector<Node> nodes;
+	nodes.emplace_back(&source);
 	nodes.emplace_back(&sink);
 
 	std::vector<std::unique_ptr<AbstractPipelineElement>> dynamicElements;
@@ -97,7 +99,7 @@ int main(int argc, char** argv)
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize(io.DisplaySize);
+		ImGui::SetNextWindowSize({1920, 1080});
 		ImGui::Begin("Pipeline Canvas", nullptr, 
 			ImGuiWindowFlags_NoTitleBar | /*ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
@@ -105,7 +107,7 @@ int main(int argc, char** argv)
 		);
 
 		ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
-		ax::NodeEditor::Begin("My Editor", ImVec2(0.0, 0.0f));
+		ax::NodeEditor::Begin("My Editor", ImVec2(1920, 1080));
 
 		for(auto& node : nodes)
 			node.draw();
