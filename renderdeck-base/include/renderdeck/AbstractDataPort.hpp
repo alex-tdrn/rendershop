@@ -17,7 +17,7 @@ int typeTag()
 class AbstractDataPort : public virtual AbstractPort
 {
 public:
-	virtual int getResourceTypeTag() const = 0;
+	virtual int getDataTypeTag() const = 0;
 	virtual Timestamp const& getTimestamp() const = 0;
 	virtual void update() const = 0;
 
@@ -27,11 +27,11 @@ template <typename T>
 class DataPort : public AbstractDataPort
 {
 public:
-	int getResourceTypeTag() const final override
+	int getDataTypeTag() const final override
 	{
 		return typeTag<T>();
 	}
 
-	virtual T const& getResource() const = 0;
+	virtual T const& getData() const = 0;
 
 };

@@ -3,14 +3,14 @@
 #include "renderdeck/OutputPort.hpp"
 #include "renderdeck/InputDataPort.hpp"
 
-template<typename Resource>
+template<typename Data>
 class InputDataPort;
 
-template<typename Resource>
-class OutputDataPort : public DataPort<Resource>, public OutputPort<InputDataPort<Resource>>
+template<typename Data>
+class OutputDataPort : public DataPort<Data>, public OutputPort<InputDataPort<Data>>
 {
 private:
-	Resource resource;
+	Data resource;
 
 public:
 	OutputDataPort() = default;
@@ -27,12 +27,12 @@ public:
 		return {};//parent->getTimestamp();
 	}
 
-	Resource& getMutableResource()
+	Data& getMutableData()
 	{
 		return resource;
 	}
 
-	Resource const& getResource() const final override
+	Data const& getData() const final override
 	{
 		return resource;
 	}

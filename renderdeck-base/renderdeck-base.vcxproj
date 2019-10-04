@@ -11,11 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\renderdeck\DataSource.hpp" />
+    <ClInclude Include="include\renderdeck\DataSink.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractDataSink.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractDataSource.hpp" />
     <ClInclude Include="include\renderdeck\AbstractPipe.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractDataPort.hpp" />
     <ClInclude Include="include\renderdeck\InputPort.hpp" />
-    <ClInclude Include="include\renderdeck\InputResourcePort.hpp" />
-    <ClInclude Include="include\renderdeck\OutputResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\InputDataPort.hpp" />
+    <ClInclude Include="include\renderdeck\OutputDataPort.hpp" />
     <ClInclude Include="include\renderdeck\Pipe.hpp" />
     <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />

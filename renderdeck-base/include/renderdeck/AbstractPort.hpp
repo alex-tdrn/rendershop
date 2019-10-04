@@ -17,7 +17,8 @@ public:
 		this->name = name;
 	}
 	
-	virtual bool canConnect(AbstractPort* port) = 0;
+	virtual bool canConnect(AbstractPort* port) const = 0;
+	virtual bool isConnected() const = 0;
 	virtual void connect(AbstractPort* port) = 0;
 	virtual void disconnect() = 0;
 

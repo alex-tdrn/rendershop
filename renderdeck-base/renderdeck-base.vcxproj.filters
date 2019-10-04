@@ -2,14 +2,50 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />
-    <ClInclude Include="include\renderdeck\OutputPort.hpp" />
-    <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\Utility.hpp" />
-    <ClInclude Include="include\renderdeck\Pipe.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPipe.hpp" />
-    <ClInclude Include="include\renderdeck\InputResourcePort.hpp" />
-    <ClInclude Include="include\renderdeck\OutputResourcePort.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractResourcePort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractPipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Pipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractDataSink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractDataSource.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\DataSink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\DataSource.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Ports">
+      <UniqueIdentifier>{7c9e1923-2647-4e4a-a5b7-6fdc69b524ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipes">
+      <UniqueIdentifier>{ef7aecfb-1620-4aed-9b46-6b4d0ce2b520}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

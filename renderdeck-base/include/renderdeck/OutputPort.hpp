@@ -33,12 +33,17 @@ public:
 		connect(dynamic_cast<InputPort*>(port));
 	}
 
-	bool canConnect(AbstractPort* port) final override
+	bool canConnect(AbstractPort* port) const final override
 	{
 		if(!dynamic_cast<InputPort*>(port))
 			return false;
 		else
 			return true;
+	}
+	
+	bool isConnected() const final override
+	{
+		return !connections.empty();
 	}
 
 	void disconnect(AbstractPort* port)

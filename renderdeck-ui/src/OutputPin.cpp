@@ -5,7 +5,7 @@
 #include "renderdeck/OutputPort.hpp"
 #include <glm/glm.hpp>
 
-OutputPin::OutputPin(AbstractResourcePort* port)
+OutputPin::OutputPin(AbstractDataPort* port)
 	: AbstractPin(port)
 {
 }

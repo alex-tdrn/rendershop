@@ -3,7 +3,7 @@
 
 #include "renderdeck/ResourcePort.hpp"
 
-InputPin::InputPin(AbstractResourcePort* port)
+InputPin::InputPin(AbstractDataPort* port)
 	: AbstractPin(port), linkID(uniqueID())
 {
 }

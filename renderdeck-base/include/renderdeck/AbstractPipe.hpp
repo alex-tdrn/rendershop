@@ -1,7 +1,7 @@
 #pragma once
 #include "renderdeck/Timestamp.hpp"
-#include "renderdeck/InputResourcePort.hpp"
-#include "renderdeck/OutputResourcePort.hpp"
+#include "renderdeck/InputDataPort.hpp"
+#include "renderdeck/OutputDataPort.hpp"
 
 #include <string>
 #include <vector>
@@ -16,10 +16,6 @@ private:
 
 protected:
 	mutable Timestamp timestamp;
-	std::vector<AbstractResourcePort*> abstractInputResourcePorts;
-	std::vector<AbstractResourcePort*> abstractOutputResourcePorts;
-	std::vector<AbstractPort*> inputEventPorts;
-	std::vector<AbstractPort*> outputEventPorts;
 
 public:
 	AbstractPipe() = default;
@@ -60,57 +56,4 @@ public:
 	}
 
 	virtual std::string const& getName() const = 0;
-
-	std::vector<AbstractResourcePort*> const& getInputResourcePorts() const
-	{
-		return abstractInputResourcePorts;
-	}
-
-	std::vector<AbstractResourcePort*> const& getOutputResourcePorts() const
-	{
-		return abstractOutputResourcePorts;
-	}
-
-	std::vector<AbstractPort*> const& getInputEventPorts() const
-	{
-		return inputEventPorts;
-	}
-
-	std::vector<AbstractPort*> const& getOutputEventPorts() const
-	{
-		return outputEventPorts;
-	}
-
-
-//TODO rethink this shit
-protected:
-	virtual void updateAllInputs() const = 0;
-
-public:
-	virtual bool allInputsConnected() const = 0;
-
-	virtual void trigger() const
-	{
-		if(!allInputsConnected())
-			return;
-
-		updateAllInputs();
-		update();
-	}
-
-protected:
-		bool isUpdateQueued() const
-		{
-			return timestamp.isReset();
-		}
-	
-	public:
-	
-	
-		void queueUpdate()
-		{
-			timestamp.reset();
-		}
-	
-		virtual void updateOutputsIfNeeded() const = 0;
 };

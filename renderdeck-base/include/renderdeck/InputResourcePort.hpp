@@ -7,7 +7,7 @@ template<typename Resource>
 class OutputResourcePort;
 
 template<typename Resource>
-class InputResourcePort : public ResourcePort<Resource>, public InputPort<OutputResourcePort<Resource>>
+class InputResourcePort : public DataPort<Resource>, public InputPort<OutputResourcePort<Resource>>
 {
 public:
 	InputResourcePort() = default;

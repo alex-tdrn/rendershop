@@ -1,30 +1,41 @@
 #pragma once
-#include "renderdeck/Pipe.hpp"
+#include "renderdeck/DataSource.hpp"
 
 #include <glm/glm.hpp>
 #include <array>
+#include <tuple>
 
-class RandomColorSource : public Pipe<RandomColorSource, InputResourceList<>, OutputResourceList<glm::vec3>>
+
+template<>
+struct OutputDataPorts<class RandomColorSource>
+{
+	using types = std::tuple<
+		glm::vec3
+	>;
+	static inline std::array names = {
+		"Color"
+	};
+	enum
+	{
+		Color
+	};
+};
+
+class RandomColorSource : public DataSource<RandomColorSource>
 {	
 public:
 	static inline std::string const name = registerPipe<RandomColorSource>("Random Color Source");
 
-	struct OutputPorts
-	{
-		static inline std::array names = {
-			"Color"
-		};
-		enum
-		{
-			Color
-		};
-	};
-
 protected:
-
-	void update() const override 
+	
+	std::string const& getName() const override final
 	{
-		auto& color = getOutputResourcePort<OutputPorts::Color>().getMutableResource();
+		return name;
+	}
+		
+	void update() const override final
+	{
+		auto& color = getOutputDataPort<OutputDataPorts<RandomColorSource>::Color>().getMutableData();
 		color = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
 	}
 

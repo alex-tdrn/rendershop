@@ -33,12 +33,12 @@ public:
 		connect(dynamic_cast<OutputPort*>(port));
 	}
 	
-	bool isConnected() const
+	bool isConnected() const final override
 	{
 		return connection != nullptr;
 	}
 
-	bool canConnect(AbstractPort* port) final override
+	bool canConnect(AbstractPort* port) const final override
 	{
 		if(!dynamic_cast<OutputPort*>(port))
 			return false;
