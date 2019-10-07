@@ -43,15 +43,6 @@ public:
 		return ConcreteSink::name;
 	}
 
-	bool allInputsConnected() const final override
-	{
-		bool ret = true;
-		static_for(inputs.list, [&](auto const& input) {
-			ret &= input.isConnected();
-			});
-		return ret;
-	}
-
 	template<int inputIndex>
 	auto& getInputDataPort() const
 	{

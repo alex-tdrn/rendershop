@@ -6,7 +6,7 @@
 #include <imgui_node_editor.h>
 #include <vector>
 
-class AbstractPipelineElement;
+class AbstractPipe;
 
 class Node
 {
@@ -16,13 +16,13 @@ private:
 	float titleOffset = 0;
 	float centerSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
-	AbstractPipelineElement* pipelineElement = nullptr;
+	AbstractPipe* pipe = nullptr;
 	std::vector<InputPin> inputPins;
 	std::vector<OutputPin> outputPins;
 
 public:
 	Node() = default;
-	Node(AbstractPipelineElement* element);
+	Node(AbstractPipe* element);
 	Node(Node&&) = default;
 	Node(Node const&) = delete;
 	Node& operator=(Node&&) = default;

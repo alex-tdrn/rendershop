@@ -80,7 +80,7 @@ int main(int argc, char** argv)
 	nodes.emplace_back(&source);
 	nodes.emplace_back(&sink);
 
-	std::vector<std::unique_ptr<AbstractPipelineElement>> dynamicElements;
+	std::vector<std::unique_ptr<AbstractPipe>> dynamicElements;
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
 		{
 			if(ImGui::BeginMenu("Sources"))
 			{
-				for(auto [name, constructor] : AbstractSource::getSourcesMap())
+				for(auto [name, constructor] : AbstractSource::getPipeMap())
 				{
 					if(ImGui::MenuItem(name.c_str()))
 					{

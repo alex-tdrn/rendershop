@@ -1,10 +1,10 @@
 #pragma once
-#include "renderdeck/Pipe.hpp"
+#include "renderdeck/Sink.hpp"
 
 #include <glm/glm.hpp>
 #include <array>
 
-class ClearBackgroundSink : public Pipe<ClearBackgroundSink, InputResourceList<glm::vec3>, OutputResourceList<>>
+class ClearBackgroundSink : public Sink<ClearBackgroundSink, InputList<glm::vec3>>
 {
 public:
 	static inline std::string const name = registerPipe<ClearBackgroundSink>("Clear Background Sink");

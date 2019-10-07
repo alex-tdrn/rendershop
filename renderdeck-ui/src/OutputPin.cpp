@@ -1,8 +1,8 @@
 #include "OutputPin.h"
 #include "InputPin.h"
 
-#include "renderdeck/AbstractPipeline.hpp"
-#include "renderdeck/OutputPort.hpp"
+#include "renderdeck/AbstractPipe.hpp"
+#include "renderdeck/OutputDataPort.hpp"
 #include <glm/glm.hpp>
 
 OutputPin::OutputPin(AbstractDataPort* port)
@@ -30,11 +30,11 @@ void OutputPin::draw()
 
 	ImGui::Text(port->getName().c_str());
 
-	auto o = dynamic_cast<OutputPort<glm::vec3> const*>(port);
+	auto o = dynamic_cast<OutputDataPort<glm::vec3> const*>(port);
 
 	if(o)
 	{
-		auto const& output = o->getResource();
+		auto const& output = o->getData();
 		ImGui::ColorButton("Caca", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
 	}
 

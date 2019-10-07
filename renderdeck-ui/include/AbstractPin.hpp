@@ -1,6 +1,6 @@
 #pragma once
 #include "UniqueID.hpp"
-#include "renderdeck/ResourcePort.hpp"
+#include "renderdeck/AbstractDataPort.hpp"
 
 #include <imgui_node_editor.h>
 #include <unordered_map>

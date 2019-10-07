@@ -1,5 +1,6 @@
 #pragma once
-#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/AbstractSource.hpp"
+#include "renderdeck/AbstractSink.hpp"
 
 #include <chrono>
 #include <set>
