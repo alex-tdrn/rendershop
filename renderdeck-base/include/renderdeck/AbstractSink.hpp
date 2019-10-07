@@ -1,18 +1,18 @@
 #pragma once
 #include "renderdeck/AbstractPipe.hpp"
 
-class AbstractDataSink : public virtual AbstractPipe
+class AbstractSink : public virtual AbstractPipe
 {
 protected:
 	std::vector<AbstractDataPort*> abstractInputDataPorts;
 
 public:
-	AbstractDataSink() = default;
-	AbstractDataSink(AbstractDataSink const&) = delete;
-	AbstractDataSink(AbstractDataSink&&) = delete;
-	AbstractDataSink& operator=(AbstractDataSink const&) = delete;
-	AbstractDataSink& operator=(AbstractDataSink&&) = delete;
-	virtual ~AbstractDataSink() = default;
+	AbstractSink() = default;
+	AbstractSink(AbstractSink const&) = delete;
+	AbstractSink(AbstractSink&&) = delete;
+	AbstractSink& operator=(AbstractSink const&) = delete;
+	AbstractSink& operator=(AbstractSink&&) = delete;
+	virtual ~AbstractSink() = default;
 
 	std::vector<AbstractDataPort*> const& getInputDataPorts() const
 	{

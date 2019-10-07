@@ -24,19 +24,19 @@
     <ClInclude Include="include\renderdeck\AbstractPipe.hpp">
       <Filter>Pipes</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractSource.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractSink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Sink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Source.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
     <ClInclude Include="include\renderdeck\Pipe.hpp">
-      <Filter>Pipes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderdeck\AbstractDataSink.hpp">
-      <Filter>Pipes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderdeck\AbstractDataSource.hpp">
-      <Filter>Pipes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderdeck\DataSink.hpp">
-      <Filter>Pipes</Filter>
-    </ClInclude>
-    <ClInclude Include="include\renderdeck\DataSource.hpp">
       <Filter>Pipes</Filter>
     </ClInclude>
   </ItemGroup>

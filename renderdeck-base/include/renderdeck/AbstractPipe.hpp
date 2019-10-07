@@ -1,5 +1,4 @@
 #pragma once
-#include "renderdeck/Timestamp.hpp"
 #include "renderdeck/InputDataPort.hpp"
 #include "renderdeck/OutputDataPort.hpp"
 
@@ -13,9 +12,6 @@ class AbstractPipe
 {
 private:
 	static inline std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> allPipes;
-
-protected:
-	mutable Timestamp timestamp;
 
 public:
 	AbstractPipe() = default;
@@ -38,7 +34,7 @@ protected:
 	}
 
 public:
-	static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> const& getAllPipes()
+	static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> const& getPipeMap()
 	{
 		return allPipes;
 	}
@@ -48,11 +44,6 @@ public:
 		assert(allPipes.find(name) != allPipes.end());
 
 		return allPipes[name]();
-	}
-
-	Timestamp const& getTimestamp() const
-	{
-		return timestamp;
 	}
 
 	virtual std::string const& getName() const = 0;

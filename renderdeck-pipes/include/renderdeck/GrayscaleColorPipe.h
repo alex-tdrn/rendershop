@@ -36,7 +36,7 @@ struct OutputDataPorts<class GrayscaleColorPipe>
 };
 
 
-class GrayscaleColorPipe : public DataSink<GrayscaleColorPipe>, DataSource<GrayscaleColorPipe>
+class GrayscaleColorPipe : public Sink<GrayscaleColorPipe>, Source<GrayscaleColorPipe>
 {
 public:
 	static inline std::string const name = registerPipe<GrayscaleColorPipe>("Grayscale Color Pipe");
