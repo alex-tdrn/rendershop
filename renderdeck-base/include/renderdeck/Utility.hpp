@@ -1,4 +1,5 @@
 #pragma once
+
 #include <tuple>
 
 template <class Tup, class F, std::size_t ...I>

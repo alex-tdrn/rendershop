@@ -1,4 +1,5 @@
 #pragma once
+
 #include "renderdeck/AbstractDataPort.hpp"
 #include "renderdeck/InputPort.hpp"
 #include "renderdeck/OutputDataPort.hpp"
@@ -20,21 +21,18 @@ public:
 public:
 	Timestamp const& getTimestamp() const final override
 	{
-		//TODO
-		return {};//connection->getTimestamp();
+		return this->connection->getTimestamp();
 	}
 
 	void update() const final override
 	{
-		//TODO
-		/*if(connection)
-			connection->update();*/
+		if(this->connection)
+			this->connection->update();
 	}
 
 	Data const& getData() const final override
 	{
-		//TODO
-		return{};// connection->getData();
+		return this->connection->getData();
 	}
 
 };

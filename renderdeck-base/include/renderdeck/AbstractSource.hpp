@@ -1,6 +1,10 @@
 #pragma once
+
 #include "renderdeck/AbstractPipe.hpp"
+#include "renderdeck/AbstractDataPort.hpp"
 #include "renderdeck/Timestamp.hpp"
+
+#include <vector>
 
 class AbstractSource : public virtual AbstractPipe
 {

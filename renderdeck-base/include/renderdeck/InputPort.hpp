@@ -1,10 +1,11 @@
 #pragma once
+
 #include "renderdeck/AbstractPort.hpp"
 
 template<typename OutputPort>
 class InputPort : public virtual AbstractPort
 {
-private:
+protected:
 	OutputPort* connection = nullptr;
 
 public:

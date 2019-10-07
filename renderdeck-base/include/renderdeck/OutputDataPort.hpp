@@ -1,7 +1,9 @@
 #pragma once
+
 #include "renderdeck/AbstractDataPort.hpp"
 #include "renderdeck/OutputPort.hpp"
 #include "renderdeck/InputDataPort.hpp"
+#include "renderdeck/AbstractSource.hpp"
 
 template<typename Data>
 class InputDataPort;
@@ -10,6 +12,7 @@ template<typename Data>
 class OutputDataPort : public DataPort<Data>, public OutputPort<InputDataPort<Data>>
 {
 private:
+	AbstractSource* parent;
 	Data resource;
 
 public:
@@ -21,10 +24,14 @@ public:
 	~OutputDataPort() = default;
 
 public:
+	void setParent(AbstractSource* parent)
+	{
+		this->parent = parent;
+	}
+
 	Timestamp const& getTimestamp() const final override
 	{
-		//TODO
-		return {};//parent->getTimestamp();
+		return parent->getTimestamp();
 	}
 
 	Data& getMutableData()
@@ -39,8 +46,7 @@ public:
 
 	void update() const final override
 	{
-		//TODO
-		//parent->updateOutputsIfNeeded();
+		parent->updateOutputsIfNeeded();
 	}
 
 };

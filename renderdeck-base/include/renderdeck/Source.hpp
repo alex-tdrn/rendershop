@@ -1,4 +1,5 @@
 #pragma once
+
 #include "renderdeck/AbstractSource.hpp"
 #include "renderdeck/OutputDataPort.hpp"
 #include "renderdeck/Utility.hpp"
@@ -21,6 +22,7 @@ public:
 		static_for_index(outputs.list, [&](auto& outputDataPort, int index) {
 			AbstractSource::abstractOutputDataPorts.push_back(&outputDataPort);
 			outputDataPort.setName(ConcreteSource::OutputPorts::names[index]);
+			outputDataPort.setParent(this);
 		});
 	}
 	Source(Source const&) = delete;

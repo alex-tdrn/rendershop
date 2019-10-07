@@ -1,4 +1,5 @@
 #pragma once
+
 #include "renderdeck/AbstractSink.hpp"
 #include "renderdeck/InputDataPort.hpp"
 #include "renderdeck/Utility.hpp"
