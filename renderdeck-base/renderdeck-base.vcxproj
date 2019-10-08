@@ -11,6 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\renderdeck\AbstractInputEventPort.hpp" />
+    <ClInclude Include="include\renderdeck\InputEventPort.hpp" />
+    <ClInclude Include="include\renderdeck\OutputEventPort.hpp" />
     <ClInclude Include="include\renderdeck\Source.hpp" />
     <ClInclude Include="include\renderdeck\Sink.hpp" />
     <ClInclude Include="include\renderdeck\AbstractSink.hpp" />

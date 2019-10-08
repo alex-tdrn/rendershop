@@ -39,6 +39,15 @@
     <ClInclude Include="include\renderdeck\Pipe.hpp">
       <Filter>Pipes</Filter>
     </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractInputEventPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputEventPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputEventPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Ports">

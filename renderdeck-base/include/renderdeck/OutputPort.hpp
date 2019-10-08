@@ -7,7 +7,7 @@
 template<typename InputPort>
 class OutputPort : public virtual AbstractPort
 {
-private:
+protected:
 	std::set<InputPort*> connections;
 
 public:
