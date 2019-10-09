@@ -26,9 +26,9 @@ public:
 		});
 	}
 	Sink(Sink const&) = delete;
-	Sink(Sink&&) = delete;
+	Sink(Sink&&) = default;
 	Sink& operator=(Sink const&) = delete;
-	Sink& operator=(Sink&&) = delete;
+	Sink& operator=(Sink&&) = default;
 	virtual ~Sink() = default;
 
 protected:

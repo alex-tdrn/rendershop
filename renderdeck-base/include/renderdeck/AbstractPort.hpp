@@ -10,9 +10,9 @@ private:
 public:
 	AbstractPort() = default;
 	AbstractPort(AbstractPort const&) = delete;
-	AbstractPort(AbstractPort&&) = delete;
+	AbstractPort(AbstractPort&&) = default;
 	AbstractPort& operator=(AbstractPort const& that) = delete;
-	AbstractPort& operator=(AbstractPort&&) = delete;
+	AbstractPort& operator=(AbstractPort&&) = default;
 	virtual ~AbstractPort() = default;
 
 public:

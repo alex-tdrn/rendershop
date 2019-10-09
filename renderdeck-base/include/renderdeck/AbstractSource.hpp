@@ -18,9 +18,9 @@ protected:
 public:
 	AbstractSource() = default;
 	AbstractSource(AbstractSource const&) = delete;
-	AbstractSource(AbstractSource&&) = delete;
+	AbstractSource(AbstractSource&&) = default;
 	AbstractSource& operator=(AbstractSource const&) = delete;
-	AbstractSource& operator=(AbstractSource&&) = delete;
+	AbstractSource& operator=(AbstractSource&&) = default;
 	virtual ~AbstractSource() = default;
 
 	std::vector<AbstractDataPort*> const& getOutputDataPorts() const
@@ -45,18 +45,15 @@ public:
 		return timestamp;
 	}
 
-	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
+	void registerInputEvents() override
 	{
-		std::unordered_map<std::string, std::unique_ptr<InputEventPort>> inputEvents;
-		inputEvents["Queue Update"] = InputEventPort::construct([this]() {
+		registerInputEvent("Queue Update", [this]() {
 			queueUpdate();
 		});
-		return inputEvents;
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
+	void registerOutputEvents() override
 	{
-		return {};
 	}
 
 	virtual void updateOutputsIfNeeded() const = 0;

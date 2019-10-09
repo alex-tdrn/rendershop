@@ -12,9 +12,9 @@ protected:
 public:
 	AbstractSink() = default;
 	AbstractSink(AbstractSink const&) = delete;
-	AbstractSink(AbstractSink&&) = delete;
+	AbstractSink(AbstractSink&&) = default;
 	AbstractSink& operator=(AbstractSink const&) = delete;
-	AbstractSink& operator=(AbstractSink&&) = delete;
+	AbstractSink& operator=(AbstractSink&&) = default;
 	virtual ~AbstractSink() = default;
 
 	std::vector<AbstractDataPort*> const& getInputDataPorts() const
@@ -43,18 +43,15 @@ public:
 		update();
 	}
 
-	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
+	void registerInputEvents() override
 	{
-		std::unordered_map<std::string, std::unique_ptr<InputEventPort>> inputEvents;
-		inputEvents["Trigger"] = InputEventPort::construct([this]() {
+		registerInputEvent("Trigger", [this]() {
 			trigger();
 		});
-		return inputEvents;
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
+	void registerOutputEvents() override
 	{
-		return {};
 	}
 
 };

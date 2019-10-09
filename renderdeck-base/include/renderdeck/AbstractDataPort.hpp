@@ -21,9 +21,9 @@ class AbstractDataPort : public virtual AbstractPort
 public:
 	AbstractDataPort() = default;
 	AbstractDataPort(AbstractDataPort const&) = delete;
-	AbstractDataPort(AbstractDataPort&&) = delete;
+	AbstractDataPort(AbstractDataPort&&) = default;
 	AbstractDataPort& operator=(AbstractDataPort const& that) = delete;
-	AbstractDataPort& operator=(AbstractDataPort&&) = delete;
+	AbstractDataPort& operator=(AbstractDataPort&&) = default;
 	virtual ~AbstractDataPort() = default;
 
 public:
@@ -39,9 +39,9 @@ class DataPort : public AbstractDataPort
 public:
 	DataPort() = default;
 	DataPort(DataPort const&) = delete;
-	DataPort(DataPort&&) = delete;
+	DataPort(DataPort&&) = default;
 	DataPort& operator=(DataPort const& that) = delete;
-	DataPort& operator=(DataPort&&) = delete;
+	DataPort& operator=(DataPort&&) = default;
 	virtual ~DataPort() = default;
 
 public:

@@ -9,9 +9,9 @@ class Pipe : virtual public Sink<ConcretePipe, InputList>, virtual public Source
 public:
 	Pipe() = default;
 	Pipe(Pipe const&) = delete;
-	Pipe(Pipe&&) = delete;
+	Pipe(Pipe&&) = default;
 	Pipe& operator=(Pipe const&) = delete;
-	Pipe& operator=(Pipe&&) = delete;
+	Pipe& operator=(Pipe&&) = default;
 	virtual ~Pipe() = default;
 
 private:
@@ -51,18 +51,16 @@ private:
 		}
 	}
 
-	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
+	void registerInputEvents() override
 	{
-		auto inputEvents = AbstractSink::registerInputEvents();
-		inputEvents.merge(AbstractSource::registerInputEvents());
-		return inputEvents;
+		AbstractSink::registerInputEvents();
+		AbstractSource::registerInputEvents();
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
+	void registerOutputEvents() override
 	{
-		auto outputEvents = AbstractSink::registerOutputEvents();
-		outputEvents.merge(AbstractSource::registerOutputEvents());
-		return outputEvents;
+		AbstractSink::registerOutputEvents();
+		AbstractSource::registerOutputEvents();
 	}
 
 };

@@ -11,9 +11,9 @@ protected:
 public:
 	InputPort() = default;
 	InputPort(InputPort const&) = delete;
-	InputPort(InputPort&&) = delete;
+	InputPort(InputPort&&) = default;
 	InputPort& operator=(InputPort const&) = delete;
-	InputPort& operator=(InputPort&&) = delete;
+	InputPort& operator=(InputPort&&) = default;
 	virtual ~InputPort() = default;
 
 public:

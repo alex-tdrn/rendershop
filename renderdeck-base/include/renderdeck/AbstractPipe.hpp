@@ -14,9 +14,9 @@ private:
 public:
 	AbstractPipe() = default;
 	AbstractPipe(AbstractPipe const&) = delete;
-	AbstractPipe(AbstractPipe&&) = delete;
+	AbstractPipe(AbstractPipe&&) = default;
 	AbstractPipe& operator=(AbstractPipe const&) = delete;
-	AbstractPipe& operator=(AbstractPipe&&) = delete;
+	AbstractPipe& operator=(AbstractPipe&&) = default;
 	virtual ~AbstractPipe() = default;
 
 protected:

@@ -27,9 +27,9 @@ public:
 		});
 	}
 	Source(Source const&) = delete;
-	Source(Source&&) = delete;
+	Source(Source&&) = default;
 	Source& operator=(Source const&) = delete;
-	Source& operator=(Source&&) = delete;
+	Source& operator=(Source&&) = default;
 	virtual ~Source() = default;
 
 protected:

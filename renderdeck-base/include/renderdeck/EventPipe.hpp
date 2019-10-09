@@ -18,20 +18,33 @@ private:
 public:
 	EventPipe() = default;
 	EventPipe(EventPipe const&) = delete;
-	EventPipe(EventPipe&&) = delete;
+	EventPipe(EventPipe&&) = default;
 	EventPipe& operator=(EventPipe const&) = delete;
-	EventPipe& operator=(EventPipe&&) = delete;
+	EventPipe& operator=(EventPipe&&) = default;
 	virtual ~EventPipe() = default;
 
 public:
-	virtual std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() = 0;
-	virtual std::unordered_map<std::string, OutputEventPort> registerOutputEvents() = 0;
+	template<typename F>
+	void registerInputEvent(std::string name, F&& callable)
+	{
+		inputEvents[name] = std::make_unique<InputEventPortImpl<F>>(std::forward<F>(callable));
+		inputEvents[name]->setName(name);
+	}
+
+	void registerOutputEvent(std::string name)
+	{
+		outputEvents[name] = OutputEventPort{};
+		outputEvents[name].setName(name);
+	}
+
+	virtual void registerInputEvents() = 0;
+	virtual void registerOutputEvents() = 0;
 
 	InputEventPort& getInputEventPort(std::string name)
 	{
 		if(!inputEventsRegistered)
 		{
-			inputEvents = registerInputEvents();
+			registerInputEvents();
 			inputEventsRegistered = true;
 		}
 		assert(inputEvents.find(name) != inputEvents.end());
@@ -43,7 +56,7 @@ public:
 	{
 		if(!outputEventsRegistered)
 		{
-			outputEvents = registerOutputEvents();
+			registerOutputEvents();
 			outputEventsRegistered = true;
 		}
 		assert(outputEvents.find(name) != outputEvents.end());

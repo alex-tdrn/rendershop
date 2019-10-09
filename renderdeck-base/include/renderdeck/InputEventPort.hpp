@@ -16,8 +16,6 @@ public:
 	virtual ~InputEventPort() = default;
 
 public:
-	template<typename F>
-	static std::unique_ptr<InputEventPort> construct(F&& callable);
 	virtual void operator()() const = 0;
 	virtual void trigger() const = 0;
 
@@ -54,9 +52,3 @@ public:
 	}
 
 };
-
-template<typename F>
-std::unique_ptr<InputEventPort> InputEventPort::construct(F&& callable)
-{
-	return std::make_unique<InputEventPortImpl<F>>(std::forward<F>(callable));
-}

@@ -1,56 +1,42 @@
 #pragma once
-#include "renderdeck/AbstractSource.hpp"
-#include "renderdeck/AbstractSink.hpp"
+#include "renderdeck/Sink.hpp"
 
 #include <chrono>
 #include <set>
 
-class Timer
+class Timer : Sink<Timer, InputList<std::chrono::milliseconds>>
 {
-private:
-	std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::time_point::max();
-	std::chrono::milliseconds interval{1'000};
-	std::set<AbstractSource*> sources;
-	std::set<AbstractSink*> sinks;
-
-private:
-	void updateActivationTime()
-	{
-		nextActivationTime = std::chrono::steady_clock::now() + interval;
-	}
-
 public:
-	void setInterval(std::chrono::milliseconds interval)
+	static inline std::string const name = registerPipe<Timer>("Timer");
+	struct InputPorts
 	{
-		this->interval = interval;
-		updateActivationTime();
+		static inline std::array names = {
+			"Interval"
+		};
+		enum
+		{
+			Interval
+		};
+	};
+
+private:
+	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::time_point::max();
+
+protected:
+	void registerOutputEvents() override
+	{
+		AbstractSink::registerOutputEvents();
+		registerOutputEvent("Timeout");
 	}
 
-	void addSource(AbstractSource* source)
-	{
-		sources.insert(source);
-	}
-
-	void addSink(AbstractSink* sink)
-	{
-		sinks.insert(sink);
-	}
-
-	void poll()
+	void update() const override
 	{
 		if(std::chrono::steady_clock::now() >= nextActivationTime)
 		{
-			for(auto* source : sources)
-			{
-				//source->queueUpdate();
-				source->getInputEventPort("Queue Update").trigger();
-			}
-			for(auto* sink : sinks)
-			{
-				//sink->trigger();
-				sink->getInputEventPort("Trigger").trigger();
-			}
-			updateActivationTime();
+			//TODO
+			const_cast<Timer*>(this)->getOutputEventPort("Timeout").trigger();
+			nextActivationTime = std::chrono::steady_clock::now() + getInputDataPort<InputPorts::Interval>().getData();
 		}
 	}
+
 };

@@ -13,9 +13,9 @@ protected:
 public:
 	OutputPort() = default;
 	OutputPort(OutputPort const&) = delete;
-	OutputPort(OutputPort&&) = delete;
+	OutputPort(OutputPort&&) = default;
 	OutputPort& operator=(OutputPort const& that) = delete;
-	OutputPort& operator=(OutputPort&&) = delete;
+	OutputPort& operator=(OutputPort&&) = default;
 	virtual ~OutputPort() = default;
 
 public:
