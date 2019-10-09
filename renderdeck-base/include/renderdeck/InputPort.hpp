@@ -14,7 +14,7 @@ public:
 	InputPort(InputPort&&) = delete;
 	InputPort& operator=(InputPort const&) = delete;
 	InputPort& operator=(InputPort&&) = delete;
-	~InputPort() = default;
+	virtual ~InputPort() = default;
 
 public:
 	void connect(OutputPort* port)

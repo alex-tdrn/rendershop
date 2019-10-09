@@ -48,7 +48,9 @@
     <ClInclude Include="include\renderdeck\OutputEventPort.hpp">
       <Filter>Ports</Filter>
     </ClInclude>
-    <ClInclude Include="include\renderdeck\EventPipe.hpp" />
+    <ClInclude Include="include\renderdeck\EventPipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Ports">

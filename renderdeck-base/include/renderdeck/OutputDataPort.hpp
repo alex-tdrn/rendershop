@@ -9,7 +9,7 @@ template<typename Data>
 class InputDataPort;
 
 template<typename Data>
-class OutputDataPort : public DataPort<Data>, public OutputPort<InputDataPort<Data>>
+class OutputDataPort final : public DataPort<Data>, public OutputPort<InputDataPort<Data>>
 {
 private:
 	AbstractSource* parent;
@@ -18,9 +18,9 @@ private:
 public:
 	OutputDataPort() = default;
 	OutputDataPort(OutputDataPort const&) = delete;
-	OutputDataPort(OutputDataPort&&) = delete;
+	OutputDataPort(OutputDataPort&&) = default;
 	OutputDataPort& operator=(OutputDataPort const& that) = delete;
-	OutputDataPort& operator=(OutputDataPort&&) = delete;
+	OutputDataPort& operator=(OutputDataPort&&) = default;
 	~OutputDataPort() = default;
 
 public:

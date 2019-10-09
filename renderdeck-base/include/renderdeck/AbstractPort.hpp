@@ -8,6 +8,14 @@ private:
 	std::string name = "Unnamed";
 
 public:
+	AbstractPort() = default;
+	AbstractPort(AbstractPort const&) = delete;
+	AbstractPort(AbstractPort&&) = delete;
+	AbstractPort& operator=(AbstractPort const& that) = delete;
+	AbstractPort& operator=(AbstractPort&&) = delete;
+	virtual ~AbstractPort() = default;
+
+public:
 	std::string const& getName() const
 	{
 		return name;

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "renderdeck/AbstractPipe.hpp"
+#include "renderdeck/EventPipe.hpp"
 
 class AbstractDataPort;
 
-class AbstractSink : public virtual AbstractPipe
+class AbstractSink : public virtual AbstractPipe, public virtual EventPipe
 {
 protected:
 	std::vector<AbstractDataPort*> abstractInputDataPorts;
@@ -41,6 +42,16 @@ public:
 
 		updateAllInputs();
 		update();
+	}
+
+	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	{
+		return {};
+	}
+
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	{
+		return {};
 	}
 
 };

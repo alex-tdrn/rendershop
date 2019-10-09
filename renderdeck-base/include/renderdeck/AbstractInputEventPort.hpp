@@ -13,9 +13,10 @@ public:
 	AbstractInputEventPort(AbstractInputEventPort&&) = delete;
 	AbstractInputEventPort& operator=(AbstractInputEventPort const& that) = delete;
 	AbstractInputEventPort& operator=(AbstractInputEventPort&&) = delete;
-	~AbstractInputEventPort() = default;
+	virtual ~AbstractInputEventPort() = default;
 
 public:
-	virtual void operator()() = 0;
+	virtual void operator()() const = 0;
+	virtual void trigger() const = 0;
 
 };

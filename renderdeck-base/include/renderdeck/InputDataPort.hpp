@@ -8,14 +8,14 @@ template<typename Data>
 class OutputDataPort;
 
 template<typename Data>
-class InputDataPort : public DataPort<Data>, public InputPort<OutputDataPort<Data>>
+class InputDataPort final : public DataPort<Data>, public InputPort<OutputDataPort<Data>>
 {
 public:
 	InputDataPort() = default;
 	InputDataPort(InputDataPort const&) = delete;
-	InputDataPort(InputDataPort&&) = delete;
+	InputDataPort(InputDataPort&&) = default;
 	InputDataPort& operator=(InputDataPort const&) = delete;
-	InputDataPort& operator=(InputDataPort&&) = delete;
+	InputDataPort& operator=(InputDataPort&&) = default;
 	~InputDataPort() = default;
 
 public:

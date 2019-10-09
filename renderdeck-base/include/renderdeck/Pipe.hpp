@@ -51,4 +51,14 @@ private:
 		}
 	}
 
+	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	{
+		return AbstractSink::registerInputEvents() + AbstractSource::registerInputEvents();
+	}
+
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	{
+		return AbstractSink::registerOutputEvents() + AbstractSource::registerOutputEvents();
+	}
+
 };

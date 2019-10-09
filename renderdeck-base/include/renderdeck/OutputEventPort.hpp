@@ -5,21 +5,25 @@
 
 class AbstractInputEventPort;
 
-class OutputEventPort :  public OutputPort<AbstractInputEventPort>
+class OutputEventPort final :  public OutputPort<AbstractInputEventPort>
 {
 public:
 	OutputEventPort() = default;
 	OutputEventPort(OutputEventPort const&) = delete;
-	OutputEventPort(OutputEventPort&&) = delete;
+	OutputEventPort(OutputEventPort&&) = default;
 	OutputEventPort& operator=(OutputEventPort const& that) = delete;
-	OutputEventPort& operator=(OutputEventPort&&) = delete;
+	OutputEventPort& operator=(OutputEventPort&&) = default;
 	~OutputEventPort() = default;
 
 public:
-	void operator()()
+	void trigger() const
 	{
 		for(auto connection : connections)
-			connection->operator()();
+			connection->trigger();
+	}
+	void operator()() const
+	{
+		trigger();
 	}
 
 };

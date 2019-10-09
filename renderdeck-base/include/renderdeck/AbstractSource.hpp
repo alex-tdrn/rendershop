@@ -2,12 +2,14 @@
 
 #include "renderdeck/AbstractPipe.hpp"
 #include "renderdeck/Timestamp.hpp"
+#include "renderdeck/EventPipe.hpp"
+#include "renderdeck/InputEventPort.hpp"
 
 #include <vector>
 
 class AbstractDataPort;
 
-class AbstractSource : public virtual AbstractPipe
+class AbstractSource : public virtual AbstractPipe, public virtual EventPipe
 {
 protected:
 	std::vector<AbstractDataPort*> abstractOutputDataPorts;
@@ -41,6 +43,20 @@ public:
 	Timestamp const& getTimestamp() const
 	{
 		return timestamp;
+	}
+
+	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	{
+		std::unordered_map<std::string, AbstractInputEventPort> inputEvents;
+		inputEvents["Queue Update"] = InputEventPort([&]() {
+			
+		});
+		return {};
+	}
+
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	{
+		return {};
 	}
 
 	virtual void updateOutputsIfNeeded() const = 0;
