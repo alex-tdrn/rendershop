@@ -1,7 +1,8 @@
 #pragma once
 
 #include "renderdeck/AbstractPort.hpp"
-#include "renderdeck/Timestamp.hpp"
+
+class Timestamp;
 
 namespace detail
 {

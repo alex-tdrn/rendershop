@@ -1,7 +1,8 @@
 #pragma once
 
 #include "renderdeck/AbstractPipe.hpp"
-#include "renderdeck/AbstractDataPort.hpp"
+
+class AbstractDataPort;
 
 class AbstractSink : public virtual AbstractPipe
 {
