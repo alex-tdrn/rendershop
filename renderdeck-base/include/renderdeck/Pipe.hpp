@@ -51,14 +51,18 @@ private:
 		}
 	}
 
-	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
 	{
-		return AbstractSink::registerInputEvents() + AbstractSource::registerInputEvents();
+		auto inputEvents = AbstractSink::registerInputEvents();
+		inputEvents.merge(AbstractSource::registerInputEvents());
+		return inputEvents;
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
 	{
-		return AbstractSink::registerOutputEvents() + AbstractSource::registerOutputEvents();
+		auto outputEvents = AbstractSink::registerOutputEvents();
+		outputEvents.merge(AbstractSource::registerOutputEvents());
+		return outputEvents;
 	}
 
 };

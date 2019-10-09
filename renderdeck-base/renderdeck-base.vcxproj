@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\renderdeck\AbstractInputEventPort.hpp" />
-    <ClInclude Include="include\renderdeck\EventPipe.hpp" />
     <ClInclude Include="include\renderdeck\InputEventPort.hpp" />
+    <ClInclude Include="include\renderdeck\EventPipe.hpp" />
+    <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\OutputEventPort.hpp" />
     <ClInclude Include="include\renderdeck\Source.hpp" />
     <ClInclude Include="include\renderdeck\Sink.hpp" />
@@ -21,7 +21,6 @@
     <ClInclude Include="include\renderdeck\AbstractSource.hpp" />
     <ClInclude Include="include\renderdeck\AbstractPipe.hpp" />
     <ClInclude Include="include\renderdeck\AbstractDataPort.hpp" />
-    <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\InputDataPort.hpp" />
     <ClInclude Include="include\renderdeck\OutputDataPort.hpp" />
     <ClInclude Include="include\renderdeck\AbstractPort.hpp" />

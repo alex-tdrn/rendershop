@@ -1,11 +1,11 @@
 #pragma once
 
 #include "renderdeck/OutputPort.hpp"
-#include "renderdeck/AbstractInputEventPort.hpp"
+#include "renderdeck/InputEventPort.hpp"
 
-class AbstractInputEventPort;
+class InputEventPort;
 
-class OutputEventPort final :  public OutputPort<AbstractInputEventPort>
+class OutputEventPort final :  public OutputPort<InputEventPort>
 {
 public:
 	OutputEventPort() = default;

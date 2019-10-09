@@ -41,9 +41,15 @@ public:
 		if(std::chrono::steady_clock::now() >= nextActivationTime)
 		{
 			for(auto* source : sources)
-				source->queueUpdate();
+			{
+				//source->queueUpdate();
+				source->getInputEventPort("Queue Update").trigger();
+			}
 			for(auto* sink : sinks)
-				sink->trigger();
+			{
+				//sink->trigger();
+				sink->getInputEventPort("Trigger").trigger();
+			}
 			updateActivationTime();
 		}
 	}

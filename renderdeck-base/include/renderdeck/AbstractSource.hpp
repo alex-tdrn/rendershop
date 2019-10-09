@@ -45,16 +45,16 @@ public:
 		return timestamp;
 	}
 
-	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
 	{
-		std::unordered_map<std::string, AbstractInputEventPort> inputEvents;
-		inputEvents["Queue Update"] = InputEventPort([&]() {
-			
+		std::unordered_map<std::string, std::unique_ptr<InputEventPort>> inputEvents;
+		inputEvents["Queue Update"] = InputEventPort::construct([this]() {
+			queueUpdate();
 		});
-		return {};
+		return inputEvents;
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
 	{
 		return {};
 	}

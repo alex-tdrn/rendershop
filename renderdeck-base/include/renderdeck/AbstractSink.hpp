@@ -2,8 +2,7 @@
 
 #include "renderdeck/AbstractPipe.hpp"
 #include "renderdeck/EventPipe.hpp"
-
-class AbstractDataPort;
+#include "renderdeck/AbstractDataPort.hpp"
 
 class AbstractSink : public virtual AbstractPipe, public virtual EventPipe
 {
@@ -44,12 +43,16 @@ public:
 		update();
 	}
 
-	std::unordered_map<std::string, AbstractInputEventPort> registerInputEvents() const override
+	std::unordered_map<std::string, std::unique_ptr<InputEventPort>> registerInputEvents() override
 	{
-		return {};
+		std::unordered_map<std::string, std::unique_ptr<InputEventPort>> inputEvents;
+		inputEvents["Trigger"] = InputEventPort::construct([this]() {
+			trigger();
+		});
+		return inputEvents;
 	}
 
-	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() const override
+	std::unordered_map<std::string, OutputEventPort> registerOutputEvents() override
 	{
 		return {};
 	}
