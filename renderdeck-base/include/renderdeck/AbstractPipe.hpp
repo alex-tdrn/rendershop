@@ -8,9 +8,6 @@
 
 class AbstractPipe
 {
-private:
-	static inline std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> allPipes;
-
 public:
 	AbstractPipe() = default;
 	AbstractPipe(AbstractPipe const&) = delete;
@@ -19,12 +16,19 @@ public:
 	AbstractPipe& operator=(AbstractPipe&&) = default;
 	virtual ~AbstractPipe() = default;
 
+private:
+	static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()>& pipeMap()
+	{
+		static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> allPipes;
+		return allPipes;
+	}
+
 protected:
 	virtual void update() = 0;
 	template <typename ConcretePipe>
 	static std::string registerPipe(std::string name)
 	{
-		allPipes[name] = []() {
+		pipeMap()[name] = []() {
 			std::unique_ptr<AbstractPipe> ptr = std::make_unique<ConcretePipe>();
 			return ptr;
 		};
@@ -34,14 +38,14 @@ protected:
 public:
 	static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> const& getPipeMap()
 	{
-		return allPipes;
+		return pipeMap();
 	}
 
 	static std::unique_ptr<AbstractPipe> createPipe(std::string const name)
 	{
-		assert(allPipes.find(name) != allPipes.end());
+		assert(pipeMap().find(name) != pipeMap().end());
 
-		return allPipes[name]();
+		return pipeMap()[name]();
 	}
 
 	virtual std::string const& getName() const = 0;
