@@ -7,7 +7,7 @@
 class MixColors : public Pipe<MixColors, InputList<float, glm::vec3, glm::vec3>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = registerPipelineElement<MixColors>("Mix Colors");
+	static inline std::string const name = registerPipe<MixColors>("Mix Colors");
 	
 	struct InputPorts
 	{
@@ -35,12 +35,12 @@ public:
 	};
 
 public:
-	void update() const override
+	void update() override
 	{
-		auto& factor = getInputPort<InputPorts::Factor>().getResource();
-		auto& colorA= getInputPort<InputPorts::ColorA>().getResource();
-		auto& colorB = getInputPort<InputPorts::ColorB>().getResource();
-		auto& mixedColor = getOutputPort<OutputPorts::MixedColor>().getMutableResource();
+		auto& factor = getInputDataPort<InputPorts::Factor>().getData();
+		auto& colorA= getInputDataPort<InputPorts::ColorA>().getData();
+		auto& colorB = getInputDataPort<InputPorts::ColorB>().getData();
+		auto& mixedColor = getOutputDataPort<OutputPorts::MixedColor>().getMutableData();
 
 		mixedColor = factor * colorA + (1 - factor) * colorB;
 	}

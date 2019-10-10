@@ -1,26 +1,23 @@
 #pragma once
-#include "renderdeck/ResourcePort.hpp"
-#include "renderdeck/OutputPort.hpp"
 
-template<typename T>
-class OutputPort;
+#include "renderdeck/AbstractPort.hpp"
 
-template<typename T>
-class InputPort : public ResourcePort<T>
+template<typename OutputPort>
+class InputPort : public virtual AbstractPort
 {
-private:
-	OutputPort<T>* connection = nullptr;
+protected:
+	OutputPort* connection = nullptr;
 
 public:
 	InputPort() = default;
 	InputPort(InputPort const&) = delete;
-	InputPort(InputPort&&) = delete;
+	InputPort(InputPort&&) = default;
 	InputPort& operator=(InputPort const&) = delete;
-	InputPort& operator=(InputPort&&) = delete;
-	~InputPort() = default;
+	InputPort& operator=(InputPort&&) = default;
+	virtual ~InputPort() = default;
 
 public:
-	void connect(OutputPort<T>* port)
+	void connect(OutputPort* port)
 	{
 		if(connection != port)
 		{
@@ -34,17 +31,17 @@ public:
 	{
 		if(!canConnect(port))
 			return;
-		connect(static_cast<OutputPort<T>*>(port));
+		connect(dynamic_cast<OutputPort*>(port));
 	}
 	
-	bool isConnected() const
+	bool isConnected() const final override
 	{
 		return connection != nullptr;
 	}
 
-	bool canConnect(AbstractPort* port) final override
+	bool canConnect(AbstractPort* port) const final override
 	{
-		if(!dynamic_cast<OutputPort<T>*>(port))
+		if(!dynamic_cast<OutputPort*>(port))
 			return false;
 		else
 			return true;
@@ -60,20 +57,5 @@ public:
 		}
 	}
 
-	Timestamp const& getTimestamp() const final override
-	{
-		return connection->getTimestamp();
-	}
-
-	void update() const final override
-	{
-		if(connection)
-			connection->update();
-	}
-
-	T const& getResource() const final override
-	{
-		return connection->getResource();
-	}
-
 };
+

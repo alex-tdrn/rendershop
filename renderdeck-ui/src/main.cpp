@@ -70,24 +70,23 @@ int main(int argc, char** argv)
 	using namespace std::chrono_literals;
 	RandomColorSource source;
 	ClearBackgroundSink sink;
+	Timer timer;
 
-	std::vector<Timer> timers(2);
-	timers[0].setInterval(1s);
-	timers[0].addSource(&source);
-	timers[0].addSink(&sink);
+	timer.getOutputEventPort("Timeout").connect(&source.getInputEventPort("Queue Update"));
+	timer.getOutputEventPort("Timeout").connect(&sink.getInputEventPort("Trigger"));
+
 
 	std::vector<Node> nodes;
 	nodes.emplace_back(&source);
 	nodes.emplace_back(&sink);
+	nodes.emplace_back(&timer);
 
-	std::vector<std::unique_ptr<AbstractPipelineElement>> dynamicElements;
+	std::vector<std::unique_ptr<AbstractPipe>> dynamicElements;
 
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
-		for(auto& timer : timers)
-			timer.poll();
-		
+		timer.update();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -159,7 +158,7 @@ int main(int argc, char** argv)
 		{
 			if(ImGui::BeginMenu("Sources"))
 			{
-				for(auto [name, constructor] : AbstractSource::getSourcesMap())
+				for(auto [name, constructor] : AbstractSource::getPipeMap())
 				{
 					if(ImGui::MenuItem(name.c_str()))
 					{

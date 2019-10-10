@@ -5,7 +5,7 @@ class OutputPin : public AbstractPin
 {
 public:
 	OutputPin() = default;
-	OutputPin(AbstractResourcePort* port);
+	OutputPin(AbstractDataPort* port);
 	OutputPin(OutputPin&&) = default;
 	OutputPin(OutputPin const&) = delete;
 	OutputPin& operator=(OutputPin&&) = default;

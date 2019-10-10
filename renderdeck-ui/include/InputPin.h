@@ -11,7 +11,7 @@ private:
 
 public:
 	InputPin() = default;
-	InputPin(AbstractResourcePort* port);
+	InputPin(AbstractDataPort* port);
 	InputPin(InputPin&&) = default;
 	InputPin(InputPin const&) = delete;
 	InputPin& operator=(InputPin&&) = default;

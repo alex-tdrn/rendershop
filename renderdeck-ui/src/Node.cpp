@@ -1,19 +1,29 @@
 #include "Node.h"
 #include "UIDebug.hpp"
-#include "renderdeck/AbstractPipeline.hpp"
+#include "renderdeck/AbstractSink.hpp"
+#include "renderdeck/AbstractSource.hpp"
 
 #include <algorithm>
 
-Node::Node(AbstractPipelineElement* element)
-	: pipelineElement(element), id(uniqueID())
+Node::Node(AbstractPipe* pipe)
+	: pipe(pipe), id(uniqueID())
 {
 	inputPins.reserve(100);
 	outputPins.reserve(100);
-	for(auto inputPort : pipelineElement->getAbstractInputPorts())
-		inputPins.emplace_back(inputPort);
 
-	for(auto outputPin : pipelineElement->getAbstractOutputPorts())
-		outputPins.emplace_back(outputPin);
+	if(auto sink = dynamic_cast<AbstractSink*>(pipe); sink != nullptr)
+	{
+		for(auto inputPort : sink->getInputDataPorts())
+			inputPins.emplace_back(inputPort);
+	}
+
+	if(auto source = dynamic_cast<AbstractSource*>(pipe); source != nullptr)
+	{
+		{
+			for(auto outputPin : source->getOutputDataPorts())
+				outputPins.emplace_back(outputPin);
+		}
+	}
 }
 
 void Node::initializeLayout()
@@ -34,7 +44,7 @@ void Node::initializeLayout()
 
 	float const inputGroupWidth = measurePinGroup(inputPins);
 	float const outputGroupWidth = measurePinGroup(outputPins);
-	float const titleWidth = ImGui::CalcTextSize(pipelineElement->getTypeName().c_str()).x;
+	float const titleWidth = ImGui::CalcTextSize(pipe->getName().c_str()).x;
 
 	if(titleWidth > contentsWidth + minimumCenterSpacing)
 	{
@@ -69,7 +79,7 @@ void Node::drawTitle()
 	if(titleOffset > 0)
 		ImGui::Indent(titleOffset);
 
-	ImGui::Text(pipelineElement->getTypeName().c_str());
+	ImGui::Text(pipe->getName().c_str());
 
 	if(titleOffset > 0)
 		ImGui::Unindent(titleOffset);

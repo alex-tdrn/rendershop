@@ -1,7 +1,8 @@
 #pragma once
+
 #include <chrono>
 
-class Timestamp
+class Timestamp final
 {
 private:
 	using chrono = std::chrono::steady_clock;

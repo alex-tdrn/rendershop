@@ -1,14 +1,14 @@
 #pragma once
-#include "renderdeck/AbstractPipeline.hpp"
-#include "renderdeck/OutputPort.hpp"
-#include "renderdeck/Utility.hpp"
 
-#include <tuple>
+#include "renderdeck/AbstractSource.hpp"
+#include "renderdeck/OutputDataPort.hpp"
+#include "renderdeck/Utility.hpp"
+#include "renderdeck/Timestamp.hpp"
 
 template<typename... O>
 struct OutputList
 {
-	std::tuple<OutputPort<O>...> list;
+	std::tuple<OutputDataPort<O>...> list;
 };
 
 template<typename ConcreteSource, typename OutputList>
@@ -20,20 +20,20 @@ private:
 public:
 	Source()
 	{
-		static_for_index(outputs.list, [&](auto& output, int index) {
-			output.setParent(this);
-			output.setName(ConcreteSource::OutputPorts::names[index]);
-			abstractOutputPorts.push_back(&output);
+		static_for_index(outputs.list, [&](auto& outputDataPort, int index) {
+			AbstractSource::abstractOutputDataPorts.push_back(&outputDataPort);
+			outputDataPort.setName(ConcreteSource::OutputPorts::names[index]);
+			outputDataPort.setParent(this);
 		});
 	}
 	Source(Source const&) = delete;
-	Source(Source&&) = delete;
+	Source(Source&&) = default;
 	Source& operator=(Source const&) = delete;
-	Source& operator=(Source&&) = delete;
+	Source& operator=(Source&&) = default;
 	virtual ~Source() = default;
 
 protected:
-	void updateOutputsIfNeeded() const override
+	void updateOutputsIfNeeded() override
 	{
 		if(isUpdateQueued())
 		{
@@ -43,13 +43,13 @@ protected:
 	}
 
 public:
-	std::string const& getTypeName() const override final
+	std::string const& getName() const override
 	{
 		return ConcreteSource::name;
 	}
 
 	template<int outputIndex>
-	auto& getOutputPort() const
+	auto& getOutputDataPort() const
 	{
 		return std::get<outputIndex>(outputs.list);
 	}

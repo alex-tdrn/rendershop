@@ -1,15 +1,14 @@
 #pragma once
-#include "renderdeck/AbstractPipeline.hpp"
-#include "renderdeck/InputPort.hpp"
-#include "renderdeck/Utility.hpp"
 
-#include <string>
-#include <tuple>
+#include "renderdeck/AbstractSink.hpp"
+#include "renderdeck/InputDataPort.hpp"
+#include "renderdeck/Utility.hpp"
+#include "renderdeck/Timestamp.hpp"
 
 template<typename... I>
 struct InputList
 {
-	std::tuple<InputPort<I>...> list;
+	std::tuple<InputDataPort<I>...> list;
 };
 
 template<typename ConcreteSink, typename InputList>
@@ -21,16 +20,15 @@ protected:
 public:
 	Sink()
 	{
-		static_for_index(inputs.list, [&](auto& input, int index) {
-			abstractInputPorts.push_back(&input);
-			input.setName(ConcreteSink::InputPorts::names[index]);
-
+		static_for_index(inputs.list, [&](auto& inputDataPort, int index) {
+			AbstractSink::abstractInputDataPorts.push_back(&inputDataPort);
+			inputDataPort.setName(ConcreteSink::InputPorts::names[index]);
 		});
 	}
 	Sink(Sink const&) = delete;
-	Sink(Sink&&) = delete;
+	Sink(Sink&&) = default;
 	Sink& operator=(Sink const&) = delete;
-	Sink& operator=(Sink&&) = delete;
+	Sink& operator=(Sink&&) = default;
 	virtual ~Sink() = default;
 
 protected:
@@ -38,26 +36,17 @@ protected:
 	{
 		static_for(inputs.list, [](auto const& input) {
 			input.update();
-		});
+			});
 	}
 
 public:
-	std::string const& getTypeName() const override
+	std::string const& getName() const override
 	{
 		return ConcreteSink::name;
 	}
 
-	bool allInputsConnected() const final override
-	{
-		bool ret = true;
-		static_for(inputs.list, [&](auto const& input) {
-			ret &= input.isConnected();
-		});
-		return ret;
-	}
-
 	template<int inputIndex>
-	auto& getInputPort() const
+	auto& getInputDataPort() const
 	{
 		return std::get<inputIndex>(inputs.list);
 	}

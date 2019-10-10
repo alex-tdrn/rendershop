@@ -4,10 +4,11 @@
 #include <glm/glm.hpp>
 #include <array>
 
+
 class RandomColorSource : public Source<RandomColorSource, OutputList<glm::vec3>>
-{	
+{
 public:
-	static inline std::string const name = registerPipelineElement<RandomColorSource>("Random Color Source");
+	static inline std::string const name = registerPipe<RandomColorSource>("Random Color Source");
 
 	struct OutputPorts
 	{
@@ -22,10 +23,10 @@ public:
 
 protected:
 
-	void update() const override 
+	void update() override
 	{
-		auto& color = getOutputPort<OutputPorts::Color>().getMutableResource();
-		color = {rand()% 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0 };
+		auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
+		color = {rand() % 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0};
 	}
 
 };

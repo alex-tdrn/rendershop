@@ -7,7 +7,7 @@
 class DecomposeColor : public Pipe<DecomposeColor, InputList<glm::vec3>, OutputList<float, float, float>>
 {
 public:
-	static inline std::string const name = registerPipelineElement<DecomposeColor>("Decompose Colors");
+	static inline std::string const name = registerPipe<DecomposeColor>("Decompose Colors");
 
 	struct InputPorts
 	{
@@ -35,12 +35,12 @@ public:
 
 
 public:
-	void update() const override
+	void update() override
 	{
-		auto& color = getInputPort<InputPorts::Color>().getResource();
-		auto& r = getOutputPort<OutputPorts::R>().getMutableResource();
-		auto& g = getOutputPort<OutputPorts::G>().getMutableResource();
-		auto& b = getOutputPort<OutputPorts::B>().getMutableResource();
+		auto& color = getInputDataPort<InputPorts::Color>().getData();
+		auto& r = getOutputDataPort<OutputPorts::R>().getMutableData();
+		auto& g = getOutputDataPort<OutputPorts::G>().getMutableData();
+		auto& b = getOutputDataPort<OutputPorts::B>().getMutableData();
 
 		r = color.r;
 		g = color.g;

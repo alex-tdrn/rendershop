@@ -1,16 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="include\renderdeck\Source.hpp" />
     <ClInclude Include="include\renderdeck\Timestamp.hpp" />
-    <ClInclude Include="include\renderdeck\Sink.hpp" />
-    <ClInclude Include="include\renderdeck\OutputPort.hpp" />
-    <ClInclude Include="include\renderdeck\InputPort.hpp" />
     <ClInclude Include="include\renderdeck\Utility.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPipeline.hpp" />
-    <ClInclude Include="include\renderdeck\Pipe.hpp" />
-    <ClInclude Include="include\renderdeck\TypeTag.hpp" />
-    <ClInclude Include="include\renderdeck\ResourcePort.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
+    <ClInclude Include="include\renderdeck\AbstractDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputDataPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractPipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractSource.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\AbstractSink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Sink.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Source.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\Pipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\OutputEventPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\EventPipe.hpp">
+      <Filter>Pipes</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputEventPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+    <ClInclude Include="include\renderdeck\InputPort.hpp">
+      <Filter>Ports</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Ports">
+      <UniqueIdentifier>{7c9e1923-2647-4e4a-a5b7-6fdc69b524ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipes">
+      <UniqueIdentifier>{ef7aecfb-1620-4aed-9b46-6b4d0ce2b520}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
