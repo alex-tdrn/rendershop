@@ -33,7 +33,7 @@ public:
 	virtual ~Source() = default;
 
 protected:
-	void updateOutputsIfNeeded() const override
+	void updateOutputsIfNeeded() override
 	{
 		if(isUpdateQueued())
 		{

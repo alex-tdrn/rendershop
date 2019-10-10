@@ -33,7 +33,7 @@ public:
 
 public:
 
-	void update() const override
+	void update() override
 	{
 		auto const& inputColor = getInputDataPort<InputPorts::Color>().getData();
 		auto& outputColor = getOutputDataPort<OutputPorts::Color>().getMutableData();

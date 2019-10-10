@@ -56,6 +56,6 @@ public:
 	{
 	}
 
-	virtual void updateOutputsIfNeeded() const = 0;
+	virtual void updateOutputsIfNeeded() = 0;
 
 };

@@ -31,7 +31,7 @@ public:
 
 
 public:
-	void update() const override
+	void update() override
 	{
 		auto& value = getInputDataPort<InputPorts::Value>().getData();
 		auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();

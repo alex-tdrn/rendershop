@@ -20,7 +20,7 @@ public:
 	};
 
 protected:
-	void update() const override;
+	void update() override;
 
 };
 

@@ -20,13 +20,13 @@ private:
 		return ConcretePipe::name;
 	}
 
-	void trigger() const override
+	void trigger() override
 	{
 		this->update();
 		this->timestamp.update();
 	}
 
-	void updateOutputsIfNeeded() const override
+	void updateOutputsIfNeeded() override
 	{
 		if(!this->allInputsConnected())
 			return;

@@ -68,21 +68,25 @@ int main(int argc, char** argv)
 
 	
 	using namespace std::chrono_literals;
-	//RandomColorSource source;
-	//ClearBackgroundSink sink;
-	//Timer timer;
+	RandomColorSource source;
+	ClearBackgroundSink sink;
+	Timer timer;
+
+	timer.getOutputEventPort("Timeout").connect(&source.getInputEventPort("Queue Update"));
+	timer.getOutputEventPort("Timeout").connect(&sink.getInputEventPort("Trigger"));
+
 
 	std::vector<Node> nodes;
-	/*nodes.emplace_back(&source);
-	nodes.emplace_back(&sink);*/
-	//nodes.emplace_back(&timer);
+	nodes.emplace_back(&source);
+	nodes.emplace_back(&sink);
+	nodes.emplace_back(&timer);
 
 	std::vector<std::unique_ptr<AbstractPipe>> dynamicElements;
 
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
-		
+		timer.update();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();

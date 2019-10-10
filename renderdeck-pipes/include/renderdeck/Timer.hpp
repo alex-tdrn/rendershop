@@ -4,7 +4,9 @@
 #include <chrono>
 #include <set>
 
-class Timer : Sink<Timer, InputList<std::chrono::milliseconds>>
+using namespace std::chrono_literals;
+
+class Timer : public Sink<Timer, InputList<std::chrono::milliseconds>>
 {
 public:
 	static inline std::string const name = registerPipe<Timer>("Timer");
@@ -20,7 +22,7 @@ public:
 	};
 
 private:
-	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::time_point::max();
+	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;
 
 protected:
 	void registerOutputEvents() override
@@ -29,13 +31,13 @@ protected:
 		registerOutputEvent("Timeout");
 	}
 
-	void update() const override
+public:
+	void update() override
 	{
 		if(std::chrono::steady_clock::now() >= nextActivationTime)
 		{
-			//TODO
-			const_cast<Timer*>(this)->getOutputEventPort("Timeout").trigger();
-			nextActivationTime = std::chrono::steady_clock::now() + getInputDataPort<InputPorts::Interval>().getData();
+			getOutputEventPort("Timeout").trigger();
+			nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;//getInputDataPort<InputPorts::Interval>().getData();
 		}
 	}
 

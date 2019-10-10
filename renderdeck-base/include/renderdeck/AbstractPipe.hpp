@@ -20,7 +20,7 @@ public:
 	virtual ~AbstractPipe() = default;
 
 protected:
-	virtual void update() const = 0;
+	virtual void update() = 0;
 	template <typename ConcretePipe>
 	static std::string registerPipe(std::string name)
 	{

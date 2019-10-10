@@ -34,7 +34,7 @@ public:
 		return ret;
 	}
 
-	virtual void trigger() const
+	virtual void trigger()
 	{
 		if(!allInputsConnected())
 			return;

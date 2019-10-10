@@ -35,7 +35,7 @@ public:
 	};
 
 public:
-	void update() const override
+	void update() override
 	{
 		auto& factor = getInputDataPort<InputPorts::Factor>().getData();
 		auto& colorA= getInputDataPort<InputPorts::ColorA>().getData();
