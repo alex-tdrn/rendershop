@@ -9,7 +9,6 @@
 class GrayscaleColorPipe : public Pipe<GrayscaleColorPipe, InputList<glm::vec3>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = registerPipe<GrayscaleColorPipe>("Grayscale Color Pipe");
 	struct InputPorts
 	{
 		static inline std::array names = {
@@ -20,6 +19,7 @@ public:
 			Color
 		};
 	};
+
 	struct OutputPorts
 	{
 		static inline std::array names = {
@@ -32,7 +32,9 @@ public:
 	};
 
 public:
+	static inline std::string const name = registerPipe<GrayscaleColorPipe>("Grayscale Color Pipe");
 
+public:
 	void update() override;
 
 };

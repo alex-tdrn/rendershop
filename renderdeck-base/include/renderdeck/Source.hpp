@@ -26,6 +26,7 @@ public:
 			outputDataPort.setParent(this);
 		});
 	}
+
 	Source(Source const&) = delete;
 	Source(Source&&) = default;
 	Source& operator=(Source const&) = delete;

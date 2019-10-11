@@ -17,15 +17,27 @@ public:
 	AbstractSink& operator=(AbstractSink&&) = default;
 	virtual ~AbstractSink() = default;
 
-	std::vector<AbstractDataPort*> const& getInputDataPorts() const
-	{
-		return abstractInputDataPorts;
-	}
 
 protected:
 	virtual void updateAllInputs() const = 0;
 
 public:
+	void registerInputEvents() override
+	{
+		registerInputEvent("Trigger", [this]() {
+			trigger();
+		});
+	}
+
+	void registerOutputEvents() override
+	{
+	}
+
+	std::vector<AbstractDataPort*> const& getInputDataPorts() const
+	{
+		return abstractInputDataPorts;
+	}
+
 	bool allInputsConnected() const
 	{
 		bool ret = true;
@@ -41,17 +53,6 @@ public:
 
 		updateAllInputs();
 		update();
-	}
-
-	void registerInputEvents() override
-	{
-		registerInputEvent("Trigger", [this]() {
-			trigger();
-		});
-	}
-
-	void registerOutputEvents() override
-	{
 	}
 
 };

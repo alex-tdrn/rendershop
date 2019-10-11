@@ -15,7 +15,12 @@ public:
 	AbstractPort& operator=(AbstractPort&&) = default;
 	virtual ~AbstractPort() = default;
 
-public:
+public:	
+	virtual bool canConnect(AbstractPort* port) const = 0;
+	virtual bool isConnected() const = 0;
+	virtual void connect(AbstractPort* port) = 0;
+	virtual void disconnect() = 0;
+
 	std::string const& getName() const
 	{
 		return name;
@@ -25,10 +30,5 @@ public:
 	{
 		this->name = name;
 	}
-	
-	virtual bool canConnect(AbstractPort* port) const = 0;
-	virtual bool isConnected() const = 0;
-	virtual void connect(AbstractPort* port) = 0;
-	virtual void disconnect() = 0;
 
 };

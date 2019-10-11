@@ -7,8 +7,6 @@
 class MixColors : public Pipe<MixColors, InputList<float, glm::vec3, glm::vec3>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = registerPipe<MixColors>("Mix Colors");
-	
 	struct InputPorts
 	{
 		static inline std::array names = {
@@ -33,6 +31,9 @@ public:
 		};
 
 	};
+
+public:
+	static inline std::string const name = registerPipe<MixColors>("Mix Colors");
 
 public:
 	void update() override;

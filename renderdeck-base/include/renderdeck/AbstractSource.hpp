@@ -23,10 +23,6 @@ public:
 	AbstractSource& operator=(AbstractSource&&) = default;
 	virtual ~AbstractSource() = default;
 
-	std::vector<AbstractDataPort*> const& getOutputDataPorts() const
-	{
-		return abstractOutputDataPorts;
-	}
 
 protected:
 	bool isUpdateQueued() const
@@ -35,15 +31,7 @@ protected:
 	}
 
 public:
-	void queueUpdate()
-	{
-		timestamp.reset();
-	}
-
-	Timestamp const& getTimestamp() const
-	{
-		return timestamp;
-	}
+	virtual void updateOutputsIfNeeded() = 0;
 
 	void registerInputEvents() override
 	{
@@ -56,6 +44,19 @@ public:
 	{
 	}
 
-	virtual void updateOutputsIfNeeded() = 0;
+	std::vector<AbstractDataPort*> const& getOutputDataPorts() const
+	{
+		return abstractOutputDataPorts;
+	}
+
+	void queueUpdate()
+	{
+		timestamp.reset();
+	}
+
+	Timestamp const& getTimestamp() const
+	{
+		return timestamp;
+	}
 
 };

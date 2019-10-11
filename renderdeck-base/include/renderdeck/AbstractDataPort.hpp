@@ -45,11 +45,12 @@ public:
 	virtual ~DataPort() = default;
 
 public:
+	virtual T const& getData() const = 0;
+
 	int getDataTypeTag() const final override
 	{
 		return typeTag<T>();
 	}
 
-	virtual T const& getData() const = 0;
 
 };

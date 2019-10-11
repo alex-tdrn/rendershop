@@ -24,6 +24,9 @@ public:
 	virtual ~EventPipe() = default;
 
 public:
+	virtual void registerInputEvents() = 0;
+	virtual void registerOutputEvents() = 0;
+
 	template<typename F>
 	void registerInputEvent(std::string name, F&& callable)
 	{
@@ -36,9 +39,6 @@ public:
 		outputEvents[name] = OutputEventPort{};
 		outputEvents[name].setName(name);
 	}
-
-	virtual void registerInputEvents() = 0;
-	virtual void registerOutputEvents() = 0;
 
 	InputEventPort& getInputEventPort(std::string name)
 	{

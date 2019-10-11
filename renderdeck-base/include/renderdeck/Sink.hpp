@@ -25,6 +25,7 @@ public:
 			inputDataPort.setName(ConcreteSink::InputPorts::names[index]);
 		});
 	}
+
 	Sink(Sink const&) = delete;
 	Sink(Sink&&) = default;
 	Sink& operator=(Sink const&) = delete;

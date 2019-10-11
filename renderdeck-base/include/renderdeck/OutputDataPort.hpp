@@ -24,11 +24,6 @@ public:
 	~OutputDataPort() = default;
 
 public:
-	void setParent(AbstractSource* parent)
-	{
-		this->parent = parent;
-	}
-
 	Timestamp const& getTimestamp() const final override
 	{
 		return parent->getTimestamp();
@@ -47,6 +42,11 @@ public:
 	void update() const final override
 	{
 		parent->updateOutputsIfNeeded();
+	}
+
+	void setParent(AbstractSource* parent)
+	{
+		this->parent = parent;
 	}
 
 };

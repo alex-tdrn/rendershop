@@ -7,8 +7,6 @@
 class DecomposeColor : public Pipe<DecomposeColor, InputList<glm::vec3>, OutputList<float, float, float>>
 {
 public:
-	static inline std::string const name = registerPipe<DecomposeColor>("Decompose Colors");
-
 	struct InputPorts
 	{
 		static inline std::array names = {
@@ -19,6 +17,7 @@ public:
 		};
 
 	};
+
 	struct OutputPorts
 	{
 		static inline std::array names = {
@@ -33,6 +32,8 @@ public:
 		};
 	};
 
+public:
+	static inline std::string const name = registerPipe<DecomposeColor>("Decompose Colors");
 
 public:
 	void update() override;
