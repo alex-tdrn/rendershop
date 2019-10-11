@@ -31,13 +31,7 @@ public:
 
 
 public:
-	void update() override
-	{
-		auto& value = getInputDataPort<InputPorts::Value>().getData();
-		auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
-
-		color = {value, value, value};
-	}
+	void update() override;
 
 };
 

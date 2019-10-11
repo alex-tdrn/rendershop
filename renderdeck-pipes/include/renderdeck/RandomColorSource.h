@@ -23,10 +23,6 @@ public:
 
 protected:
 
-	void update() override
-	{
-		auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
-		color = {rand() % 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0};
-	}
+	void update() override;
 
 };

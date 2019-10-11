@@ -2,7 +2,7 @@
 #include "renderdeck/Sink.hpp"
 
 #include <chrono>
-#include <set>
+#include <array>
 
 using namespace std::chrono_literals;
 
@@ -25,20 +25,9 @@ private:
 	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;
 
 protected:
-	void registerOutputEvents() override
-	{
-		AbstractSink::registerOutputEvents();
-		registerOutputEvent("Timeout");
-	}
+	void registerOutputEvents() override;
 
 public:
-	void update() override
-	{
-		if(std::chrono::steady_clock::now() >= nextActivationTime)
-		{
-			getOutputEventPort("Timeout").trigger();
-			nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;//getInputDataPort<InputPorts::Interval>().getData();
-		}
-	}
+	void update() override;
 
 };
