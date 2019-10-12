@@ -30,6 +30,7 @@
     <ProjectGuid>{E68A3F44-48B5-4443-9BF2-20F021D757CE}</ProjectGuid>
     <RootNamespace>renderdeckui</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>renderdeck-editor</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

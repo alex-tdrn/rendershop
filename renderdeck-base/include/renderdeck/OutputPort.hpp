@@ -26,8 +26,6 @@ public:
 
 	void connect(AbstractPort* port) final override
 	{
-		if(!canConnect(port))
-			return;
 		connect(dynamic_cast<InputPort*>(port));
 	}
 
@@ -49,6 +47,9 @@ public:
 
 	void connect(InputPort* port)
 	{
+		if(port == nullptr)
+			throw "Invalid port";
+
 		if(connections.find(port) != connections.end())
 			return;
 		connections.insert(port);

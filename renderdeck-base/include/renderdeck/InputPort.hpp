@@ -32,8 +32,6 @@ public:
 
 	void connect(AbstractPort* port) final override
 	{
-		if(!canConnect(port))
-			return;
 		connect(dynamic_cast<OutputPort*>(port));
 	}
 
@@ -49,6 +47,8 @@ public:
 
 	void connect(OutputPort* port)
 	{
+		if(port == nullptr)
+			throw "Invalid port";
 		if(connection != port)
 		{
 			disconnect();
