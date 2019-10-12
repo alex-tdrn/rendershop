@@ -30,7 +30,7 @@ public:
 	template<typename F>
 	void registerInputEvent(std::string name, F&& callable)
 	{
-		inputEvents[name] = std::make_unique<InputEventPortImpl<F>>(std::forward<F>(callable));
+		inputEvents[name] = std::make_unique<InputEventPort>(std::forward<F>(callable));
 		inputEvents[name]->setName(name);
 	}
 

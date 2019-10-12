@@ -3,52 +3,61 @@
 #include "renderdeck/InputPort.hpp"
 #include "renderdeck/OutputEventPort.hpp"
 
+#include <memory>
+
+namespace detail
+{
+	class TypeErasedCallable
+	{
+	public:
+		virtual void call() const = 0;
+
+	};
+
+	template <typename F>
+	class Callable final : public TypeErasedCallable
+	{
+	private:
+		F callable;
+
+	public:
+		Callable(F&& callable) : callable(callable){ }
+		void call() const final override {	callable();	}
+
+	};
+}
+
 class OutputEventPort;
 
 class InputEventPort : public InputPort<OutputEventPort>
 {
+private:
+	std::unique_ptr<detail::TypeErasedCallable> f;
+
 public:
-	InputEventPort() = default;
+	template<typename F>
+	InputEventPort(F&& callable)
+		: f(std::make_unique<detail::Callable<F>>(std::forward<F>(callable)))
+	{
+
+	}
 	InputEventPort(InputEventPort const&) = delete;
-	InputEventPort(InputEventPort&&) = delete;
+	InputEventPort(InputEventPort&&) = default;
 	InputEventPort& operator=(InputEventPort const& that) = delete;
-	InputEventPort& operator=(InputEventPort&&) = delete;
+	InputEventPort& operator=(InputEventPort&&) = default;
 	virtual ~InputEventPort() = default;
 
 public:
-	virtual void operator()() const = 0;
-	virtual void trigger() const = 0;
-
-};
-
-
-template <typename F>
-class InputEventPortImpl final : public InputEventPort
-{
-private:
-	F callable;
-
-public:
-	InputEventPortImpl(F callable)
-		: callable(callable)
+	void trigger() const
 	{
-
-	}
-	InputEventPortImpl(InputEventPortImpl const&) = delete;
-	InputEventPortImpl(InputEventPortImpl&&) = default;
-	InputEventPortImpl& operator=(InputEventPortImpl const& that) = delete;
-	InputEventPortImpl& operator=(InputEventPortImpl&&) = default;
-	~InputEventPortImpl() = default;
-
-public:
-	void trigger() const final override
-	{
-		callable();
+		f->call();
 	}
 
-	void operator()() const final override
+	void operator()() const
 	{
 		trigger();
 	}
 
 };
+
+
