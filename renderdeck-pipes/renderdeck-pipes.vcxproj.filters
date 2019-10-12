@@ -11,5 +11,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ClearBackgroundSink.cpp" />
+    <ClCompile Include="src\DecomposeColor.cpp" />
+    <ClCompile Include="src\GrayscaleColorPipe.cpp" />
+    <ClCompile Include="src\MixColors.cpp" />
+    <ClCompile Include="src\RandomColorSource.cpp" />
+    <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\ValueToColor.cpp" />
   </ItemGroup>
 </Project>

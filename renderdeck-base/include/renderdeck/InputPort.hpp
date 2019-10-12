@@ -17,23 +17,6 @@ public:
 	virtual ~InputPort() = default;
 
 public:
-	void connect(OutputPort* port)
-	{
-		if(connection != port)
-		{
-			disconnect();
-			connection = port;
-			port->connect(this);
-		}
-	}
-
-	void connect(AbstractPort* port) final override
-	{
-		if(!canConnect(port))
-			return;
-		connect(dynamic_cast<OutputPort*>(port));
-	}
-	
 	bool isConnected() const final override
 	{
 		return connection != nullptr;
@@ -47,6 +30,13 @@ public:
 			return true;
 	}
 
+	void connect(AbstractPort* port) final override
+	{
+		if(!canConnect(port))
+			return;
+		connect(dynamic_cast<OutputPort*>(port));
+	}
+
 	void disconnect() final override
 	{
 		if(connection != nullptr)
@@ -54,6 +44,16 @@ public:
 			auto oldConnection = connection;
 			connection = nullptr;
 			oldConnection->disconnect(this);
+		}
+	}
+
+	void connect(OutputPort* port)
+	{
+		if(connection != port)
+		{
+			disconnect();
+			connection = port;
+			port->connect(this);
 		}
 	}
 

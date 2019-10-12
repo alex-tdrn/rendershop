@@ -26,6 +26,7 @@ public:
 			outputDataPort.setParent(this);
 		});
 	}
+
 	Source(Source const&) = delete;
 	Source(Source&&) = default;
 	Source& operator=(Source const&) = delete;
@@ -52,6 +53,12 @@ public:
 	auto& getOutputDataPort() const
 	{
 		return std::get<outputIndex>(outputs.list);
+	}
+
+	template<int outputIndex>
+	auto& getOutputData() const
+	{
+		return getOutputDataPort<outputIndex>().get();
 	}
 
 };

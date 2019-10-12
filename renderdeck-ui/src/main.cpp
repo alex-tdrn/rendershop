@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	Timer timer;
 
 	timer.getOutputEventPort("Timeout").connect(&source.getInputEventPort("Queue Update"));
-	timer.getOutputEventPort("Timeout").connect(&sink.getInputEventPort("Trigger"));
+	timer.getOutputEventPort("Timeout").connect(&sink.getInputEventPort("Run"));
 
 
 	std::vector<Node> nodes;

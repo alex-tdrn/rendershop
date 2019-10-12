@@ -19,12 +19,9 @@ public:
 	virtual ~OutputPort() = default;
 
 public:
-	void connect(InputPort* port)
+	bool isConnected() const final override
 	{
-		if(connections.find(port) != connections.end())
-			return;
-		connections.insert(port);
-		port->connect(this);
+		return !connections.empty();
 	}
 
 	void connect(AbstractPort* port) final override
@@ -41,10 +38,21 @@ public:
 		else
 			return true;
 	}
-	
-	bool isConnected() const final override
+
+	void disconnect() final override
 	{
-		return !connections.empty();
+		while(!connections.empty())
+		{
+			disconnect(*connections.begin());
+		}
+	}
+
+	void connect(InputPort* port)
+	{
+		if(connections.find(port) != connections.end())
+			return;
+		connections.insert(port);
+		port->connect(this);
 	}
 
 	void disconnect(AbstractPort* port)
@@ -61,14 +69,6 @@ public:
 			return;
 		connections.erase(port);
 		port->disconnect();
-	}
-
-	void disconnect() final override
-	{
-		while(!connections.empty())
-		{
-			disconnect(*connections.begin());
-		}
 	}
 
 };

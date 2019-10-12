@@ -25,6 +25,7 @@ public:
 			inputDataPort.setName(ConcreteSink::InputPorts::names[index]);
 		});
 	}
+
 	Sink(Sink const&) = delete;
 	Sink(Sink&&) = default;
 	Sink& operator=(Sink const&) = delete;
@@ -36,7 +37,7 @@ protected:
 	{
 		static_for(inputs.list, [](auto const& input) {
 			input.update();
-			});
+		});
 	}
 
 public:
@@ -49,6 +50,12 @@ public:
 	auto& getInputDataPort() const
 	{
 		return std::get<inputIndex>(inputs.list);
+	}
+
+	template<int inputIndex>
+	auto& getInputData() const
+	{
+		return getInputDataPort<inputIndex>().get();
 	}
 
 };

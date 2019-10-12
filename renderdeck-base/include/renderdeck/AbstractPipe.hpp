@@ -25,6 +25,7 @@ private:
 
 protected:
 	virtual void update() = 0;
+	
 	template <typename ConcretePipe>
 	static std::string registerPipe(std::string name)
 	{
@@ -49,4 +50,5 @@ public:
 	}
 
 	virtual std::string const& getName() const = 0;
+
 };

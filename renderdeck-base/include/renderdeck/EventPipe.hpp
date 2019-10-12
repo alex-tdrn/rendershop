@@ -24,10 +24,13 @@ public:
 	virtual ~EventPipe() = default;
 
 public:
+	virtual void registerInputEvents() = 0;
+	virtual void registerOutputEvents() = 0;
+
 	template<typename F>
 	void registerInputEvent(std::string name, F&& callable)
 	{
-		inputEvents[name] = std::make_unique<InputEventPortImpl<F>>(std::forward<F>(callable));
+		inputEvents[name] = std::make_unique<InputEventPort>(std::forward<F>(callable));
 		inputEvents[name]->setName(name);
 	}
 
@@ -36,9 +39,6 @@ public:
 		outputEvents[name] = OutputEventPort{};
 		outputEvents[name].setName(name);
 	}
-
-	virtual void registerInputEvents() = 0;
-	virtual void registerOutputEvents() = 0;
 
 	InputEventPort& getInputEventPort(std::string name)
 	{
@@ -62,6 +62,11 @@ public:
 		assert(outputEvents.find(name) != outputEvents.end());
 
 		return outputEvents[name];
+	}
+
+	void trigger(std::string outputPortName)
+	{
+		getOutputEventPort(outputPortName).trigger();
 	}
 
 };

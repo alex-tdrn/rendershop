@@ -7,8 +7,6 @@
 class ValueToColor : public Pipe<ValueToColor, InputList<float>, OutputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = registerPipe<ValueToColor>("Value To Color");
-
 	struct InputPorts
 	{
 		static inline std::array names = {
@@ -29,15 +27,11 @@ public:
 		};
 	};
 
+public:
+	static inline std::string const name = registerPipe<ValueToColor>("Value To Color");
 
 public:
-	void update() override
-	{
-		auto& value = getInputDataPort<InputPorts::Value>().getData();
-		auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
-
-		color = {value, value, value};
-	}
+	void update() override;
 
 };
 

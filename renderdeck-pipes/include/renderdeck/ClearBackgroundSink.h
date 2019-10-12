@@ -7,7 +7,6 @@
 class ClearBackgroundSink : public Sink<ClearBackgroundSink, InputList<glm::vec3>>
 {
 public:
-	static inline std::string const name = registerPipe<ClearBackgroundSink>("Clear Background Sink");
 	struct InputPorts
 	{
 		static inline std::array names = {
@@ -18,6 +17,9 @@ public:
 			Color
 		};
 	};
+
+public:
+	static inline std::string const name = registerPipe<ClearBackgroundSink>("Clear Background Sink");
 
 protected:
 	void update() override;

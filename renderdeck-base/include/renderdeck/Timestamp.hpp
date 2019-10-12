@@ -6,6 +6,8 @@ class Timestamp final
 {
 private:
 	using chrono = std::chrono::steady_clock;
+
+private:
 	chrono::time_point timestamp = chrono::time_point::min();
 
 public:
