@@ -2,10 +2,10 @@
 
 void MixColors::update()
 {
-	auto& factor = getInputDataPort<InputPorts::Factor>().getData();
-	auto& colorA = getInputDataPort<InputPorts::ColorA>().getData();
-	auto& colorB = getInputDataPort<InputPorts::ColorB>().getData();
-	auto& mixedColor = getOutputDataPort<OutputPorts::MixedColor>().getMutableData();
+	auto& factor = getInputData<InputPorts::Factor>();
+	auto& colorA = getInputData<InputPorts::ColorA>();
+	auto& colorB = getInputData<InputPorts::ColorB>();
+	auto& mixedColor = getOutputData<OutputPorts::MixedColor>();
 
 	mixedColor = factor * colorA + (1 - factor) * colorB;
 }

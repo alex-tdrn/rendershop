@@ -2,6 +2,6 @@
 
 void RandomColorSource::update()
 {
-	auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
+	auto& color = getOutputData<OutputPorts::Color>();
 	color = {rand() % 256 / 256.0, rand() % 256 / 256.0, rand() % 256 / 256.0};
 }

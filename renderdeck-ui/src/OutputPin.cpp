@@ -34,7 +34,7 @@ void OutputPin::draw()
 
 	if(o)
 	{
-		auto const& output = o->getData();
+		auto const& output = o->get();
 		ImGui::ColorButton("Caca", { output.r, output.g, output.b, 1 }, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
 	}
 

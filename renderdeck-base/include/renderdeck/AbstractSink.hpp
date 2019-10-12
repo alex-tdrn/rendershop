@@ -24,8 +24,8 @@ protected:
 public:
 	void registerInputEvents() override
 	{
-		registerInputEvent("Trigger", [this]() {
-			trigger();
+		registerInputEvent("Run", [this]() {
+			run();
 		});
 	}
 
@@ -46,7 +46,7 @@ public:
 		return ret;
 	}
 
-	virtual void trigger()
+	virtual void run()
 	{
 		if(!allInputsConnected())
 			return;

@@ -9,11 +9,11 @@ template<typename Data>
 class InputDataPort;
 
 template<typename Data>
-class OutputDataPort final : public DataPort<Data>, public OutputPort<InputDataPort<Data>>
+class OutputDataPort final : public AbstractDataPort, public OutputPort<InputDataPort<Data>>
 {
 private:
-	AbstractSource* parent;
-	Data resource;
+	AbstractSource* parent = nullptr;
+	Data data;
 
 public:
 	OutputDataPort() = default;
@@ -29,14 +29,14 @@ public:
 		return parent->getTimestamp();
 	}
 
-	Data& getMutableData()
+	Data& get()
 	{
-		return resource;
+		return data;
 	}
 
-	Data const& getData() const final override
+	Data const& get() const
 	{
-		return resource;
+		return data;
 	}
 
 	void update() const final override

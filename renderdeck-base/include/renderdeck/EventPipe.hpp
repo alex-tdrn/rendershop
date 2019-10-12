@@ -64,4 +64,9 @@ public:
 		return outputEvents[name];
 	}
 
+	void trigger(std::string outputPortName)
+	{
+		getOutputEventPort(outputPortName).trigger();
+	}
+
 };

@@ -2,8 +2,8 @@
 
 void ValueToColor::update()
 {
-	auto& value = getInputDataPort<InputPorts::Value>().getData();
-	auto& color = getOutputDataPort<OutputPorts::Color>().getMutableData();
+	auto& value = getInputData<InputPorts::Value>();
+	auto& color = getOutputData<OutputPorts::Color>();
 
 	color = {value, value, value};
 }

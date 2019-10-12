@@ -8,7 +8,7 @@ template<typename Data>
 class OutputDataPort;
 
 template<typename Data>
-class InputDataPort final : public DataPort<Data>, public InputPort<OutputDataPort<Data>>
+class InputDataPort final : public AbstractDataPort, public InputPort<OutputDataPort<Data>>
 {
 public:
 	InputDataPort() = default;
@@ -30,9 +30,9 @@ public:
 			this->connection->update();
 	}
 
-	Data const& getData() const final override
+	Data const& get() const
 	{
-		return this->connection->getData();
+		return this->connection->get();
 	}
 
 };

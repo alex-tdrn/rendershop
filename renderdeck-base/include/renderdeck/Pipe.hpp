@@ -20,7 +20,7 @@ private:
 		return ConcretePipe::name;
 	}
 
-	void trigger() override
+	void run() override
 	{
 		this->update();
 		this->timestamp.update();
@@ -34,7 +34,7 @@ private:
 		if(this->isUpdateQueued())
 		{
 			this->updateAllInputs();
-			trigger();
+			run();
 		}
 		else
 		{
@@ -44,10 +44,10 @@ private:
 			static_for(this->inputs.list, [&](auto const& input) {
 				if(input.getTimestamp().isNewerThan(this->timestamp))
 					outputsOutdated = true;
-				});
+			});
 
 			if(outputsOutdated)
-				trigger();
+				run();
 		}
 	}
 

@@ -55,4 +55,10 @@ public:
 		return std::get<outputIndex>(outputs.list);
 	}
 
+	template<int outputIndex>
+	auto& getOutputData() const
+	{
+		return getOutputDataPort<outputIndex>().get();
+	}
+
 };
