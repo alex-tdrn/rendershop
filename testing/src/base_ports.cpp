@@ -45,7 +45,7 @@ void testConnectionIsInvalid(A& a, B& b)
 	}
 }
 
-TEST_CASE("base.ports.Connections between input and output ports")
+TEST_CASE("base::ports::Connections between input and output ports")
 {
 	class TestOutputPort;
 	class TestInputPort : public InputPort<TestOutputPort> {};
@@ -139,7 +139,7 @@ TEST_CASE("base.ports.Connections between input and output ports")
 	}
 }
 
-TEST_CASE("base.ports.Connections between data ports")
+TEST_CASE("base::ports::Connections between data ports")
 {
 	GIVEN("A, an input data port holding an int")
 	{
@@ -171,7 +171,7 @@ TEST_CASE("base.ports.Connections between data ports")
 	}
 }
 
-TEST_CASE("base.ports.Connections between event ports")
+TEST_CASE("base::ports::Connections between event ports")
 {
 	GIVEN("A, an input event port referencing an empty lambda")
 	{
@@ -198,7 +198,7 @@ TEST_CASE("base.ports.Connections between event ports")
 	}
 }
 
-TEST_CASE("base.ports.Event triggering")
+TEST_CASE("base::ports::Event triggering")
 {
 	GIVEN("F a boolean flag initially set to false")
 	{

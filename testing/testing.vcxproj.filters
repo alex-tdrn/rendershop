@@ -5,7 +5,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\base.cpp" />
+    <ClCompile Include="src\base_ports.cpp" />
+    <ClCompile Include="src\base_pipes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.runsettings" />

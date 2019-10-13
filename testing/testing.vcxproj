@@ -141,7 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\base.cpp" />
+    <ClCompile Include="src\base_pipes.cpp" />
+    <ClCompile Include="src\base_ports.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
