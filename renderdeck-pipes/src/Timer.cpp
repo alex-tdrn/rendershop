@@ -1,9 +1,9 @@
-#include "renderdeck\Timer.hpp"
+#include "renderdeck/pipes/Timer.hpp"
 
 void Timer::registerOutputEvents()
 {
 	AbstractSink::registerOutputEvents();
-	registerOutputEvent("Timeout");
+	registerOutputEvent(OutputEvents::Timeout, "Timeout");
 }
 
 void Timer::update()

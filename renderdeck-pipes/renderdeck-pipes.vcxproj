@@ -11,13 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\renderdeck\ClearBackgroundSink.h" />
-    <ClInclude Include="include\renderdeck\DecomposeColor.h" />
-    <ClInclude Include="include\renderdeck\GrayscaleColorPipe.h" />
-    <ClInclude Include="include\renderdeck\MixColors.h" />
-    <ClInclude Include="include\renderdeck\RandomColorSource.h" />
-    <ClInclude Include="include\renderdeck\ValueToColor.h" />
-    <ClInclude Include="include\renderdeck\Timer.hpp" />
+    <ClInclude Include="include\renderdeck\pipes\ClearBackgroundSink.h" />
+    <ClInclude Include="include\renderdeck\pipes\DecomposeColor.h" />
+    <ClInclude Include="include\renderdeck\pipes\GrayscaleColorPipe.h" />
+    <ClInclude Include="include\renderdeck\pipes\MixColors.h" />
+    <ClInclude Include="include\renderdeck\pipes\RandomColorSource.h" />
+    <ClInclude Include="include\renderdeck\pipes\ValueToColor.h" />
+    <ClInclude Include="include\renderdeck\pipes\Timer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ClearBackgroundSink.cpp" />

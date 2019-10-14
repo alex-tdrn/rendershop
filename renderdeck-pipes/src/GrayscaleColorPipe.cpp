@@ -1,4 +1,4 @@
-#include "renderdeck\GrayscaleColorPipe.h"
+#include "renderdeck/pipes/GrayscaleColorPipe.h"
 
 void GrayscaleColorPipe::update()
 {
