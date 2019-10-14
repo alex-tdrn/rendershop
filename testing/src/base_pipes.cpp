@@ -2,6 +2,7 @@
 #include "renderdeck/Pipe.hpp"
 
 #include <array>
+#include <utility>
 
 class TestSource : public Source<TestSource, OutputList<std::string>>
 {
@@ -118,7 +119,7 @@ public:
 	};
 
 public:
-	static inline std::string const name = registerPipe<TestSink>("Test Pipe");
+	static inline std::string const name = registerPipe<TestPipe>("Test Pipe");
 
 private:
 	std::string message = TestSink::noMessageReceived;
@@ -145,7 +146,60 @@ public:
 	}
 };
 
-TEST_CASE("base.pipes.Interactions between sinks, sources and pipes")
+template<typename P>
+void testRegistration()
+{
+	GIVEN("Pipe type '" + P::name + "'")
+	{
+		THEN("it is registered in the pipe map")
+		{
+			auto& pipeMap = AbstractPipe::getPipeMap();
+			REQUIRE(pipeMap.find(P::name) != pipeMap.end());
+			AND_THEN("it is constructible from the pipemap factory")
+			{
+				std::unique_ptr<AbstractPipe> pipe = nullptr;
+				REQUIRE_NOTHROW(pipe = std::move(AbstractPipe::createPipe(P::name)));
+				REQUIRE(pipe != nullptr);
+				AND_THEN("its name is available from the base class")
+				{
+					REQUIRE(P::name == pipe->getName());
+					if constexpr(std::is_base_of_v<AbstractSink, P>)
+					{
+						AND_THEN("its input data ports are registered correctly")
+						{
+							auto sink = dynamic_cast<AbstractSink*>(pipe.get());
+							auto ports = sink->getInputDataPorts();
+							REQUIRE(ports.size() == P::InputPorts::names.size());
+							for(int i = 0; i < ports.size(); i++)
+								REQUIRE(ports[i]->getName() == P::InputPorts::names[i]);
+						}
+					}
+
+					if constexpr(std::is_base_of_v<AbstractSource, P>)
+					{
+						AND_THEN("its output data ports are registered correctly")
+						{
+							auto source = dynamic_cast<AbstractSource*>(pipe.get());
+							auto ports = source->getOutputDataPorts();
+							REQUIRE(ports.size() == P::OutputPorts::names.size());
+							for(int i = 0; i < ports.size(); i++)
+								REQUIRE(ports[i]->getName() == P::OutputPorts::names[i]);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+TEST_CASE("base.pipes.Pipe auto-registration")
+{
+	testRegistration<TestSource>();
+	testRegistration<TestSink>();
+	testRegistration<TestPipe>();
+}
+
+TEST_CASE("base.pipes.Pipeline update behaviour")
 {
 	GIVEN("Source A with one output port, AO, and update event AU")
 	{
@@ -318,3 +372,4 @@ TEST_CASE("base.pipes.Interactions between sinks, sources and pipes")
 		}
 	}
 }
+
