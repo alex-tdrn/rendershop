@@ -41,7 +41,7 @@ public:
 
 	void update() const final override
 	{
-		parent->updateOutputsIfNeeded();
+		parent->run();
 	}
 
 	void setParent(AbstractSource* parent)

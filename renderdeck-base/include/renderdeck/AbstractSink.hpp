@@ -37,7 +37,14 @@ public:
 protected:
 	virtual void updateAllInputs() const = 0;
 
-public:
+	bool allInputsConnected() const
+	{
+		bool ret = true;
+		for(auto inputDataPort : abstractInputDataPorts)
+			ret &= inputDataPort->isConnected();
+		return ret;
+	}
+
 	void registerInputEvents() override
 	{
 		AbstractPipe::registerInputEvents();
@@ -51,27 +58,21 @@ public:
 		AbstractPipe::registerOutputEvents();
 	}
 
+public:
+
 	std::vector<AbstractDataPort*> const& getInputDataPorts() const
 	{
 		return abstractInputDataPorts;
 	}
 
-	bool allInputsConnected() const
-	{
-		bool ret = true;
-		for(auto inputDataPort : abstractInputDataPorts)
-			ret &= inputDataPort->isConnected();
-		return ret;
-	}
-
-	virtual void run()
+	virtual void run() override
 	{
 		if(!allInputsConnected())
 			return;
 
 		updateAllInputs();
-		trigger(AbstractPipe::OutputEvents::Updated);
 		update();
+		trigger(AbstractPipe::OutputEvents::Updated);
 	}
 
 };

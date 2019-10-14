@@ -46,9 +46,6 @@ protected:
 		return timestamp.isReset();
 	}
 
-public:
-	virtual void updateOutputsIfNeeded() = 0;
-
 	void registerInputEvents() override
 	{
 		AbstractPipe::registerInputEvents();
@@ -62,6 +59,7 @@ public:
 		AbstractPipe::registerOutputEvents();
 	}
 
+public:
 	std::vector<AbstractDataPort*> const& getOutputDataPorts() const
 	{
 		return abstractOutputDataPorts;

@@ -30,42 +30,6 @@ public:
 	virtual ~Pipe() = default;
 
 private:
-	std::string const& getName() const override final
-	{
-		return ConcretePipe::name;
-	}
-
-	void run() override
-	{
-		this->update();
-		this->timestamp.update();
-	}
-
-	void updateOutputsIfNeeded() override
-	{
-		if(!this->allInputsConnected())
-			return;
-
-		if(this->isUpdateQueued())
-		{
-			this->updateAllInputs();
-			run();
-		}
-		else
-		{
-			this->updateAllInputs();
-
-			bool outputsOutdated = false;
-			static_for(this->inputs.list, [&](auto const& input) {
-				if(input.getTimestamp().isNewerThan(this->timestamp))
-					outputsOutdated = true;
-			});
-
-			if(outputsOutdated)
-				run();
-		}
-	}
-
 	void registerInputEvents() override
 	{
 		AbstractSink::registerInputEvents();
@@ -76,6 +40,36 @@ private:
 	{
 		AbstractSink::registerOutputEvents();
 		AbstractSource::registerOutputEvents();
+	}
+
+public:
+	std::string const& getName() const override final
+	{
+		return ConcretePipe::name;
+	}
+
+	void run() override
+	{
+		if(!this->allInputsConnected())
+			return;
+
+		this->updateAllInputs();
+
+		if(!this->isUpdateQueued())
+		{
+			bool outputsOutdated = false;
+			static_for(this->inputs.list, [&](auto const& input) {
+				if(input.getTimestamp().isNewerThan(this->timestamp))
+					outputsOutdated = true;
+			});
+
+			if(!outputsOutdated)
+				return;
+		}
+
+		this->update();
+		this->timestamp.update();
+		this->trigger(AbstractPipe::OutputEvents::Updated);
 	}
 
 };

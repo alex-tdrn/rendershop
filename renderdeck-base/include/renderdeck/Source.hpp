@@ -33,8 +33,8 @@ public:
 	Source& operator=(Source&&) = default;
 	virtual ~Source() = default;
 
-protected:
-	void updateOutputsIfNeeded() override
+public:
+	void run() override
 	{
 		if(isUpdateQueued())
 		{
@@ -44,7 +44,6 @@ protected:
 		}
 	}
 
-public:
 	std::string const& getName() const override
 	{
 		return ConcreteSource::name;
