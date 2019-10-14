@@ -72,8 +72,8 @@ int main(int argc, char** argv)
 	ClearBackgroundSink sink;
 	Timer timer;
 
-	timer.getOutputEventPort("Timeout").connect(&source.getInputEventPort("Queue Update"));
-	timer.getOutputEventPort("Timeout").connect(&sink.getInputEventPort("Run"));
+	timer.getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source.getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
+	timer.getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink.getInputEventPort(AbstractSink::InputEvents::Run));
 
 
 	std::vector<Node> nodes;

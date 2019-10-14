@@ -4,8 +4,24 @@
 #include "renderdeck/EventPipe.hpp"
 #include "renderdeck/AbstractDataPort.hpp"
 
-class AbstractSink : public virtual AbstractPipe, public virtual EventPipe
+class AbstractSink : public virtual AbstractPipe
 {
+public:
+	struct InputEvents
+	{
+		enum
+		{
+			Run = AbstractPipe::InputEvents::SinkEvents
+		};
+	};
+
+	struct OutputEvents
+	{
+		enum
+		{
+		};
+	};
+
 protected:
 	std::vector<AbstractDataPort*> abstractInputDataPorts;
 
@@ -24,13 +40,15 @@ protected:
 public:
 	void registerInputEvents() override
 	{
-		registerInputEvent("Run", [this]() {
+		AbstractPipe::registerInputEvents();
+		registerInputEvent(InputEvents::Run, "Run", [this]() {
 			run();
 		});
 	}
 
 	void registerOutputEvents() override
 	{
+		AbstractPipe::registerOutputEvents();
 	}
 
 	std::vector<AbstractDataPort*> const& getInputDataPorts() const
@@ -52,6 +70,7 @@ public:
 			return;
 
 		updateAllInputs();
+		trigger(AbstractPipe::OutputEvents::Updated);
 		update();
 	}
 

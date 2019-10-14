@@ -11,9 +11,11 @@ class EventPipe
 {
 private:
 	mutable bool inputEventsRegistered = false;
-	mutable std::unordered_map<std::string, std::unique_ptr<InputEventPort>> inputEvents;
+	mutable std::unordered_map<int, std::unique_ptr<InputEventPort>> inputEvents;
+	mutable std::unordered_map<std::string, int> inputEventNames;
 	mutable bool outputEventsRegistered = false;
-	mutable std::unordered_map<std::string, OutputEventPort> outputEvents;
+	mutable std::unordered_map<int, OutputEventPort> outputEvents;
+	mutable std::unordered_map<std::string, int> outputEventNames;
 
 public:
 	EventPipe() = default;
@@ -28,40 +30,54 @@ public:
 	virtual void registerOutputEvents() = 0;
 
 	template<typename F>
-	void registerInputEvent(std::string name, F&& callable)
+	void registerInputEvent(int index, std::string name, F&& callable)
 	{
-		inputEvents[name] = std::make_unique<InputEventPort>(std::forward<F>(callable));
-		inputEvents[name]->setName(name);
+		inputEventNames[name] = index;
+		inputEvents[index] = std::make_unique<InputEventPort>(std::forward<F>(callable));
+		inputEvents[index]->setName(name);
 	}
 
-	void registerOutputEvent(std::string name)
+	void registerOutputEvent(int index, std::string name)
 	{
-		outputEvents[name] = OutputEventPort{};
-		outputEvents[name].setName(name);
+		outputEventNames[name] = index;
+		outputEvents[index] = OutputEventPort{};
+		outputEvents[index].setName(name);
 	}
 
-	InputEventPort& getInputEventPort(std::string name)
+	InputEventPort& getInputEventPort(int index)
 	{
 		if(!inputEventsRegistered)
 		{
 			registerInputEvents();
 			inputEventsRegistered = true;
 		}
-		assert(inputEvents.find(name) != inputEvents.end());
-
-		return *inputEvents[name];
+		return *inputEvents[index];
 	}
 
-	OutputEventPort& getOutputEventPort(std::string name)
+	InputEventPort& getInputEventPort(std::string name)
+	{
+		return getInputEventPort(inputEventNames[name]);
+	}
+
+	OutputEventPort& getOutputEventPort(int index)
 	{
 		if(!outputEventsRegistered)
 		{
 			registerOutputEvents();
 			outputEventsRegistered = true;
 		}
-		assert(outputEvents.find(name) != outputEvents.end());
 
-		return outputEvents[name];
+		return outputEvents[index];
+	}
+
+	OutputEventPort& getOutputEventPort(std::string name)
+	{
+		return getOutputEventPort(outputEventNames[name]);
+	}
+
+	void trigger(int index)
+	{
+		getOutputEventPort(index).trigger();
 	}
 
 	void trigger(std::string outputPortName)

@@ -20,6 +20,21 @@ public:
 		};
 	};
 
+	struct InputEvents
+	{
+		enum
+		{
+		};
+	};
+
+	struct OutputEvents
+	{
+		enum
+		{
+			Timeout = AbstractPipe::OutputEvents::UserEvents
+		};
+	};
+
 public:
 	static inline std::string const name = registerPipe<Timer>("Timer");
 

@@ -9,8 +9,24 @@
 
 class AbstractDataPort;
 
-class AbstractSource : public virtual AbstractPipe, public virtual EventPipe
+class AbstractSource : public virtual AbstractPipe
 {
+public:
+	struct InputEvents
+	{
+		enum
+		{
+			QueueUpdate = AbstractPipe::InputEvents::SourceEvents
+		};
+	};
+
+	struct OutputEvents
+	{
+		enum
+		{
+		};
+	};
+
 protected:
 	std::vector<AbstractDataPort*> abstractOutputDataPorts;
 	mutable Timestamp timestamp;
@@ -35,13 +51,15 @@ public:
 
 	void registerInputEvents() override
 	{
-		registerInputEvent("Queue Update", [this]() {
+		AbstractPipe::registerInputEvents();
+		registerInputEvent(InputEvents::QueueUpdate, "Queue Update", [this]() {
 			queueUpdate();
 		});
 	}
 
 	void registerOutputEvents() override
 	{
+		AbstractPipe::registerOutputEvents();
 	}
 
 	std::vector<AbstractDataPort*> const& getOutputDataPorts() const

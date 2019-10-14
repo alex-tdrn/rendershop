@@ -6,8 +6,34 @@
 #include <memory>
 #include <cassert>
 
-class AbstractPipe
+#include "EventPipe.hpp"
+
+class AbstractPipe : public virtual EventPipe
 {
+public:
+	struct InputEvents
+	{
+		enum
+		{
+			SourceEvents = 8,
+			SinkEvents = 16,
+			PipeEvents = 24,
+			UserEvents = 32
+		};
+	};
+
+	struct OutputEvents
+	{
+		enum
+		{
+			Updated,
+			SourceEvents = 8,
+			SinkEvents = 16,
+			PipeEvents = 24,
+			UserEvents = 32
+		};
+	};
+
 public:
 	AbstractPipe() = default;
 	AbstractPipe(AbstractPipe const&) = delete;
@@ -37,6 +63,15 @@ protected:
 	}
 
 public:
+	void registerInputEvents() override
+	{
+	}
+
+	void registerOutputEvents() override
+	{
+		registerOutputEvent(OutputEvents::Updated, "Updated");
+	}
+
 	static std::unordered_map<std::string, std::unique_ptr<AbstractPipe>(*)()> const& getPipeMap()
 	{
 		return pipeMap();

@@ -7,6 +7,21 @@ template<typename ConcretePipe, typename InputList, typename OutputList>
 class Pipe : virtual public Sink<ConcretePipe, InputList>, virtual public Source<ConcretePipe, OutputList>
 {
 public:
+	struct InputEvents
+	{
+		enum
+		{
+		};
+	};
+
+	struct OutputEvents
+	{
+		enum
+		{
+		};
+	};
+
+public:
 	Pipe() = default;
 	Pipe(Pipe const&) = delete;
 	Pipe(Pipe&&) = default;

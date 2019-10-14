@@ -39,6 +39,7 @@ protected:
 		if(isUpdateQueued())
 		{
 			update();
+			trigger(AbstractPipe::OutputEvents::Updated);
 			timestamp.update();
 		}
 	}
