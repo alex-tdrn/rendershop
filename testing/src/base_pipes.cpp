@@ -19,22 +19,34 @@ public:
 
 public:
 	static inline std::string const name = registerPipe<TestSource>("Test Source");
-	static inline std::string const noMessage = "No message set";
-	static inline std::string const noMessageSent = "No Message Sent";
-	std::string messageToSend;
-
-public:
-	TestSource(std::string messageToSend = noMessage)
-		: messageToSend(messageToSend)
-	{
-		getOutputData<OutputPorts::Message>() = noMessageSent;
-	}
+	
+private:
+	std::string message = "No message";
+	int updatesRan = 0;
 
 protected:
 	void update() override
 	{
-		getOutputData<OutputPorts::Message>() = messageToSend;
+		updatesRan++;
 	}
+
+public:
+	std::string const& getMessage() const
+	{
+		return message;
+	}
+
+	void setMessage(std::string message)
+	{
+		this->message = message;
+		getOutputData<OutputPorts::Message>() = message;
+	}
+
+	int getUpdatesRan() const
+	{
+		return updatesRan;
+	}
+
 };
 
 class TestSink : public Sink<TestSink, InputList<std::string>>
@@ -54,41 +66,64 @@ public:
 public:
 	static inline std::string const name = registerPipe<TestSink>("Test Sink");
 	static inline std::string const noMessageReceived = "No Message Received";
-	std::string receivedMessage = noMessageReceived;
+
+private:
+	std::string message = noMessageReceived;
+	int updatesRan = 0;
 
 protected:
 	void update() override
 	{
-		receivedMessage = getInputData<InputPorts::Message>();
+		message = getInputData<InputPorts::Message>();
+		updatesRan++;
+	}
+
+public:
+	std::string const& getMessage() const
+	{
+		return message;
+	}
+
+	int getUpdatesRan() const
+	{
+		return updatesRan;
 	}
 };
 
 TEST_CASE("base.pipes.Interactions between a sink and a source")
 {
-	/*GIVEN("Source A with one, message output port that always outputs 'SourceA'")
+	GIVEN("Source A with one output port")
 	{
-		TestSource A("SourceA");
+		TestSource A;
+		A.setMessage("This message comes from A");
 		auto& outputPort = A.getOutputDataPort<TestSource::OutputPorts::Message>();
-		REQUIRE(outputPort.get() == A.noMessage);
-
-		AND_GIVEN("test sink B with a message input port")
+		AND_GIVEN("test sink B with one input port connected to A's output port")
 		{
 			TestSink B;
-			auto& InputPort = B.getInputDataPort<TestSink::InputPorts::Message>();
-			WHEN("connecting the two ports and running B")
+			auto& inputPort = B.getInputDataPort<TestSink::InputPorts::Message>();
+			inputPort.connect(&outputPort);
+			WHEN("running B")
 			{
-				InputPort.connect(&outputPort);
+				bool updateEventTriggered = false;
+				InputEventPort E([&updateEventTriggered]() {
+					updateEventTriggered = true;
+				});
+				E.connect(&A.getOutputEventPort(AbstractPipe::OutputEvents::Updated));
 				B.run();
-				THEN("A's update method is run")
+				THEN("A's update event is triggered")
 				{
-					REQUIRE(outputPort.get() == A.messageToSend);
-				}
-				AND_THEN("A's output port message is sent to B's input port")
-				{
-					REQUIRE(B.receivedMessage == A.messageToSend);
+					REQUIRE(updateEventTriggered);
+					AND_THEN("A and B's update methods are ran once")
+					{
+						REQUIRE(A.getUpdatesRan() == 1);
+						REQUIRE(B.getUpdatesRan() == 1);
+						AND_THEN("A's output port value is sent to B's input port")
+						{
+							REQUIRE(B.getMessage() == A.getMessage());
+						}
+					}
 				}
 			}
-
 		}
-	}*/
+	}
 }

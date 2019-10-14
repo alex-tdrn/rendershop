@@ -33,6 +33,7 @@ class InputEventPort : public InputPort<OutputEventPort>
 {
 private:
 	std::unique_ptr<detail::TypeErasedCallable> f;
+	mutable int timesTriggered = 0;
 
 public:
 	template<typename F>
@@ -48,9 +49,15 @@ public:
 	virtual ~InputEventPort() = default;
 
 public:
+	int getTimesTriggered() const
+	{
+		return timesTriggered;
+	}
+
 	void trigger() const
 	{
 		f->call();
+		timesTriggered++;
 	}
 
 	void operator()() const

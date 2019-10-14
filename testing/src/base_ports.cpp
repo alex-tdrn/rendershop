@@ -10,18 +10,18 @@ void testConnectionIsValid(A& a, B& b)
 	THEN("connecting A to B is possible")
 	{
 		REQUIRE(a.canConnect(&b));
-	}
-	THEN("connecting A to B does not throw")
-	{
-		REQUIRE_NOTHROW(a.connect(&b));
-	}
-	THEN("connecting B to A is possible")
-	{
-		REQUIRE(b.canConnect(&a));
-	}
-	THEN("connecting B to A does not throw")
-	{
-		REQUIRE_NOTHROW(b.connect(&a));
+		AND_THEN("connecting A to B does not throw")
+		{
+			REQUIRE_NOTHROW(a.connect(&b));
+		}
+		AND_THEN("connecting B to A is possible")
+		{
+			REQUIRE(b.canConnect(&a));
+			AND_THEN("connecting B to A does not throw")
+			{
+				REQUIRE_NOTHROW(b.connect(&a));
+			}
+		}
 	}
 }
 template <typename A, typename B>
@@ -75,16 +75,16 @@ TEST_CASE("base::ports::Connections between input and output ports")
 							REQUIRE(C.isConnected());
 						}
 					}
-				}
-				THEN("connecting B to A is still possible")
-				{
-					REQUIRE(B.canConnect(&A));
-					AND_WHEN("connecting B to A")
+					AND_THEN("connecting B to A is still possible")
 					{
-						REQUIRE_NOTHROW(B.connect(&A));
-						THEN("C remains connected")
+						REQUIRE(B.canConnect(&A));
+						AND_WHEN("connecting B to A")
 						{
-							REQUIRE(C.isConnected());
+							REQUIRE_NOTHROW(B.connect(&A));
+							THEN("C remains connected")
+							{
+								REQUIRE(C.isConnected());
+							}
 						}
 					}
 				}
@@ -104,16 +104,16 @@ TEST_CASE("base::ports::Connections between input and output ports")
 							REQUIRE(!C.isConnected());
 						}
 					}
-				}
-				THEN("connecting B to A is still possible")
-				{
-					REQUIRE(B.canConnect(&A));
-					AND_WHEN("connecting B to A")
+					AND_THEN("connecting B to A is still possible")
 					{
-						REQUIRE_NOTHROW(B.connect(&A));
-						THEN("C gets disconnected")
+						REQUIRE(B.canConnect(&A));
+						AND_WHEN("connecting B to A")
 						{
-							REQUIRE(!C.isConnected());
+							REQUIRE_NOTHROW(B.connect(&A));
+							THEN("C gets disconnected")
+							{
+								REQUIRE(!C.isConnected());
+							}
 						}
 					}
 				}
@@ -211,19 +211,34 @@ TEST_CASE("base::ports::Event triggering")
 			AND_GIVEN("A, an input event port referencing L")
 			{
 				InputEventPort A{L};
-				THEN("triggering A calls L and thus, sets F to true")
+				WHEN("triggering A")
 				{
 					A.trigger();
-					REQUIRE(F == true);
+					THEN("A's trigger counter goes up by one")
+					{
+						REQUIRE(A.getTimesTriggered() == 1);
+						AND_THEN("L gets called and thus, F gets set to true")
+						{
+							REQUIRE(F == true);
+						}
+					}
 				}
 				AND_GIVEN("B, an output event port connected to A")
 				{
 					OutputEventPort B;
 					B.connect(&A);
-					THEN("triggering B also triggers A and thus, sets F to true")
+					WHEN("triggering B")
 					{
 						B.trigger();
-						REQUIRE(F == true);
+						THEN("B and A's trigger counter both go up by one")
+						{
+							REQUIRE(A.getTimesTriggered() == 1);
+							REQUIRE(B.getTimesTriggered() == 1);
+							AND_THEN("A gets also triggered and thus, F gets set to true")
+							{
+								REQUIRE(F == true);
+							}
+						}
 					}
 					WHEN("disconnecting B")
 					{
@@ -232,6 +247,7 @@ TEST_CASE("base::ports::Event triggering")
 						{
 							B.trigger();
 							REQUIRE(F == false);
+							REQUIRE(A.getTimesTriggered() == 0);
 						}
 					}
 				}
@@ -272,6 +288,9 @@ TEST_CASE("base::ports::Event triggering")
 						REQUIRE(F == true);
 						REQUIRE(G == true);
 						REQUIRE(H == true);
+						REQUIRE(A.getTimesTriggered() == 1);
+						REQUIRE(B.getTimesTriggered() == 1);
+						REQUIRE(C.getTimesTriggered() == 1);
 					}
 					WHEN("disconnecting D from A")
 					{
@@ -282,6 +301,9 @@ TEST_CASE("base::ports::Event triggering")
 							REQUIRE(F == false);
 							REQUIRE(G == true);
 							REQUIRE(H == true);
+							REQUIRE(A.getTimesTriggered() == 0);
+							REQUIRE(B.getTimesTriggered() == 1);
+							REQUIRE(C.getTimesTriggered() == 1);
 						}
 					}
 					WHEN("disconnecting D")
@@ -293,6 +315,9 @@ TEST_CASE("base::ports::Event triggering")
 							REQUIRE(F == false);
 							REQUIRE(G == false);
 							REQUIRE(H == false);
+							REQUIRE(A.getTimesTriggered() == 0);
+							REQUIRE(B.getTimesTriggered() == 0);
+							REQUIRE(C.getTimesTriggered() == 0);
 						}
 					}
 				}

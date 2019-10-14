@@ -7,6 +7,9 @@ class InputEventPort;
 
 class OutputEventPort final :  public OutputPort<InputEventPort>
 {
+private:
+	mutable int timesTriggered = 0;
+
 public:
 	OutputEventPort() = default;
 	OutputEventPort(OutputEventPort const&) = delete;
@@ -16,10 +19,16 @@ public:
 	~OutputEventPort() = default;
 
 public:
+	int getTimesTriggered() const
+	{
+		return timesTriggered;
+	}
+
 	void trigger() const
 	{
 		for(auto connection : connections)
 			connection->trigger();
+		timesTriggered++;
 	}
 	void operator()() const
 	{
