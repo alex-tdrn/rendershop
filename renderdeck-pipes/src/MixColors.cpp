@@ -1,4 +1,4 @@
-#include "renderdeck\MixColors.h"
+#include "renderdeck/pipes/MixColors.h"
 
 void MixColors::update()
 {

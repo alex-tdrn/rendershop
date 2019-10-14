@@ -1,7 +1,7 @@
 #include "Node.h"
 #include "UIDebug.hpp"
-#include "renderdeck/AbstractSink.hpp"
-#include "renderdeck/AbstractSource.hpp"
+#include "renderdeck/base/AbstractSink.hpp"
+#include "renderdeck/base/AbstractSource.hpp"
 
 #include <algorithm>
 

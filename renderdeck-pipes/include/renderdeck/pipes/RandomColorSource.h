@@ -1,5 +1,5 @@
 #pragma once
-#include "renderdeck/Source.hpp"
+#include "renderdeck/base/Source.hpp"
 
 #include <glm/glm.hpp>
 #include <array>

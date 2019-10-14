@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderdeck/OutputEventPort.hpp"
-#include "renderdeck/InputEventPort.hpp"
+#include "renderdeck/base/OutputEventPort.hpp"
+#include "renderdeck/base/InputEventPort.hpp"
 
 #include <unordered_map>
 #include <cassert>

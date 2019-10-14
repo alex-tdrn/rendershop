@@ -1,4 +1,4 @@
-#include "renderdeck\Timer.hpp"
+#include "renderdeck/pipes/Timer.hpp"
 
 void Timer::registerOutputEvents()
 {

@@ -1,8 +1,15 @@
 #include "catch.hpp"
-#include "renderdeck/Pipe.hpp"
+#include "renderdeck/base/Pipe.hpp"
+#include "renderdeck/pipes/ClearBackgroundSink.h"
+#include "renderdeck/pipes/DecomposeColor.h"
+#include "renderdeck/pipes/GrayscaleColorPipe.h"
+#include "renderdeck/pipes/MixColors.h"
+#include "renderdeck/pipes/RandomColorSource.h"
+#include "renderdeck/pipes/Timer.hpp"
+#include "renderdeck/pipes/ValueToColor.h"
 
-#include <array>
 #include <utility>
+#include <array>
 
 class TestSource : public Source<TestSource, OutputList<std::string>>
 {
@@ -20,7 +27,7 @@ public:
 
 public:
 	static inline std::string const name = registerPipe<TestSource>("Test Source");
-	
+
 private:
 	std::string message = "No message";
 	int updatesRan = 0;
@@ -146,57 +153,49 @@ public:
 	}
 };
 
-template<typename P>
-void testRegistration()
+TEMPLATE_TEST_CASE("base.pipes.Pipe registration", "", TestSource, TestSink, TestPipe, ClearBackgroundSink, DecomposeColor, GrayscaleColorPipe, MixColors, RandomColorSource, Timer, ValueToColor)
 {
-	GIVEN("Pipe type '" + P::name + "'")
+	GIVEN("Pipe type '" + TestType::name + "'")
 	{
 		THEN("it is registered in the pipe map")
 		{
 			auto& pipeMap = AbstractPipe::getPipeMap();
-			REQUIRE(pipeMap.find(P::name) != pipeMap.end());
+			REQUIRE(pipeMap.find(TestType::name) != pipeMap.end());
 			AND_THEN("it is constructible from the pipemap factory")
 			{
 				std::unique_ptr<AbstractPipe> pipe = nullptr;
-				REQUIRE_NOTHROW(pipe = std::move(AbstractPipe::createPipe(P::name)));
+				REQUIRE_NOTHROW(pipe = std::move(AbstractPipe::createPipe(TestType::name)));
 				REQUIRE(pipe != nullptr);
 				AND_THEN("its name is available from the base class")
 				{
-					REQUIRE(P::name == pipe->getName());
-					if constexpr(std::is_base_of_v<AbstractSink, P>)
+					REQUIRE(TestType::name == pipe->getName());
+					if constexpr(std::is_base_of_v<AbstractSink, TestType>)
 					{
 						AND_THEN("its input data ports are registered correctly")
 						{
 							auto sink = dynamic_cast<AbstractSink*>(pipe.get());
 							auto ports = sink->getInputDataPorts();
-							REQUIRE(ports.size() == P::InputPorts::names.size());
+							REQUIRE(ports.size() == TestType::InputPorts::names.size());
 							for(int i = 0; i < ports.size(); i++)
-								REQUIRE(ports[i]->getName() == P::InputPorts::names[i]);
+								REQUIRE(ports[i]->getName() == TestType::InputPorts::names[i]);
 						}
 					}
 
-					if constexpr(std::is_base_of_v<AbstractSource, P>)
+					if constexpr(std::is_base_of_v<AbstractSource, TestType>)
 					{
 						AND_THEN("its output data ports are registered correctly")
 						{
 							auto source = dynamic_cast<AbstractSource*>(pipe.get());
 							auto ports = source->getOutputDataPorts();
-							REQUIRE(ports.size() == P::OutputPorts::names.size());
+							REQUIRE(ports.size() == TestType::OutputPorts::names.size());
 							for(int i = 0; i < ports.size(); i++)
-								REQUIRE(ports[i]->getName() == P::OutputPorts::names[i]);
+								REQUIRE(ports[i]->getName() == TestType::OutputPorts::names[i]);
 						}
 					}
 				}
 			}
 		}
 	}
-}
-
-TEST_CASE("base.pipes.Pipe auto-registration")
-{
-	testRegistration<TestSource>();
-	testRegistration<TestSink>();
-	testRegistration<TestPipe>();
 }
 
 TEST_CASE("base.pipes.Pipeline update behaviour")

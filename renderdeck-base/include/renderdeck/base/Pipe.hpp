@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderdeck/Source.hpp"
-#include "renderdeck/Sink.hpp"
+#include "renderdeck/base/Source.hpp"
+#include "renderdeck/base/Sink.hpp"
 
 template<typename ConcretePipe, typename InputList, typename OutputList>
 class Pipe : virtual public Sink<ConcretePipe, InputList>, virtual public Source<ConcretePipe, OutputList>

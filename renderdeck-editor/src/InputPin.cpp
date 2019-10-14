@@ -1,7 +1,7 @@
 #include "InputPin.h"
 #include "OutputPin.h"
 
-#include "renderdeck/AbstractDataPort.hpp"
+#include "renderdeck/base/AbstractDataPort.hpp"
 
 InputPin::InputPin(AbstractDataPort* port)
 	: AbstractPin(port), linkID(uniqueID())

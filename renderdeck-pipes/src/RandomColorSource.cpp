@@ -1,4 +1,4 @@
-#include "renderdeck\RandomColorSource.h"
+#include "renderdeck/pipes/RandomColorSource.h"
 
 void RandomColorSource::update()
 {

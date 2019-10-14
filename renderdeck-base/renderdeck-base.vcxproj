@@ -11,23 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\renderdeck\InputEventPort.hpp" />
-    <ClInclude Include="include\renderdeck\EventPipe.hpp" />
-    <ClInclude Include="include\renderdeck\InputPort.hpp" />
-    <ClInclude Include="include\renderdeck\OutputEventPort.hpp" />
-    <ClInclude Include="include\renderdeck\Source.hpp" />
-    <ClInclude Include="include\renderdeck\Sink.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractSink.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractSource.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPipe.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractDataPort.hpp" />
-    <ClInclude Include="include\renderdeck\InputDataPort.hpp" />
-    <ClInclude Include="include\renderdeck\OutputDataPort.hpp" />
-    <ClInclude Include="include\renderdeck\AbstractPort.hpp" />
-    <ClInclude Include="include\renderdeck\Timestamp.hpp" />
-    <ClInclude Include="include\renderdeck\OutputPort.hpp" />
-    <ClInclude Include="include\renderdeck\Utility.hpp" />
-    <ClInclude Include="include\renderdeck\Pipe.hpp" />
+    <ClInclude Include="include\renderdeck\base\InputEventPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\EventPipe.hpp" />
+    <ClInclude Include="include\renderdeck\base\InputPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\OutputEventPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\Source.hpp" />
+    <ClInclude Include="include\renderdeck\base\Sink.hpp" />
+    <ClInclude Include="include\renderdeck\base\AbstractSink.hpp" />
+    <ClInclude Include="include\renderdeck\base\AbstractSource.hpp" />
+    <ClInclude Include="include\renderdeck\base\AbstractPipe.hpp" />
+    <ClInclude Include="include\renderdeck\base\AbstractDataPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\InputDataPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\OutputDataPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\AbstractPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\Timestamp.hpp" />
+    <ClInclude Include="include\renderdeck\base\OutputPort.hpp" />
+    <ClInclude Include="include\renderdeck\base\Utility.hpp" />
+    <ClInclude Include="include\renderdeck\base\Pipe.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

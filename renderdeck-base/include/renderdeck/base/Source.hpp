@@ -1,9 +1,9 @@
 #pragma once
 
-#include "renderdeck/AbstractSource.hpp"
-#include "renderdeck/OutputDataPort.hpp"
-#include "renderdeck/Utility.hpp"
-#include "renderdeck/Timestamp.hpp"
+#include "renderdeck/base/AbstractSource.hpp"
+#include "renderdeck/base/OutputDataPort.hpp"
+#include "renderdeck/base/Utility.hpp"
+#include "renderdeck/base/Timestamp.hpp"
 
 template<typename... O>
 struct OutputList

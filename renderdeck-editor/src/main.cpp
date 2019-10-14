@@ -1,10 +1,10 @@
-#include "renderdeck/RandomColorSource.h"
-#include "renderdeck/ClearBackgroundSink.h"
-#include "renderdeck/GrayscaleColorPipe.h"
-#include "renderdeck/MixColors.h"
-#include "renderdeck/Timer.hpp"
-#include "renderdeck/DecomposeColor.h"
-#include "renderdeck/ValueToColor.h"
+#include "renderdeck/pipes/RandomColorSource.h"
+#include "renderdeck/pipes/ClearBackgroundSink.h"
+#include "renderdeck/pipes/GrayscaleColorPipe.h"
+#include "renderdeck/pipes/MixColors.h"
+#include "renderdeck/pipes/Timer.hpp"
+#include "renderdeck/pipes/DecomposeColor.h"
+#include "renderdeck/pipes/ValueToColor.h"
 #include "Node.h"
 
 #include <imgui.h>

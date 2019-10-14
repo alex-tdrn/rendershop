@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderdeck/AbstractPort.hpp"
+#include "renderdeck/base/AbstractPort.hpp"
 
 template<typename OutputPort>
 class InputPort : public virtual AbstractPort

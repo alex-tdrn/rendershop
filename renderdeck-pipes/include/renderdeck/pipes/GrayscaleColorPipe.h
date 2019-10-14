@@ -1,5 +1,5 @@
 #pragma once
-#include "renderdeck/Pipe.hpp"
+#include "renderdeck/base/Pipe.hpp"
 
 #include <glm/glm.hpp>
 #include <array>

@@ -1,5 +1,5 @@
 #pragma once
-#include "renderdeck/Sink.hpp"
+#include "renderdeck/base/Sink.hpp"
 
 #include <glm/glm.hpp>
 #include <array>

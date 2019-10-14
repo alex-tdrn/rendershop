@@ -1,9 +1,9 @@
 #pragma once
 
-#include "renderdeck/AbstractPipe.hpp"
-#include "renderdeck/Timestamp.hpp"
-#include "renderdeck/EventPipe.hpp"
-#include "renderdeck/InputEventPort.hpp"
+#include "renderdeck/base/AbstractPipe.hpp"
+#include "renderdeck/base/Timestamp.hpp"
+#include "renderdeck/base/EventPipe.hpp"
+#include "renderdeck/base/InputEventPort.hpp"
 
 #include <vector>
 

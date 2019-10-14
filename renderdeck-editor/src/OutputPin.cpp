@@ -1,8 +1,8 @@
 #include "OutputPin.h"
 #include "InputPin.h"
 
-#include "renderdeck/AbstractPipe.hpp"
-#include "renderdeck/OutputDataPort.hpp"
+#include "renderdeck/base/AbstractPipe.hpp"
+#include "renderdeck/base/OutputDataPort.hpp"
 #include <glm/glm.hpp>
 
 OutputPin::OutputPin(AbstractDataPort* port)

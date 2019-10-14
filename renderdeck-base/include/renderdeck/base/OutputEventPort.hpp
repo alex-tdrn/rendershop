@@ -1,7 +1,7 @@
 #pragma once
 
-#include "renderdeck/OutputPort.hpp"
-#include "renderdeck/InputEventPort.hpp"
+#include "renderdeck/base/OutputPort.hpp"
+#include "renderdeck/base/InputEventPort.hpp"
 
 class InputEventPort;
 

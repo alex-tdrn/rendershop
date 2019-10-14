@@ -1,8 +1,8 @@
 #pragma once
 
-#include "renderdeck/AbstractDataPort.hpp"
-#include "renderdeck/InputPort.hpp"
-#include "renderdeck/OutputDataPort.hpp"
+#include "renderdeck/base/AbstractDataPort.hpp"
+#include "renderdeck/base/InputPort.hpp"
+#include "renderdeck/base/OutputDataPort.hpp"
 
 template<typename Data>
 class OutputDataPort;

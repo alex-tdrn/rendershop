@@ -1,8 +1,8 @@
 #include "catch.hpp"
-#include "renderdeck/InputDataPort.hpp"
-#include "renderdeck/OutputDataPort.hpp"
-#include "renderdeck/InputEventPort.hpp"
-#include "renderdeck/OutputEventPort.hpp"
+#include "renderdeck/base/InputDataPort.hpp"
+#include "renderdeck/base/OutputDataPort.hpp"
+#include "renderdeck/base/InputEventPort.hpp"
+#include "renderdeck/base/OutputEventPort.hpp"
 
 template <typename A, typename B>
 void testConnectionIsValid(A& a, B& b)

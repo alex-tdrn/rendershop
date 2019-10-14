@@ -1,4 +1,4 @@
-#include "renderdeck\DecomposeColor.h"
+#include "renderdeck/pipes/DecomposeColor.h"
 
 void DecomposeColor::update()
 {

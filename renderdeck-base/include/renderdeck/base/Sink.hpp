@@ -1,9 +1,9 @@
 #pragma once
 
-#include "renderdeck/AbstractSink.hpp"
-#include "renderdeck/InputDataPort.hpp"
-#include "renderdeck/Utility.hpp"
-#include "renderdeck/Timestamp.hpp"
+#include "renderdeck/base/AbstractSink.hpp"
+#include "renderdeck/base/InputDataPort.hpp"
+#include "renderdeck/base/Utility.hpp"
+#include "renderdeck/base/Timestamp.hpp"
 
 template<typename... I>
 struct InputList
