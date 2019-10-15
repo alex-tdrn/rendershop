@@ -3,9 +3,13 @@
 
 class OutputPin : public AbstractPin
 {
+private:
+	int triggerCount = 0;
+	int animCounter = 0;
+
 public:
 	OutputPin() = default;
-	OutputPin(AbstractDataPort* port);
+	OutputPin(AbstractPort* port);
 	OutputPin(OutputPin&&) = default;
 	OutputPin(OutputPin const&) = delete;
 	OutputPin& operator=(OutputPin&&) = default;

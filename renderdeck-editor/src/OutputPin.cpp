@@ -3,9 +3,10 @@
 
 #include "renderdeck/base/AbstractPipe.hpp"
 #include "renderdeck/base/OutputDataPort.hpp"
+#include "renderdeck/base/OutputEventPort.hpp"
 #include <glm/glm.hpp>
 
-OutputPin::OutputPin(AbstractDataPort* port)
+OutputPin::OutputPin(AbstractPort* port)
 	: AbstractPin(port)
 {
 }
@@ -28,9 +29,32 @@ void OutputPin::draw()
 {
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Output);
 
+	auto o = dynamic_cast<OutputDataPort<glm::vec3> const*>(port);
+	auto e = dynamic_cast<OutputEventPort*>(port);
+
+	if(e)
+	{
+		if(e->getTimesTriggered() > triggerCount)
+		{
+			animCounter = 120;
+			triggerCount = e->getTimesTriggered();
+		}
+		if(animCounter > 0)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.7, 0.7, 1});
+			animCounter--;
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.5, 0.5, 1});
+		}
+
+	}
+
 	ImGui::Text(port->getName().c_str());
 
-	auto o = dynamic_cast<OutputDataPort<glm::vec3> const*>(port);
+	if(e)
+		ImGui::PopStyleColor();
 
 	if(o)
 	{

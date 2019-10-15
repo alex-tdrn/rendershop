@@ -73,8 +73,8 @@ int main(int argc, char** argv)
 	std::unique_ptr<AbstractPipe> sink = std::make_unique<ClearBackgroundSink>();
 	std::unique_ptr<AbstractPipe> timer = std::make_unique<Timer>();
 
-	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
-	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(AbstractSink::InputEvents::Run));
+	//timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
+	//timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(AbstractSink::InputEvents::Run));
 	
 	//TODO
 	OutputEventPort tick;

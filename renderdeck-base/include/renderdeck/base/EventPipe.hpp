@@ -44,6 +44,16 @@ public:
 		outputEvents[index].setName(name);
 	}
 
+	auto& getInputEventPorts()
+	{
+		if(!inputEventsRegistered)
+		{
+			registerInputEvents();
+			inputEventsRegistered = true;
+		}
+		return inputEvents;
+	}
+
 	InputEventPort& getInputEventPort(int index)
 	{
 		if(!inputEventsRegistered)
@@ -57,6 +67,16 @@ public:
 	InputEventPort& getInputEventPort(std::string name)
 	{
 		return getInputEventPort(inputEventNames[name]);
+	}
+
+	auto& getOutputEventPorts()
+	{
+		if(!outputEventsRegistered)
+		{
+			registerOutputEvents();
+			outputEventsRegistered = true;
+		}
+		return outputEvents;
 	}
 
 	OutputEventPort& getOutputEventPort(int index)

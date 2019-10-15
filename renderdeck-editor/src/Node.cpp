@@ -8,21 +8,32 @@
 Node::Node(AbstractPipe* pipe)
 	: pipe(pipe), id(uniqueID())
 {
+	//TODO fix lifetime
 	inputPins.reserve(100);
 	outputPins.reserve(100);
 
 	if(auto sink = dynamic_cast<AbstractSink*>(pipe); sink != nullptr)
 	{
-		for(auto inputPort : sink->getInputDataPorts())
-			inputPins.emplace_back(inputPort);
+		for(auto inputDataPort : sink->getInputDataPorts())
+			inputPins.emplace_back(inputDataPort);
 	}
 
 	if(auto source = dynamic_cast<AbstractSource*>(pipe); source != nullptr)
 	{
-		{
-			for(auto outputPin : source->getOutputDataPorts())
-				outputPins.emplace_back(outputPin);
-		}
+		for(auto outputPin : source->getOutputDataPorts())
+			outputPins.emplace_back(outputPin);
+	}
+
+	for(auto& it : pipe->getInputEventPorts())
+	{
+		auto p = it.second.get();
+		inputPins.emplace_back(p);
+	}
+
+	for(auto& it : pipe->getOutputEventPorts())
+	{
+		auto p = &it.second;
+		outputPins.emplace_back(&it.second);
 	}
 }
 

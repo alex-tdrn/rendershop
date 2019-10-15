@@ -1,9 +1,8 @@
 #include "InputPin.h"
 #include "OutputPin.h"
+#include "renderdeck/base/OutputEventPort.hpp"
 
-#include "renderdeck/base/AbstractDataPort.hpp"
-
-InputPin::InputPin(AbstractDataPort* port)
+InputPin::InputPin(AbstractPort* port)
 	: AbstractPin(port), linkID(uniqueID())
 {
 }
@@ -28,7 +27,25 @@ void InputPin::draw()
 {
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Input);
 
+	auto e = dynamic_cast<InputEventPort*>(port);
+
+	if(e)
+	{
+		if(e->getTimesTriggered() > triggerCount)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.7, 0.7, 1});
+			justTriggered = true;
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.5, 0.5, 1});
+		}
+	}
+
 	ImGui::Text(port->getName().c_str());
+
+	if(e)
+		ImGui::PopStyleColor();
 
 	ax::NodeEditor::PinPivotSize({ 0, 0 });
 
@@ -43,5 +60,22 @@ ImVec2 InputPin::calculateSize() const
 void InputPin::drawLink()
 {
 	if(connection != nullptr)
-		ax::NodeEditor::Link(linkID, id, connection->getID());
+	{
+		
+		auto e = dynamic_cast<InputEventPort*>(port);
+		if(e)
+		{
+			ax::NodeEditor::Link(linkID, connection->getID(), id, {1, 0.5, 0.5, 1}, 2.0f);
+			if(justTriggered)
+			{
+				ax::NodeEditor::Flow(linkID);
+				triggerCount = e->getTimesTriggered();
+				justTriggered = false;
+			}
+		}
+		else
+		{
+			ax::NodeEditor::Link(linkID, connection->getID(), id);
+		}
+	}
 }

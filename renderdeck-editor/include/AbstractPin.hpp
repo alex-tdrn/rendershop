@@ -1,6 +1,6 @@
 #pragma once
 #include "UniqueID.hpp"
-#include "renderdeck/base/AbstractDataPort.hpp"
+#include "renderdeck/base/AbstractPort.hpp"
 
 #include <imgui_node_editor.h>
 #include <unordered_map>
@@ -9,15 +9,15 @@ class AbstractPin
 {
 private:
 	static inline std::unordered_map<unsigned long long, AbstractPin*> pinMap;
-	static inline std::unordered_map<AbstractDataPort const*, ax::NodeEditor::PinId> portMap;
-	
+	static inline std::unordered_map<AbstractPort const*, ax::NodeEditor::PinId> portMap;
+
 protected:
 	ax::NodeEditor::PinId id = -1;
-	AbstractDataPort* port = nullptr;
+	AbstractPort* port = nullptr;
 
 public:
 	AbstractPin() = default;
-	AbstractPin(AbstractDataPort* port)
+	AbstractPin(AbstractPort * port)
 		: id(uniqueID()), port(port)
 	{
 		pinMap[id.Get()] = this;
@@ -40,7 +40,7 @@ public:
 			return pinMap[id.Get()];
 		return nullptr;
 	}
-	static ax::NodeEditor::PinId getIDForPort(AbstractDataPort const* port)
+	static ax::NodeEditor::PinId getIDForPort(AbstractPort const* port)
 	{
 		if(portMap.find(port) != portMap.end())
 			return portMap[port];
@@ -52,7 +52,7 @@ public:
 		return id;
 	}
 
-	AbstractDataPort* getPort() const
+	AbstractPort* getPort() const
 	{
 		return port;
 	}

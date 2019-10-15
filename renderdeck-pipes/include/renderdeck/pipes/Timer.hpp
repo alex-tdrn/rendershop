@@ -40,7 +40,7 @@ public:
 	static inline std::string const name = registerPipe<Timer>("Timer");
 
 private:
-	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;
+	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::now() + 5'000ms;
 
 protected:
 	void registerInputEvents() override;
