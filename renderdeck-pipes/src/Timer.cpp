@@ -1,5 +1,13 @@
 #include "renderdeck/pipes/Timer.hpp"
 
+void Timer::registerInputEvents()
+{
+	AbstractSink::registerInputEvents();
+	registerInputEvent(InputEvents::Poll, "Poll", [this](){
+		this->poll();
+	});
+}
+
 void Timer::registerOutputEvents()
 {
 	AbstractSink::registerOutputEvents();
@@ -7,6 +15,11 @@ void Timer::registerOutputEvents()
 }
 
 void Timer::update()
+{
+	poll();
+}
+
+void Timer::poll()
 {
 	if(std::chrono::steady_clock::now() >= nextActivationTime)
 	{

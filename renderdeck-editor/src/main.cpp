@@ -5,7 +5,7 @@
 #include "renderdeck/pipes/Timer.hpp"
 #include "renderdeck/pipes/DecomposeColor.h"
 #include "renderdeck/pipes/ValueToColor.h"
-#include "Node.h"
+#include "NodeCanvas.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -59,7 +59,6 @@ int main(int argc, char** argv)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
-	ax::NodeEditor::EditorContext* nodeEditorContext = ax::NodeEditor::CreateEditor();
 
 	ImGuiCherryStyle();
 
@@ -68,25 +67,30 @@ int main(int argc, char** argv)
 
 	
 	using namespace std::chrono_literals;
-	RandomColorSource source;
-	ClearBackgroundSink sink;
-	Timer timer;
+	std::vector<std::unique_ptr<AbstractPipe>> pipes;
+	
+	std::unique_ptr<AbstractPipe> source = std::make_unique<RandomColorSource>();
+	std::unique_ptr<AbstractPipe> sink = std::make_unique<ClearBackgroundSink>();
+	std::unique_ptr<AbstractPipe> timer = std::make_unique<Timer>();
 
-	timer.getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source.getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
-	timer.getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink.getInputEventPort(AbstractSink::InputEvents::Run));
+	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
+	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(AbstractSink::InputEvents::Run));
+	
+	//TODO
+	OutputEventPort tick;
+	timer->getInputEventPort(Timer::InputEvents::Poll).connect(&tick);
 
+	pipes.push_back(std::move(source));
+	pipes.push_back(std::move(sink));
+	pipes.push_back(std::move(timer));
 
-	std::vector<Node> nodes;
-	nodes.emplace_back(&source);
-	nodes.emplace_back(&sink);
-	nodes.emplace_back(&timer);
-
-	std::vector<std::unique_ptr<AbstractPipe>> dynamicElements;
+	NodeCanvas canvas;
+	canvas.setStore(&pipes);
 
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
-		timer.update();
+		tick();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -97,86 +101,7 @@ int main(int argc, char** argv)
 		glViewport(0, 0, display_w, display_h);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
-		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize({1920, 1080});
-		ImGui::Begin("Pipeline Canvas", nullptr, 
-			ImGuiWindowFlags_NoTitleBar | /*ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
-			ImGuiWindowFlags_NoBringToFrontOnFocus
-		);
-
-		ax::NodeEditor::SetCurrentEditor(nodeEditorContext);
-		ax::NodeEditor::Begin("My Editor", ImVec2(1920, 1080));
-
-		for(auto& node : nodes)
-			node.draw();
-		for(auto& node : nodes)
-			node.drawInputLinks();
-		if(ax::NodeEditor::BeginCreate())
-		{
-			ax::NodeEditor::PinId idPin1 = 0, idPin2 = 0;
-			if(ax::NodeEditor::QueryNewLink(&idPin1, &idPin2) && idPin1 != idPin2)
-			{
-				auto pin1 = AbstractPin::getPinForID(idPin1);
-				auto pin2 = AbstractPin::getPinForID(idPin2);
-				if(pin1->canConnect(pin2))
-				{
-					if(ax::NodeEditor::AcceptNewItem({ 0, 1, 0, 1, }, 2))
-					{
-						pin1->connect(pin2);
-					}
-				}
-				else
-				{
-					ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
-				}
-			}
-
-			ax::NodeEditor::PinId pinId = 0;
-			if(ax::NodeEditor::QueryNewNode(&pinId))
-			{
-				if(ax::NodeEditor::AcceptNewItem())
-				{
-					ax::NodeEditor::Suspend();
-					ImGui::OpenPopup("Create New Node");
-					ax::NodeEditor::Resume();
-				}
-			}
-		}
-		ax::NodeEditor::EndCreate();
-
-		ax::NodeEditor::Suspend();
-		if(ImGui::BeginPopup("<<Create New Link>>"))
-		{
-			ImGui::Text("<<< TEST >>>");
-			ImGui::Text("Create New Link");
-			
-			ImGui::EndPopup();
-		}
-
-		if(ImGui::BeginPopup("Create New Node"))
-		{
-			if(ImGui::BeginMenu("Sources"))
-			{
-				for(auto [name, constructor] : AbstractSource::getPipeMap())
-				{
-					if(ImGui::MenuItem(name.c_str()))
-					{
-						auto source = constructor();
-						nodes.emplace_back(source.get());
-						dynamicElements.push_back(std::move(source));
-					}
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::EndPopup();
-		}
-		ax::NodeEditor::Resume();
-
-		ax::NodeEditor::End();
-
-
-		ImGui::End();
+		canvas.draw();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -187,7 +112,6 @@ int main(int argc, char** argv)
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-	ax::NodeEditor::DestroyEditor(nodeEditorContext);
 
 	glfwDestroyWindow(window);
 	glfwTerminate();

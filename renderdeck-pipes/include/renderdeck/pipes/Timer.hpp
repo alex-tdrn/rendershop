@@ -24,6 +24,7 @@ public:
 	{
 		enum
 		{
+			Poll = AbstractPipe::InputEvents::UserEvents
 		};
 	};
 
@@ -42,9 +43,11 @@ private:
 	mutable std::chrono::steady_clock::time_point nextActivationTime = std::chrono::steady_clock::now() + 1'000ms;
 
 protected:
+	void registerInputEvents() override;
 	void registerOutputEvents() override;
 
 public:
 	void update() override;
+	void poll();
 
 };

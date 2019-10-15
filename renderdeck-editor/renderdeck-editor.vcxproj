@@ -11,19 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\NodeCanvas.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
+    <ClCompile Include="src\Widget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AbstractNode.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
     <ClInclude Include="include\InputPin.h" />
+    <ClInclude Include="include\NodeCanvas.h" />
     <ClInclude Include="include\OutputPin.h" />
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Node.h" />
+    <ClInclude Include="include\Widget.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

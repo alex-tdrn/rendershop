@@ -5,6 +5,8 @@
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
+    <ClCompile Include="src\Widget.cpp" />
+    <ClCompile Include="src\NodeCanvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Node.h" />
@@ -14,5 +16,7 @@
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
     <ClInclude Include="include\AbstractNode.hpp" />
+    <ClInclude Include="include\Widget.h" />
+    <ClInclude Include="include\NodeCanvas.h" />
   </ItemGroup>
 </Project>
