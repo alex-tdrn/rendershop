@@ -1,12 +1,12 @@
 #include "catch.hpp"
-#include "renderdeck/base/Pipe.hpp"
-#include "renderdeck/pipes/ClearBackgroundSink.h"
-#include "renderdeck/pipes/DecomposeColor.h"
-#include "renderdeck/pipes/GrayscaleColorPipe.h"
-#include "renderdeck/pipes/MixColors.h"
-#include "renderdeck/pipes/RandomColorSource.h"
-#include "renderdeck/pipes/Timer.hpp"
-#include "renderdeck/pipes/ValueToColor.h"
+#include "rendershop/base/Pipe.hpp"
+#include "rendershop/pipes/ClearBackgroundSink.h"
+#include "rendershop/pipes/DecomposeColor.h"
+#include "rendershop/pipes/GrayscaleColorPipe.h"
+#include "rendershop/pipes/MixColors.h"
+#include "rendershop/pipes/RandomColorSource.h"
+#include "rendershop/pipes/Timer.hpp"
+#include "rendershop/pipes/ValueToColor.h"
 
 #include <utility>
 #include <array>
@@ -153,7 +153,7 @@ public:
 	}
 };
 
-TEMPLATE_TEST_CASE("base.pipes.Pipe registration", "", TestSource, TestSink, TestPipe, ClearBackgroundSink, DecomposeColor, GrayscaleColorPipe, MixColors, RandomColorSource, Timer, ValueToColor)
+TEMPLATE_TEST_CASE("base::pipes::Pipe registration", "", TestSource, TestSink, TestPipe, ClearBackgroundSink, DecomposeColor, GrayscaleColorPipe, MixColors, RandomColorSource, Timer, ValueToColor)
 {
 	GIVEN("Pipe type '" + TestType::name + "'")
 	{
@@ -198,7 +198,7 @@ TEMPLATE_TEST_CASE("base.pipes.Pipe registration", "", TestSource, TestSink, Tes
 	}
 }
 
-TEST_CASE("base.pipes.Pipeline update behaviour")
+TEST_CASE("base::pipes::Pipeline update behaviour")
 {
 	GIVEN("Source A with one output port, AO, and update event AU")
 	{
