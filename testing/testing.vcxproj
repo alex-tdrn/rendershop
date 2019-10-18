@@ -82,13 +82,13 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;$(SolutionDir)third party/include;$(SolutionDir)renderdeck-base/include;$(SolutionDir)renderdeck-pipes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;$(SolutionDir)third party/include;$(SolutionDir)rendershop-base/include;$(SolutionDir)rendershop-pipes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>renderdeck-pipes.lib;glfw3.lib;glad.lib;imgui.lib;imgui-node-editor.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)renderdeck-base/lib/$(Platform)/$(Configuration);$(SolutionDir)renderdeck-pipes/lib/$(Platform)/$(Configuration);$(SolutionDir)third party/lib/$(Platform)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rendershop-pipes.lib;glfw3.lib;glad.lib;imgui.lib;imgui-node-editor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)rendershop-base/lib/$(Platform)/$(Configuration);$(SolutionDir)rendershop-pipes/lib/$(Platform)/$(Configuration);$(SolutionDir)third party/lib/$(Platform)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>include;$(SolutionDir)third party/include;$(SolutionDir)renderdeck-base/include;$(SolutionDir)renderdeck-pipes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;$(SolutionDir)third party/include;$(SolutionDir)rendershop-base/include;$(SolutionDir)rendershop-pipes/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -136,8 +136,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>renderdeck-pipes.lib;glfw3.lib;glad.lib;imgui.lib;imgui-node-editor.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)renderdeck-base/lib/$(Platform)/$(Configuration);$(SolutionDir)renderdeck-pipes/lib/$(Platform)/$(Configuration);$(SolutionDir)third party/lib/$(Platform)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rendershop-pipes.lib;glfw3.lib;glad.lib;imgui.lib;imgui-node-editor.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)rendershop-base/lib/$(Platform)/$(Configuration);$(SolutionDir)rendershop-pipes/lib/$(Platform)/$(Configuration);$(SolutionDir)third party/lib/$(Platform)/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
