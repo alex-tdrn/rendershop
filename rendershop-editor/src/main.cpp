@@ -59,6 +59,10 @@ int main(int argc, char** argv)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoTaskBarIcon = true;
 
 	ImGuiCherryStyle();
 
@@ -101,10 +105,26 @@ int main(int argc, char** argv)
 		glViewport(0, 0, display_w, display_h);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
+		ImGui::ShowDemoWindow();
+		ImGui::ShowMetricsWindow();
+		ImGui::ShowAboutWindow();
+		ImGui::ShowStyleEditor();
+		ImGui::ShowStyleSelector("asga");
+		ImGui::ShowTestWindow();
+		ImGui::ShowUserGuide();
+
 		canvas.draw();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
 
 		glfwSwapBuffers(window);
 	}
