@@ -2,8 +2,6 @@
 
 #include "rendershop/base/AbstractPort.hpp"
 
-#include <set>
-
 template<typename InputPort>
 class OutputPort : public virtual AbstractPort
 {
@@ -43,6 +41,14 @@ public:
 		{
 			disconnect(*connections.begin());
 		}
+	}
+
+	std::set<AbstractPort*> getConnections() const final override
+	{
+		std::set<AbstractPort*> ret;
+		for(auto port : connections)
+			ret.insert(port);
+		return ret;
 	}
 
 	void connect(InputPort* port)

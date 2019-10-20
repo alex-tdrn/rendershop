@@ -1,4 +1,5 @@
 #include "NodeCanvas.h"
+#include "AbstractPin.hpp"
 #include "rendershop/base/AbstractPipe.hpp"
 
 NodeCanvas::NodeCanvas()

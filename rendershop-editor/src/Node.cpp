@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "UniqueID.hpp"
 #include "UIDebug.hpp"
 #include "rendershop/base/AbstractSink.hpp"
 #include "rendershop/base/AbstractSource.hpp"
@@ -8,33 +9,30 @@
 Node::Node(AbstractPipe* pipe)
 	: pipe(pipe), id(uniqueID())
 {
-	//TODO fix lifetime
-	inputPins.reserve(100);
-	outputPins.reserve(100);
-
 	if(auto sink = dynamic_cast<AbstractSink*>(pipe); sink != nullptr)
-	{
 		for(auto inputDataPort : sink->getInputDataPorts())
-			inputPins.emplace_back(inputDataPort);
-	}
-
+			inputDataPins.push_back(std::make_unique<InputDataPin>(inputDataPort));
+	
 	if(auto source = dynamic_cast<AbstractSource*>(pipe); source != nullptr)
-	{
 		for(auto outputPin : source->getOutputDataPorts())
-			outputPins.emplace_back(outputPin);
-	}
+			outputDataPins.push_back(std::make_unique<OutputDataPin>(outputPin));
+	pipe->registerInputEvents();
+	pipe->registerOutputEvents();
+	for(auto& [index, port] : pipe->getInputEventPorts())
+		inputEventPins.push_back(std::make_unique<InputEventPin>(port.get()));
 
-	for(auto& it : pipe->getInputEventPorts())
-	{
-		auto p = it.second.get();
-		inputPins.emplace_back(p);
-	}
+	for(auto& [index, port] : pipe->getOutputEventPorts())
+		outputEventPins.push_back(std::make_unique<OutputEventPin>(&port));
+}
 
-	for(auto& it : pipe->getOutputEventPorts())
-	{
-		auto p = &it.second;
-		outputPins.emplace_back(&it.second);
-	}
+bool Node::hasInputs() const
+{
+	return !inputDataPins.empty() || !inputEventPins.empty();
+}
+
+bool Node::hasOutputs() const
+{
+	return !outputDataPins.empty() || !outputEventPins.empty();
 }
 
 void Node::initializeLayout()
@@ -42,19 +40,21 @@ void Node::initializeLayout()
 	float const itemSpacing = ImGui::GetStyle().ItemSpacing.x;
 	float const minimumCenterSpacing = 20;
 
-	auto measurePinGroup = [&](auto& pins) {
+	auto measurePinGroup = [&](auto& dataPins, auto& eventPins) {
 		float pinGroupWidth = 0;
-		if(pins.size() > 0)
-		{
-			for(auto const& pin : pins)
-				pinGroupWidth = std::max(pinGroupWidth, pin.calculateSize().x);
+		for(auto const& pin : dataPins)
+			pinGroupWidth = std::max(pinGroupWidth, pin->calculateSize().x);
+		for(auto const& pin : eventPins)
+			pinGroupWidth = std::max(pinGroupWidth, pin->calculateSize().x);
+
+		if(dataPins.size() > 0 || eventPins.size() > 0)
 			contentsWidth += pinGroupWidth + itemSpacing;
-		}
 		return pinGroupWidth;
 	};
 
-	float const inputGroupWidth = measurePinGroup(inputPins);
-	float const outputGroupWidth = measurePinGroup(outputPins);
+	measurePinGroup(inputDataPins, inputEventPins);
+	measurePinGroup(outputDataPins, outputEventPins);
+
 	float const titleWidth = ImGui::CalcTextSize(pipe->getName().c_str()).x;
 
 	if(titleWidth > contentsWidth + minimumCenterSpacing)
@@ -101,22 +101,28 @@ void Node::drawTitle()
 
 void Node::drawInputs()
 {
-	if(inputPins.empty())
-		return;
-	ImGui::BeginGroup();
-	for(auto& inputPin : inputPins)
-		inputPin.draw();
-	ImGui::EndGroup();
+	if(hasInputs())
+	{
+		ImGui::BeginGroup();
+		for(auto& inputPin : inputDataPins)
+			inputPin->draw();
+		for(auto& inputPin : inputEventPins)
+			inputPin->draw();
+		ImGui::EndGroup();
+	}
 }
 
 void Node::drawOutputs()
 {
-	if(outputPins.empty())
-		return;
-	ImGui::BeginGroup();
-	for(auto& outputPin : outputPins)
-		outputPin.draw();
-	ImGui::EndGroup();
+	if(hasOutputs())
+	{
+		ImGui::BeginGroup();
+		for(auto& outputPin : outputDataPins)
+			outputPin->draw();
+		for(auto& outputPin : outputEventPins)
+			outputPin->draw();
+		ImGui::EndGroup();
+	}
 }
 
 void Node::draw()
@@ -130,36 +136,24 @@ void Node::draw()
 	drawTitle();
 
 	drawInputs();
-	if(!inputPins.empty())
-		debug::drawItemRect(drawList);
 
-	if(!inputPins.empty())
-	{
+	if(hasInputs())
 		ImGui::SameLine();
-		debug::drawSpacingRect(drawList);
-	}
 
 	ImGui::Dummy({centerSpacing, 0});
-	debug::drawItemRect(drawList);
 
-	if(!outputPins.empty())
-	{
+	if(hasOutputs())
 		ImGui::SameLine();
-		debug::drawSpacingRect(drawList);
-	}
 
 	drawOutputs();
-	if(!outputPins.empty())
-		debug::drawItemRect(drawList);
-
 	ax::NodeEditor::EndNode();
-	debug::drawItemRect(drawList);
-
 }
 
 void Node::drawInputLinks()
 {
-	for(auto& inputPin : inputPins)
-		inputPin.drawLink();
+	for(auto& inputPin : inputDataPins)
+		inputPin->drawLink();
+	for(auto& inputEventPin : inputEventPins)
+		inputEventPin->drawLink();
 }
 

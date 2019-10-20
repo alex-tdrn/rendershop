@@ -6,7 +6,7 @@
 #include "rendershop/pipes/DecomposeColor.h"
 #include "rendershop/pipes/ValueToColor.h"
 #include "NodeCanvas.h"
-#include "MainWidget.h"
+#include "RootWindow.h"
 #include "FrameControllerPipe.h"
 
 #include <imgui.h>
@@ -75,23 +75,26 @@ int main(int argc, char** argv)
 	std::unique_ptr<AbstractPipe> source = std::make_unique<RandomColorSource>();
 	std::unique_ptr<AbstractPipe> sink = std::make_unique<ClearBackgroundSink>();
 	std::unique_ptr<AbstractPipe> timer = std::make_unique<Timer>();
-
-	//timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(AbstractSource::InputEvents::QueueUpdate));
-	//timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(AbstractSink::InputEvents::Run));
-	
-	//TODO
 	auto tmpFrameController = std::make_unique<FrameControllerPipe>();
 	FrameControllerPipe* frameController = tmpFrameController.get();
+
+	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(ClearBackgroundSink::InputEvents::Run));
+	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(RandomColorSource::InputEvents::QueueUpdate));
+	timer->getInputEventPort(Timer::InputEvents::Poll).connect(&frameController->getOutputEventPort(FrameControllerPipe::OutputEvents::NewFrame));
+	dynamic_cast<RandomColorSource*>(source.get())->getOutputDataPort<RandomColorSource::OutputPorts::Color>()
+		.connect(&dynamic_cast<ClearBackgroundSink*>(sink.get())->getInputDataPort<ClearBackgroundSink::InputPorts::Color>());
+	
+	//TODO
 	pipes.push_back(std::move(source));
 	pipes.push_back(std::move(sink));
 	pipes.push_back(std::move(timer));
 	pipes.push_back(std::move(tmpFrameController));
 	
 
-	MainWidget mainWidget;
-	NodeCanvas* canvas = mainWidget.addChild(std::make_unique<NodeCanvas>());
-	mainWidget.addChild(std::make_unique<NodeCanvas>());
-	mainWidget.addChild(std::make_unique<NodeCanvas>());
+	RootWindow rootWindow;
+	NodeCanvas* canvas = rootWindow.addChild(std::make_unique<NodeCanvas>());
+	rootWindow.addChild(std::make_unique<NodeCanvas>());
+	rootWindow.addChild(std::make_unique<NodeCanvas>());
 	canvas->setStore(&pipes);
 
 	while(!glfwWindowShouldClose(window))
@@ -110,15 +113,7 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
-		//ImGui::ShowDemoWindow();
-		//ImGui::ShowMetricsWindow();
-	//	ImGui::ShowAboutWindow();
-		//ImGui::ShowStyleEditor();
-		//ImGui::ShowStyleSelector("asga");
-		//ImGui::ShowTestWindow();
-		//ImGui::ShowUserGuide();
-
-		mainWidget.draw();
+		rootWindow.draw();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

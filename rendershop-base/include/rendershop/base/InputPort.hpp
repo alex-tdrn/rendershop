@@ -34,6 +34,11 @@ public:
 	{
 		connect(dynamic_cast<OutputPort*>(port));
 	}
+	
+	std::set<AbstractPort*> getConnections() const final override
+	{
+		return {connection};
+	}
 
 	void disconnect() final override
 	{

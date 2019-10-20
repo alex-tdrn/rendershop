@@ -5,9 +5,7 @@ class OutputPin;
 
 class InputPin : public AbstractPin
 {
-private:
-	int triggerCount = 0;
-	bool justTriggered = false;
+protected:
 	OutputPin* connection = nullptr;
 	ax::NodeEditor::LinkId linkID = -1;
 
@@ -18,13 +16,11 @@ public:
 	InputPin(InputPin const&) = delete;
 	InputPin& operator=(InputPin&&) = default;
 	InputPin& operator=(InputPin const&) = delete;
-	~InputPin() = default;
+	virtual ~InputPin() = default;
 
 public:
+	virtual void drawLink() = 0;
 	bool canConnect(AbstractPin* outputPin) final override;
 	void connect(AbstractPin* outputPin) final override;
-	void draw() final override;
-	ImVec2 calculateSize() const final override;
-	void drawLink();
 
 };

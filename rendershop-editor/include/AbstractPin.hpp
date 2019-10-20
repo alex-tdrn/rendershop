@@ -34,7 +34,7 @@ public:
 	}
 
 public:
-	static  AbstractPin* getPinForID(ax::NodeEditor::PinId id)
+	static AbstractPin* getPinForID(ax::NodeEditor::PinId id)
 	{
 		if(pinMap.find(id.Get()) != pinMap.end())
 			return pinMap[id.Get()];
@@ -44,7 +44,11 @@ public:
 	{
 		if(portMap.find(port) != portMap.end())
 			return portMap[port];
-		return -1;
+		return {};
+	}
+	static AbstractPin* getPinForPort(AbstractPort const* port)
+	{
+		return getPinForID(getIDForPort(port));
 	}
 
 	ax::NodeEditor::PinId getID() const

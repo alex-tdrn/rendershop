@@ -14,24 +14,32 @@
     <ClInclude Include="include\AbstractNode.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
     <ClInclude Include="include\FrameControllerPipe.h" />
+    <ClInclude Include="include\InputDataPin.h" />
+    <ClInclude Include="include\InputEventPin.h" />
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\NodeCanvas.h" />
+    <ClInclude Include="include\OutputDataPin.h" />
+    <ClInclude Include="include\OutputEventPin.h" />
     <ClInclude Include="include\OutputPin.h" />
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
-    <ClInclude Include="include\Widget.h" />
-    <ClInclude Include="include\MainWidget.h" />
+    <ClInclude Include="include\Window.h" />
+    <ClInclude Include="include\RootWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\OutputEventPin.cpp" />
+    <ClCompile Include="src\InputEventPin.cpp" />
+    <ClCompile Include="src\OutputDataPin.cpp" />
+    <ClCompile Include="src\InputDataPin.cpp" />
     <ClCompile Include="src\FrameControllerPipe.cpp" />
-    <ClCompile Include="MainWidget.cpp" />
+    <ClCompile Include="src\RootWindow.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />
     <ClCompile Include="src\NodeCanvas.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
-    <ClCompile Include="src\Widget.cpp" />
+    <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
