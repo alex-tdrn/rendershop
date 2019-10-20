@@ -11,6 +11,9 @@
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Widget.h" />
     <ClInclude Include="include\MainWidget.h" />
+    <ClInclude Include="include\FrameControllerPipe.h">
+      <Filter>Pipes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\InputPin.cpp" />
@@ -20,5 +23,13 @@
     <ClCompile Include="src\OutputPin.cpp" />
     <ClCompile Include="src\Widget.cpp" />
     <ClCompile Include="MainWidget.cpp" />
+    <ClCompile Include="src\FrameControllerPipe.cpp">
+      <Filter>Pipes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Pipes">
+      <UniqueIdentifier>{560bac3c-e8c4-4667-864c-d590c1334170}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

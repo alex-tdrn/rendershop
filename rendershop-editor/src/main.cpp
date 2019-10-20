@@ -7,6 +7,7 @@
 #include "rendershop/pipes/ValueToColor.h"
 #include "NodeCanvas.h"
 #include "MainWidget.h"
+#include "FrameControllerPipe.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -79,12 +80,13 @@ int main(int argc, char** argv)
 	//timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(AbstractSink::InputEvents::Run));
 	
 	//TODO
-	OutputEventPort tick;
-	timer->getInputEventPort(Timer::InputEvents::Poll).connect(&tick);
-
+	auto tmpFrameController = std::make_unique<FrameControllerPipe>();
+	FrameControllerPipe* frameController = tmpFrameController.get();
 	pipes.push_back(std::move(source));
 	pipes.push_back(std::move(sink));
 	pipes.push_back(std::move(timer));
+	pipes.push_back(std::move(tmpFrameController));
+	
 
 	MainWidget mainWidget;
 	NodeCanvas* canvas = mainWidget.addChild(std::make_unique<NodeCanvas>());
@@ -95,7 +97,7 @@ int main(int argc, char** argv)
 	while(!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
-		tick();
+		frameController->newFrame();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="include\AbstractNode.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
+    <ClInclude Include="include\FrameControllerPipe.h" />
     <ClInclude Include="include\InputPin.h" />
     <ClInclude Include="include\Node.h" />
     <ClInclude Include="include\NodeCanvas.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="include\MainWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\FrameControllerPipe.cpp" />
     <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
