@@ -20,8 +20,10 @@
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Widget.h" />
+    <ClInclude Include="include\MainWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MainWidget.cpp" />
     <ClCompile Include="src\InputPin.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Node.cpp" />

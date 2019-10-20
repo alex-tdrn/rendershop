@@ -6,6 +6,7 @@
 #include "rendershop/pipes/DecomposeColor.h"
 #include "rendershop/pipes/ValueToColor.h"
 #include "NodeCanvas.h"
+#include "MainWidget.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -60,9 +61,6 @@ int main(int argc, char** argv)
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	//io.ConfigViewportsNoAutoMerge = true;
-	//io.ConfigViewportsNoTaskBarIcon = true;
 
 	ImGuiCherryStyle();
 
@@ -88,8 +86,11 @@ int main(int argc, char** argv)
 	pipes.push_back(std::move(sink));
 	pipes.push_back(std::move(timer));
 
-	NodeCanvas canvas;
-	canvas.setStore(&pipes);
+	MainWidget mainWidget;
+	NodeCanvas* canvas = mainWidget.addChild(std::make_unique<NodeCanvas>());
+	mainWidget.addChild(std::make_unique<NodeCanvas>());
+	mainWidget.addChild(std::make_unique<NodeCanvas>());
+	canvas->setStore(&pipes);
 
 	while(!glfwWindowShouldClose(window))
 	{
@@ -107,15 +108,15 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT);
 		glfwGetWindowPos(window, &wind_x, &wind_y);
 
-		ImGui::ShowDemoWindow();
-		ImGui::ShowMetricsWindow();
-		ImGui::ShowAboutWindow();
-		ImGui::ShowStyleEditor();
-		ImGui::ShowStyleSelector("asga");
-		ImGui::ShowTestWindow();
-		ImGui::ShowUserGuide();
+		//ImGui::ShowDemoWindow();
+		//ImGui::ShowMetricsWindow();
+	//	ImGui::ShowAboutWindow();
+		//ImGui::ShowStyleEditor();
+		//ImGui::ShowStyleSelector("asga");
+		//ImGui::ShowTestWindow();
+		//ImGui::ShowUserGuide();
 
-		canvas.draw();
+		mainWidget.draw();
 
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
