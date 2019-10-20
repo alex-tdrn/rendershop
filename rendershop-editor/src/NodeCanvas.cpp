@@ -4,6 +4,8 @@
 NodeCanvas::NodeCanvas()
 {
 	context = ax::NodeEditor::CreateEditor();
+	title = "Pipeline Canvas " + std::to_string(id);
+	windowFlags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 }
 
 NodeCanvas::~NodeCanvas()
@@ -11,80 +13,76 @@ NodeCanvas::~NodeCanvas()
 	ax::NodeEditor::DestroyEditor(context);
 }
 
-void NodeCanvas::draw()
+void NodeCanvas::drawContents()
 {
-	ImGui::Begin("Pipeline Canvas", nullptr,
-		ImGuiWindowFlags_NoTitleBar | /*ImGuiWindowFlags_NoResize | */ImGuiWindowFlags_NoMove |
-		ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings |
-		ImGuiWindowFlags_NoBringToFrontOnFocus
-	);
-	ax::NodeEditor::SetCurrentEditor(context);
-	ax::NodeEditor::Begin("My Editor");
-
-	for(auto& node : nodes)
-		node.draw();
-	for(auto& node : nodes)
-		node.drawInputLinks();
-	if(ax::NodeEditor::BeginCreate())
+	if(ImGui::Begin(title.c_str(), &visible, windowFlags))
 	{
-		ax::NodeEditor::PinId idPin1 = 0, idPin2 = 0;
-		if(ax::NodeEditor::QueryNewLink(&idPin1, &idPin2) && idPin1 != idPin2)
+		ax::NodeEditor::SetCurrentEditor(context);
+		ax::NodeEditor::Begin(title.c_str());
+
+		for(auto& node : nodes)
+			node.draw();
+		for(auto& node : nodes)
+			node.drawInputLinks();
+		if(ax::NodeEditor::BeginCreate())
 		{
-			auto pin1 = AbstractPin::getPinForID(idPin1);
-			auto pin2 = AbstractPin::getPinForID(idPin2);
-			if(pin1->canConnect(pin2))
+			ax::NodeEditor::PinId idPin1 = 0, idPin2 = 0;
+			if(ax::NodeEditor::QueryNewLink(&idPin1, &idPin2) && idPin1 != idPin2)
 			{
-				if(ax::NodeEditor::AcceptNewItem({0, 1, 0, 1, }, 2))
+				auto pin1 = AbstractPin::getPinForID(idPin1);
+				auto pin2 = AbstractPin::getPinForID(idPin2);
+				if(pin1->canConnect(pin2))
 				{
-					pin1->connect(pin2);
+					if(ax::NodeEditor::AcceptNewItem({0, 1, 0, 1, }, 2))
+					{
+						pin1->connect(pin2);
+					}
+				}
+				else
+				{
+					ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
 				}
 			}
-			else
+
+			ax::NodeEditor::PinId pinId = 0;
+			if(ax::NodeEditor::QueryNewNode(&pinId))
 			{
-				ax::NodeEditor::RejectNewItem({1, 0, 0, 1}, 2);
+				if(ax::NodeEditor::AcceptNewItem())
+				{
+					ax::NodeEditor::Suspend();
+					ImGui::OpenPopup("Create New Node");
+					ax::NodeEditor::Resume();
+				}
 			}
 		}
+		ax::NodeEditor::EndCreate();
 
-		ax::NodeEditor::PinId pinId = 0;
-		if(ax::NodeEditor::QueryNewNode(&pinId))
+		ax::NodeEditor::Suspend();
+		if(ImGui::BeginPopup("<<Create New Link>>"))
 		{
-			if(ax::NodeEditor::AcceptNewItem())
-			{
-				ax::NodeEditor::Suspend();
-				ImGui::OpenPopup("Create New Node");
-				ax::NodeEditor::Resume();
-			}
+			ImGui::Text("<<< TEST >>>");
+			ImGui::Text("Create New Link");
+
+			ImGui::EndPopup();
 		}
-	}
-	ax::NodeEditor::EndCreate();
 
-	ax::NodeEditor::Suspend();
-	if(ImGui::BeginPopup("<<Create New Link>>"))
-	{
-		ImGui::Text("<<< TEST >>>");
-		ImGui::Text("Create New Link");
-
-		ImGui::EndPopup();
-	}
-
-	if(ImGui::BeginPopup("Create New Node"))
-	{
-		for(auto [name, constructor] : AbstractPipe::getPipeMap())
+		if(ImGui::BeginPopup("Create New Node"))
 		{
-			if(ImGui::MenuItem(name.c_str()))
+			for(auto [name, constructor] : AbstractPipe::getPipeMap())
 			{
-				auto source = constructor();
-				nodes.emplace_back(source.get());
-				store->push_back(std::move(source));
+				if(ImGui::MenuItem(name.c_str()))
+				{
+					auto source = constructor();
+					nodes.emplace_back(source.get());
+					store->push_back(std::move(source));
+				}
 			}
+			ImGui::EndPopup();
 		}
-		ImGui::EndPopup();
+		ax::NodeEditor::Resume();
+
+		ax::NodeEditor::End();
 	}
-	ax::NodeEditor::Resume();
-
-	ax::NodeEditor::End();
-
-
 	ImGui::End();
 }
 

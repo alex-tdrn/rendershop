@@ -10,6 +10,7 @@
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Widget.h" />
+    <ClInclude Include="include\MainWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\InputPin.cpp" />
@@ -18,5 +19,6 @@
     <ClCompile Include="src\NodeCanvas.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
     <ClCompile Include="src\Widget.cpp" />
+    <ClCompile Include="MainWidget.cpp" />
   </ItemGroup>
 </Project>

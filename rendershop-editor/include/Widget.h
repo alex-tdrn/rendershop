@@ -1,8 +1,19 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <string>
+#include <imgui.h>
 
 class Widget
 {
+private:
+	static inline int idCounter = 0;
+
+protected:
+	const int id = idCounter++;
+	std::string title; 
+	bool visible = true;
+	ImGuiWindowFlags windowFlags;
+
 public:
 	Widget() = default;
 	Widget(Widget const&) = delete;
@@ -11,7 +22,15 @@ public:
 	Widget& operator=(Widget&&) = default;
 	virtual ~Widget() = default;
 
+protected:
+	virtual void drawContents() = 0;
+
 public:
-	virtual void draw() = 0;
+	void draw();
+	std::string const& getTitle() const;
+	bool isVisible() const;
+	void toggleVisibility();
+	void show();
+	void hide();
 
 };

@@ -23,8 +23,10 @@ public:
 	NodeCanvas& operator=(NodeCanvas&&) = default;
 	~NodeCanvas();
 
+private:
+	void drawContents() override;
+
 public:
-	void draw() override;
 	void setStore(std::vector<std::unique_ptr<AbstractPipe>>* store);
 
 };
