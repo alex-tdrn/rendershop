@@ -32,6 +32,8 @@ public:
 	template<typename F>
 	void registerInputEvent(int index, std::string name, F&& callable)
 	{
+		if(inputEventNames.find(name) != inputEventNames.end() && inputEvents.find(index) != inputEvents.end())
+			return;
 		inputEventNames[name] = index;
 		inputEvents[index] = std::make_unique<InputEventPort>(std::forward<F>(callable));
 		inputEvents[index]->setName(name);
@@ -39,6 +41,8 @@ public:
 
 	void registerOutputEvent(int index, std::string name)
 	{
+		if(outputEventNames.find(name) != outputEventNames.end() && outputEvents.find(index) != outputEvents.end())
+			return;
 		outputEventNames[name] = index;
 		outputEvents[index] = OutputEventPort{};
 		outputEvents[index].setName(name);
