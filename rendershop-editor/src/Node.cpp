@@ -69,7 +69,8 @@ void Node::initializeLayout()
 	contentsWidth += centerSpacing;
 
 	defaultBorderWidth = ax::NodeEditor::GetStyle().NodeBorderWidth;
-	updatedBorderWidth = defaultBorderWidth * 3;
+	currentBorderWidth = defaultBorderWidth;
+	maxBorderWidth = defaultBorderWidth * 3;
 
 	layoutInitialized = true;
 }
@@ -150,13 +151,14 @@ void Node::draw()
 		initializeLayout();
 	auto& nodeEditorStyle = ax::NodeEditor::GetStyle();
 	
+	nodeEditorStyle.NodeBorderWidth = currentBorderWidth;
 	nodeEditorStyle.NodeBorderWidth += (defaultBorderWidth - nodeEditorStyle.NodeBorderWidth) * 0.005f;
 
 	auto timesUpdateTriggered = pipe->getOutputEventPort(AbstractPipe::OutputEvents::Updated).getTimesTriggered();
 	if(timesUpdateTriggered > updateCount)
 	{
 		updateCount = timesUpdateTriggered;
-		nodeEditorStyle.NodeBorderWidth = updatedBorderWidth;
+		nodeEditorStyle.NodeBorderWidth = maxBorderWidth;
 	}
 
 	ax::NodeEditor::BeginNode(id);
@@ -176,6 +178,9 @@ void Node::draw()
 		ImGui::SameLine();
 
 	drawOutputs();
+	currentBorderWidth = nodeEditorStyle.NodeBorderWidth;
+	nodeEditorStyle.NodeBorderWidth = defaultBorderWidth;
+
 	ax::NodeEditor::EndNode();
 }
 

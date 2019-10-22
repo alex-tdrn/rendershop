@@ -22,7 +22,8 @@ private:
 	AbstractPipe* pipe = nullptr;
 	int updateCount = 0;
 	float defaultBorderWidth;
-	float updatedBorderWidth;
+	float maxBorderWidth;
+	float currentBorderWidth;
 	std::vector<std::unique_ptr<InputDataPin>> inputDataPins;
 	std::vector<std::unique_ptr<OutputDataPin>> outputDataPins;	
 	std::vector<std::unique_ptr<InputEventPin>> inputEventPins;

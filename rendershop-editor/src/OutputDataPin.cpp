@@ -10,19 +10,30 @@ OutputDataPin::OutputDataPin(AbstractDataPort* port)
 
 void OutputDataPin::draw()
 {
+
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Output);
-
 	auto o = dynamic_cast<OutputDataPort<glm::vec3> const*>(port);
-
+	ImGui::BeginGroup();
 	ImGui::Text(port->getName().c_str());
 
 	if(o)
 	{
 		auto const& output = o->get();
-		ImGui::ColorButton("Caca", {output.r, output.g, output.b, 1}, ImGuiColorEditFlags_NoTooltip, ImVec2(32, 32));
+		ImGui::ColorButton("Caca", {output.r, output.g, output.b, 1}, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, ImVec2(32, 32));
 	}
+	ImGui::EndGroup();
+	
+	auto drawList = ImGui::GetWindowDrawList();
+	auto min = ImGui::GetItemRectMin();
+	auto max = ImGui::GetItemRectMax();
+	auto h = max.y - min.y;
+	auto x = max.x + 20;
+	auto y = min.y + h / 2;
 
-	ax::NodeEditor::PinPivotSize({0, 0});
+	drawList->AddCircle({x, y}, 5, ImGui::GetColorU32({1, 0, 0, 1}));
+	drawList->AddCircleFilled({x, y}, 4, ImGui::GetColorU32({0, 0, 0, 1}));
+
+	ax::NodeEditor::PinPivotRect({x, y}, {x, y});
 
 	ax::NodeEditor::EndPin();
 }

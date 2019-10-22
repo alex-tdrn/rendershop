@@ -32,7 +32,17 @@ void OutputEventPin::draw()
 
 	ImGui::PopStyleColor();
 
-	ax::NodeEditor::PinPivotSize({0, 0});
+	auto drawList = ImGui::GetWindowDrawList();
+	auto min = ImGui::GetItemRectMin();
+	auto max = ImGui::GetItemRectMax();
+	auto h = max.y - min.y;
+	auto x = max.x + 20;
+	auto y = min.y + h / 2;
+
+	drawList->AddCircle({x, y}, 5, ImGui::GetColorU32({0, 0, 1, 1}));
+	drawList->AddCircleFilled({x, y}, 4, ImGui::GetColorU32({0, 0, 0, 1}));
+
+	ax::NodeEditor::PinPivotRect({x, y}, {x, y});
 
 	ax::NodeEditor::EndPin();
 }
