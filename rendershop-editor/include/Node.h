@@ -20,6 +20,9 @@ private:
 	float centerSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipe* pipe = nullptr;
+	int updateCount = 0;
+	float defaultBorderWidth;
+	float updatedBorderWidth;
 	std::vector<std::unique_ptr<InputDataPin>> inputDataPins;
 	std::vector<std::unique_ptr<OutputDataPin>> outputDataPins;	
 	std::vector<std::unique_ptr<InputEventPin>> inputEventPins;
