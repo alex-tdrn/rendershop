@@ -48,12 +48,12 @@ void Node::initializeLayout()
 			pinGroupWidth = std::max(pinGroupWidth, pin->calculateSize().x);
 
 		if(dataPins.size() > 0 || eventPins.size() > 0)
-			contentsWidth += pinGroupWidth + itemSpacing;
+			contentsWidth += pinGroupWidth + itemSpacing * 2;
 		return pinGroupWidth;
 	};
 
 	measurePinGroup(inputDataPins, inputEventPins);
-	measurePinGroup(outputDataPins, outputEventPins);
+	outputsWidth = measurePinGroup(outputDataPins, outputEventPins);
 
 	float const titleWidth = ImGui::CalcTextSize(pipe->getName().c_str()).x;
 
@@ -105,9 +105,17 @@ void Node::drawInputs()
 	{
 		ImGui::BeginGroup();
 		for(auto& inputPin : inputDataPins)
+		{
 			inputPin->draw();
+			ImGui::SameLine();
+			ImGui::Dummy({0, 0});
+		}
 		for(auto& inputPin : inputEventPins)
+		{
 			inputPin->draw();
+			ImGui::SameLine();
+			ImGui::Dummy({0, 0});
+		}
 		ImGui::EndGroup();
 	}
 }
@@ -118,9 +126,17 @@ void Node::drawOutputs()
 	{
 		ImGui::BeginGroup();
 		for(auto& outputPin : outputDataPins)
+		{
+			ImGui::Dummy({outputsWidth - outputPin->calculateSize().x, 0});
+			ImGui::SameLine();
 			outputPin->draw();
+		}
 		for(auto& outputPin : outputEventPins)
+		{
+			ImGui::Dummy({outputsWidth - outputPin->calculateSize().x, 0});
+			ImGui::SameLine();
 			outputPin->draw();
+		}
 		ImGui::EndGroup();
 	}
 }

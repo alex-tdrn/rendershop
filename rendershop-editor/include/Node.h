@@ -14,6 +14,7 @@ class Node
 {
 private:
 	bool layoutInitialized = false;
+	float outputsWidth = 0;
 	float contentsWidth = 0;
 	float titleOffset = 0;
 	float centerSpacing = 0;
