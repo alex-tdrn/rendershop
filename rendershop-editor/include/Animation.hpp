@@ -30,7 +30,7 @@ public:
 		playing = true;
 	}
 
-	T get(T startValue, T endValue, std::chrono::steady_clock::duration const& duration)
+	T get(T startValue, T endValue, std::chrono::milliseconds const& duration)
 	{
 		if(!playing)
 			return endValue;
@@ -41,11 +41,9 @@ public:
 			playing = false;
 			return endValue;
 		}
-		auto currentDuration = now - startTime;
-		;
+		auto currentDuration = std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime);
 
-		float p = double(std::chrono::duration_cast<std::chrono::milliseconds>(currentDuration).count()) 
-			/ double(std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
+		float p = double(currentDuration.count()) / double(duration.count());
 
 		return lerp(startValue, endValue, p);
 	}

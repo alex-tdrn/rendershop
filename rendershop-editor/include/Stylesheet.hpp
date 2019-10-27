@@ -19,7 +19,7 @@ public:
 	float linkThickness = 2;
 	float nodeBorderWidth = 2;
 	float animatedNodeBorderWidth = 4;
-	std::chrono::steady_clock::duration animatedNodeBorderDuration = 1s;
+	std::chrono::milliseconds animatedNodeBorderDuration = 1s;
 
 public:
 	Stylesheet(std::string name = "default")

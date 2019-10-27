@@ -26,7 +26,11 @@ void StylesheetWindow::drawContents()
 			ImGui::Separator();
 			ImGui::PushID("Node Border Width Animation");
 			ImGui::SliderFloat("Animated", &sheet->animatedNodeBorderWidth, 1.0f, 10.0f);
-			ImGui::SliderFloat("Duration", &sheet->linkThickness, 1.0f, 10.0f);
+			int duration = sheet->animatedNodeBorderDuration.count();
+			ImGui::InputInt("Duration", &duration, 10, 100);
+			if(duration < 0)
+				duration = 0;
+			sheet->animatedNodeBorderDuration = std::chrono::milliseconds(duration);
 			ImGui::PopID();
 
 		}
