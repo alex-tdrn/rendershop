@@ -16,7 +16,10 @@ private:
 	Data data;
 
 public:
-	OutputDataPort() = default;
+	OutputDataPort()
+	{
+		dataTypeHash = std::type_index(typeid(Data)).hash_code();
+	}
 	OutputDataPort(OutputDataPort const&) = delete;
 	OutputDataPort(OutputDataPort&&) = default;
 	OutputDataPort& operator=(OutputDataPort const& that) = delete;

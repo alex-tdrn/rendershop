@@ -1,6 +1,7 @@
 #include "OutputEventPin.h"
-
 #include "rendershop/base/OutputEventPort.hpp"
+#include "ImGuiUtilities.hpp"
+
 #include <glm/glm.hpp>
 
 OutputEventPin::OutputEventPin(OutputEventPort* port)
@@ -32,17 +33,14 @@ void OutputEventPin::draw()
 
 	ImGui::PopStyleColor();
 
-	auto drawList = ImGui::GetWindowDrawList();
-	auto min = ImGui::GetItemRectMin();
-	auto max = ImGui::GetItemRectMax();
-	auto h = max.y - min.y;
-	auto x = max.x + 20;
-	auto y = min.y + h / 2;
+	auto anchorPosition = calculateAnchorPosition();
 
-	drawList->AddCircle({x, y}, 5, ImGui::GetColorU32({0, 0, 1, 1}));
-	drawList->AddCircleFilled({x, y}, 4, ImGui::GetColorU32({0, 0, 0, 1}));
+	if(port->isConnected())
+		ImGui::DrawDiamond(anchorPosition, 5, {1, 0, 0, 1});
+	else
+		ImGui::DrawDiamond(anchorPosition, 5, {0, 0, 0, 1}, {1, 0, 0, 1});
 
-	ax::NodeEditor::PinPivotRect({x, y}, {x, y});
+	ax::NodeEditor::PinPivotRect(anchorPosition, anchorPosition);
 
 	ax::NodeEditor::EndPin();
 }

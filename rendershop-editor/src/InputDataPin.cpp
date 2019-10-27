@@ -1,6 +1,7 @@
 #include "InputDataPin.h"
 #include "OutputPin.h"
 #include "rendershop/base/AbstractDataPort.hpp"
+#include "ImGuiUtilities.hpp"
 
 InputDataPin::InputDataPin(AbstractDataPort* port)
 	: InputPin(port), port(port)
@@ -13,17 +14,15 @@ void InputDataPin::draw()
 
 	ImGui::Text(port->getName().c_str());
 
-	auto drawList = ImGui::GetWindowDrawList();
-	auto min = ImGui::GetItemRectMin();
-	auto max = ImGui::GetItemRectMax();
-	auto h = max.y - min.y;
-	auto x = min.x - 20;
-	auto y = min.y + h / 2;
+	auto anchorPosition = calculateAnchorPosition();
+	auto anchorColor = ImGui::ColorFromHash(port->getDataTypeHash());
 
-	drawList->AddCircle({x, y}, 5, ImGui::GetColorU32({1, 0, 0, 1}));
-	drawList->AddCircleFilled({x, y}, 4, ImGui::GetColorU32({0, 0, 0, 1}));
+	if(port->isConnected())
+		ImGui::DrawCircle(anchorPosition, 5, anchorColor);
+	else
+		ImGui::DrawCircle(anchorPosition, 5, {0, 0, 0, 1}, anchorColor);
 
-	ax::NodeEditor::PinPivotRect({x, y}, {x, y});
+	ax::NodeEditor::PinPivotRect(anchorPosition, anchorPosition);
 
 	ax::NodeEditor::EndPin();
 }
@@ -36,5 +35,7 @@ ImVec2 InputDataPin::calculateSize() const
 void InputDataPin::drawLink()
 {
 	if(connection != nullptr)
-		ax::NodeEditor::Link(linkID, connection->getID(), id);
+	{
+		ax::NodeEditor::Link(linkID, connection->getID(), id, ImGui::ColorFromHash(port->getDataTypeHash()));
+	}
 }

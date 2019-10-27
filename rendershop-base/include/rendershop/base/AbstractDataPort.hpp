@@ -6,6 +6,9 @@ class Timestamp;
 
 class AbstractDataPort : public virtual AbstractPort
 {
+protected:
+	std::size_t dataTypeHash;
+
 public:
 	AbstractDataPort() = default;
 	AbstractDataPort(AbstractDataPort const&) = delete;
@@ -17,5 +20,8 @@ public:
 public:
 	virtual Timestamp const& getTimestamp() const = 0;
 	virtual void update() const = 0;
-
+	std::size_t getDataTypeHash() const
+	{
+		return dataTypeHash;
+	}
 };

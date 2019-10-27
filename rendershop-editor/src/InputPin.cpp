@@ -11,6 +11,16 @@ InputPin::InputPin(AbstractPort* port)
 			connect(pin);
 }
 
+ImVec2 InputPin::calculateAnchorPosition() const
+{
+	auto min = ImGui::GetItemRectMin();
+	auto max = ImGui::GetItemRectMax();
+	auto h = max.y - min.y;
+	auto x = min.x - anchorOffset;
+	auto y = min.y + h / 2;
+	return {x, y};
+}
+
 bool InputPin::canConnect(AbstractPin* outputPin)
 {
 	if(!dynamic_cast<OutputPin*>(outputPin))
@@ -24,5 +34,5 @@ void InputPin::connect(AbstractPin* outputPin)
 	assert(canConnect(outputPin));
 
 	port->connect(outputPin->getPort());
-	connection = static_cast<OutputPin*>(outputPin);
+	connection = dynamic_cast<OutputPin*>(outputPin);
 }

@@ -4,6 +4,8 @@
 #include "rendershop/base/InputPort.hpp"
 #include "rendershop/base/OutputDataPort.hpp"
 
+#include <typeindex>
+
 template<typename Data>
 class OutputDataPort;
 
@@ -11,7 +13,10 @@ template<typename Data>
 class InputDataPort final : public AbstractDataPort, public InputPort<OutputDataPort<Data>>
 {
 public:
-	InputDataPort() = default;
+	InputDataPort()
+	{
+		dataTypeHash = std::type_index(typeid(Data)).hash_code();
+	}
 	InputDataPort(InputDataPort const&) = delete;
 	InputDataPort(InputDataPort&&) = default;
 	InputDataPort& operator=(InputDataPort const&) = delete;

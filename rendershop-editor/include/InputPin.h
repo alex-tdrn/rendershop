@@ -18,6 +18,9 @@ public:
 	InputPin& operator=(InputPin const&) = delete;
 	virtual ~InputPin() = default;
 
+protected:
+	ImVec2 calculateAnchorPosition() const override;
+
 public:
 	virtual void drawLink() = 0;
 	bool canConnect(AbstractPin* outputPin) final override;

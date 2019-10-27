@@ -42,6 +42,7 @@
     <ClInclude Include="include\OutputEventPin.h">
       <Filter>Pins</Filter>
     </ClInclude>
+    <ClInclude Include="include\ImGuiUtilities.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />

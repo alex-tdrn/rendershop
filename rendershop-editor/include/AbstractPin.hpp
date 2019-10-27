@@ -14,6 +14,7 @@ private:
 protected:
 	ax::NodeEditor::PinId id = -1;
 	AbstractPort* port = nullptr;
+	float anchorOffset = 7;
 
 public:
 	AbstractPin() = default;
@@ -32,6 +33,9 @@ public:
 		pinMap.erase(id.Get());
 		portMap.erase(port);
 	}
+
+protected:
+	virtual ImVec2 calculateAnchorPosition() const = 0;
 
 public:
 	static AbstractPin* getPinForID(ax::NodeEditor::PinId id)

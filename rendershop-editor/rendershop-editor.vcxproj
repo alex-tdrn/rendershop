@@ -14,6 +14,7 @@
     <ClInclude Include="include\AbstractNode.hpp" />
     <ClInclude Include="include\AbstractPin.hpp" />
     <ClInclude Include="include\FrameControllerPipe.h" />
+    <ClInclude Include="include\ImGuiUtilities.hpp" />
     <ClInclude Include="include\InputDataPin.h" />
     <ClInclude Include="include\InputEventPin.h" />
     <ClInclude Include="include\InputPin.h" />
