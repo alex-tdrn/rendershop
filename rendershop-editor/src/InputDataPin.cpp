@@ -2,6 +2,7 @@
 #include "OutputPin.h"
 #include "rendershop/base/AbstractDataPort.hpp"
 #include "ImGuiUtilities.hpp"
+#include "Stylesheet.hpp"
 
 InputDataPin::InputDataPin(AbstractDataPort* port)
 	: InputPin(port), port(port)
@@ -36,6 +37,7 @@ void InputDataPin::drawLink()
 {
 	if(connection != nullptr)
 	{
-		ax::NodeEditor::Link(linkID, connection->getID(), id, ImGui::ColorFromHash(port->getDataTypeHash()));
+		ax::NodeEditor::Link(linkID, connection->getID(), id, 
+			ImGui::ColorFromHash(port->getDataTypeHash()), Stylesheet::getCurrentSheet().linkThickness);
 	}
 }

@@ -1,8 +1,10 @@
 #include "InputEventPin.h"
 #include "OutputPin.h"
+#include "Stylesheet.hpp"
+#include "ImGuiUtilities.hpp"
 #include "rendershop/base/OutputEventPort.hpp"
 #include "rendershop/base/InputEventPort.hpp"
-#include "ImGuiUtilities.hpp"
+
 
 InputEventPin::InputEventPin(InputEventPort* port)
 	: InputPin(port), port(port)
@@ -26,9 +28,9 @@ void InputEventPin::draw()
 	auto anchorPosition = calculateAnchorPosition();
 
 	if(port->isConnected())
-		ImGui::DrawDiamond(anchorPosition, 5, {1, 0, 0, 1});
+		ImGui::DrawDiamond(anchorPosition, 5, Stylesheet::getCurrentSheet().eventColor);
 	else
-		ImGui::DrawDiamond(anchorPosition, 5, {0, 0, 0, 1}, {1, 0, 0, 1});
+		ImGui::DrawDiamond(anchorPosition, 5, {0, 0, 0, 1}, Stylesheet::getCurrentSheet().eventColor);
 
 	ax::NodeEditor::PinPivotRect(anchorPosition, anchorPosition);
 
@@ -44,7 +46,9 @@ void InputEventPin::drawLink()
 {
 	if(connection != nullptr)
 	{
-		ax::NodeEditor::Link(linkID, connection->getID(), id, {1, 0.5, 0.5, 1}, 2.0f);
+		ax::NodeEditor::Link(linkID, connection->getID(), id,
+			Stylesheet::getCurrentSheet().eventColor, Stylesheet::getCurrentSheet().linkThickness);
+		
 		if(justTriggered)
 		{
 			ax::NodeEditor::Flow(linkID);

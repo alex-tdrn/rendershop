@@ -43,6 +43,7 @@
       <Filter>Pins</Filter>
     </ClInclude>
     <ClInclude Include="include\ImGuiUtilities.hpp" />
+    <ClInclude Include="include\Stylesheet.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />

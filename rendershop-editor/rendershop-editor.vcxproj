@@ -23,6 +23,7 @@
     <ClInclude Include="include\OutputDataPin.h" />
     <ClInclude Include="include\OutputEventPin.h" />
     <ClInclude Include="include\OutputPin.h" />
+    <ClInclude Include="include\Stylesheet.hpp" />
     <ClInclude Include="include\UIDebug.hpp" />
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Window.h" />

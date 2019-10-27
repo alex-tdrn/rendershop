@@ -8,6 +8,7 @@
 #include "NodeCanvas.h"
 #include "RootWindow.h"
 #include "FrameControllerPipe.h"
+#include "Stylesheet.hpp"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -90,6 +91,8 @@ int main(int argc, char** argv)
 	pipes.push_back(std::move(timer));
 	pipes.push_back(std::move(tmpFrameController));
 	
+
+	Stylesheet::addSheet(Stylesheet());
 
 	RootWindow rootWindow;
 	NodeCanvas* canvas = rootWindow.addChild(std::make_unique<NodeCanvas>());

@@ -14,7 +14,6 @@ private:
 protected:
 	ax::NodeEditor::PinId id = -1;
 	AbstractPort* port = nullptr;
-	float anchorOffset = 7;
 
 public:
 	AbstractPin() = default;

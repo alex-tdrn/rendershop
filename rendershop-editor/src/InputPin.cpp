@@ -1,5 +1,6 @@
 #include "InputPin.h"
 #include "OutputPin.h"
+#include "Stylesheet.hpp"
 
 InputPin::InputPin(AbstractPort* port)
 	: AbstractPin(port), linkID(uniqueID())
@@ -16,7 +17,7 @@ ImVec2 InputPin::calculateAnchorPosition() const
 	auto min = ImGui::GetItemRectMin();
 	auto max = ImGui::GetItemRectMax();
 	auto h = max.y - min.y;
-	auto x = min.x - anchorOffset;
+	auto x = min.x - Stylesheet::getCurrentSheet().anchorOffset;
 	auto y = min.y + h / 2;
 	return {x, y};
 }

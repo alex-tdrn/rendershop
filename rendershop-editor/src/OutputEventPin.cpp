@@ -1,4 +1,5 @@
 #include "OutputEventPin.h"
+#include "Stylesheet.hpp"
 #include "rendershop/base/OutputEventPort.hpp"
 #include "ImGuiUtilities.hpp"
 
@@ -36,9 +37,9 @@ void OutputEventPin::draw()
 	auto anchorPosition = calculateAnchorPosition();
 
 	if(port->isConnected())
-		ImGui::DrawDiamond(anchorPosition, 5, {1, 0, 0, 1});
+		ImGui::DrawDiamond(anchorPosition, 5, Stylesheet::getCurrentSheet().eventColor);
 	else
-		ImGui::DrawDiamond(anchorPosition, 5, {0, 0, 0, 1}, {1, 0, 0, 1});
+		ImGui::DrawDiamond(anchorPosition, 5, {0, 0, 0, 1}, Stylesheet::getCurrentSheet().eventColor);
 
 	ax::NodeEditor::PinPivotRect(anchorPosition, anchorPosition);
 
