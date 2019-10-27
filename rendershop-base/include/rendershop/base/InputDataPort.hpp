@@ -37,6 +37,7 @@ public:
 
 	Data const& get() const
 	{
+		requestCount++;
 		return this->connection->get();
 	}
 

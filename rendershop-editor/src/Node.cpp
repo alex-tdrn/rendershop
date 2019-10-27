@@ -148,20 +148,9 @@ void Node::draw()
 		initializeLayout();
 	auto& nodeEditorStyle = ax::NodeEditor::GetStyle();
 	
-	auto& currentStyle = Stylesheet::getCurrentSheet();
-
-	nodeEditorStyle.NodeBorderWidth = borderWidth.get(currentStyle.animatedNodeBorderWidth, 
-		currentStyle.nodeBorderWidth, currentStyle.animatedNodeBorderDuration, currentStyle.animatedNodeBorderCurve);
-	auto timesUpdateTriggered = pipe->getOutputEventPort(AbstractPipe::OutputEvents::Updated).getTimesTriggered();
-	if(timesUpdateTriggered > updateCount)
-	{
-		borderWidth.play();
-		updateCount = timesUpdateTriggered;
-	}
+	nodeEditorStyle.NodeBorderWidth = Stylesheet::getCurrentSheet().nodeBorderWidth;
 
 	ax::NodeEditor::BeginNode(id);
-
-
 
 	drawTitle();
 

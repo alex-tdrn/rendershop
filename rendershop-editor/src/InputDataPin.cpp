@@ -15,6 +15,11 @@ void InputDataPin::draw()
 
 	ImGui::Text(port->getName().c_str());
 
+	dataRequested = port->getRequestCount() > dataRequests;
+	dataRequests = port->getRequestCount();
+	if(dataRequested && !port->isConnected())
+		anchorOffset.play();
+
 	auto anchorPosition = calculateAnchorPosition();
 	auto anchorColor = ImGui::ColorFromHash(port->getDataTypeHash());
 
@@ -37,7 +42,14 @@ void InputDataPin::drawLink()
 {
 	if(connection != nullptr)
 	{
+		auto portColor = ImGui::ColorFromHash(port->getDataTypeHash());
 		ax::NodeEditor::Link(linkID, connection->getID(), id, 
-			ImGui::ColorFromHash(port->getDataTypeHash()), Stylesheet::getCurrentSheet().linkThickness);
+			portColor, Stylesheet::getCurrentSheet().linkThickness);
+
+		if(dataRequested)
+		{
+			ax::NodeEditor::Flow(linkID, portColor);
+			dataRequested = false;
+		}
 	}
 }

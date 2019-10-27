@@ -17,14 +17,12 @@ private:
 
 public:
 	ImVec4 eventColor = {1, 1, 1, 1};
+	ImVec4 eventTextColor = {1, 0.9, 0.68, 1};
 	float anchorOffset = 7;
 	float animatedAnchorOffset = 10;
 	std::chrono::milliseconds animatedAnchorOffsetDuration = 1s;
 	float linkThickness = 2;
 	float nodeBorderWidth = 2;
-	float animatedNodeBorderWidth = 4;
-	std::chrono::milliseconds animatedNodeBorderDuration = 1s;
-	AnimationCurve animatedNodeBorderCurve = AnimationCurve::linear;
 
 public:
 	Stylesheet(std::string name = "default")

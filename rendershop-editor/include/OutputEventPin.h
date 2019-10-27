@@ -8,7 +8,6 @@ class OutputEventPin final : public OutputPin
 private:
 	OutputEventPort* port;
 	int triggerCount = 0;
-	int animCounter = 0;
 
 public:
 	OutputEventPin() = default;

@@ -83,8 +83,8 @@ int main(int argc, char** argv)
 	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&sink->getInputEventPort(ClearBackgroundSink::InputEvents::Run));
 	timer->getOutputEventPort(Timer::OutputEvents::Timeout).connect(&source->getInputEventPort(RandomColorSource::InputEvents::QueueUpdate));
 	timer->getInputEventPort(Timer::InputEvents::Poll).connect(&frameController->getOutputEventPort(FrameControllerPipe::OutputEvents::NewFrame));
-	dynamic_cast<RandomColorSource*>(source.get())->getOutputDataPort<RandomColorSource::OutputPorts::Color>()
-		.connect(&dynamic_cast<ClearBackgroundSink*>(sink.get())->getInputDataPort<ClearBackgroundSink::InputPorts::Color>());
+	/*dynamic_cast<RandomColorSource*>(source.get())->getOutputDataPort<RandomColorSource::OutputPorts::Color>()
+		.connect(&dynamic_cast<ClearBackgroundSink*>(sink.get())->getInputDataPort<ClearBackgroundSink::InputPorts::Color>());*/
 	
 	//TODO
 	pipes.push_back(std::move(source));

@@ -16,23 +16,13 @@ void OutputEventPin::draw()
 
 	if(port->getTimesTriggered() > triggerCount)
 	{
-		animCounter = 120;
 		triggerCount = port->getTimesTriggered();
-		anchorOffset.play();
-	}
-	if(animCounter > 0)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.7, 0.7, 1});
-		animCounter--;
-	}
-	else
-	{
-		ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.5, 0.5, 1});
+		if(!port->isConnected())
+			anchorOffset.play();
 	}
 
-
+	ImGui::PushStyleColor(ImGuiCol_Text, Stylesheet::getCurrentSheet().eventTextColor);
 	ImGui::Text(port->getName().c_str());
-
 	ImGui::PopStyleColor();
 
 	auto anchorPosition = calculateAnchorPosition();

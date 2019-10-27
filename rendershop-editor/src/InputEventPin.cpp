@@ -16,10 +16,13 @@ void InputEventPin::draw()
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Input);
 
 	justTriggered = port->getTimesTriggered() > triggerCount;
-	if(justTriggered)
+	triggerCount = port->getTimesTriggered();
+	if(justTriggered && !port->isConnected())
 		anchorOffset.play();
 
+	ImGui::PushStyleColor(ImGuiCol_Text, Stylesheet::getCurrentSheet().eventTextColor);
 	ImGui::Text(port->getName().c_str());
+	ImGui::PopStyleColor();
 
 	auto anchorPosition = calculateAnchorPosition();
 
@@ -48,8 +51,6 @@ void InputEventPin::drawLink()
 		if(justTriggered)
 		{
 			ax::NodeEditor::Flow(linkID, Stylesheet::getCurrentSheet().eventColor);
-
-			triggerCount = port->getTimesTriggered();
 			justTriggered = false;
 		}
 	}

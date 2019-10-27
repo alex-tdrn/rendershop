@@ -7,6 +7,8 @@ class InputDataPin final : public InputPin
 {
 private:
 	AbstractDataPort* port;
+	int dataRequests = 0;
+	bool dataRequested = false;
 
 public:
 	InputDataPin() = default;
