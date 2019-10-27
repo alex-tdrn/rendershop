@@ -17,13 +17,9 @@ void InputEventPin::draw()
 
 	justTriggered = port->getTimesTriggered() > triggerCount;
 	if(justTriggered)
-		ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.7, 0.7, 1});
-	else
-		ImGui::PushStyleColor(ImGuiCol_Text, {1, 0.5, 0.5, 1});
+		anchorOffset.play();
 
 	ImGui::Text(port->getName().c_str());
-
-	ImGui::PopStyleColor();
 
 	auto anchorPosition = calculateAnchorPosition();
 

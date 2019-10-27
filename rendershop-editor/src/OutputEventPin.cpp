@@ -18,6 +18,7 @@ void OutputEventPin::draw()
 	{
 		animCounter = 120;
 		triggerCount = port->getTimesTriggered();
+		anchorOffset.play();
 	}
 	if(animCounter > 0)
 	{

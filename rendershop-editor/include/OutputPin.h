@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractPin.hpp"
+#include "Animation.hpp"
 
 class OutputPin : public AbstractPin
 {

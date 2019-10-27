@@ -1,18 +1,17 @@
 #pragma once
 #include <chrono>
 
-template<typename T>
-T lerp(T const& startValue, T const& endValue, float p)
+enum class AnimationCurve
 {
-	T difference = endValue - startValue;
-	return startValue + p * difference;
-}
+	linear,
+	spring,
+};
 
 template<typename T>
 class Animation
 {
 private:
-	bool playing = false;
+	mutable bool playing = false;
 	std::chrono::steady_clock::time_point startTime;
 
 public:
@@ -23,6 +22,20 @@ public:
 	Animation& operator=(Animation const&) = default;
 	~Animation() = default;
 
+private:
+	T static inline linear(T const& startValue, T const& endValue, float p)
+	{
+		T difference = endValue - startValue;
+		return startValue + p * difference;
+	}
+
+	T static inline spring(T const& startValue, T const& endValue, float p)
+	{
+		float f = std::sin(p * 10 * 3.141) / (p + 1); 
+		T difference = endValue - startValue;
+		return endValue - f * difference;
+	}
+
 public:
 	void play()
 	{
@@ -30,7 +43,7 @@ public:
 		playing = true;
 	}
 
-	T get(T startValue, T endValue, std::chrono::milliseconds const& duration)
+	T get(T startValue, T endValue, std::chrono::milliseconds const& duration, AnimationCurve curveType) const
 	{
 		if(!playing)
 			return endValue;
@@ -45,7 +58,14 @@ public:
 
 		float p = double(currentDuration.count()) / double(duration.count());
 
-		return lerp(startValue, endValue, p);
+		switch(curveType)
+		{
+			case AnimationCurve::linear:
+				return linear(startValue, endValue, p);
+			case AnimationCurve::spring:
+				return spring(startValue, endValue, p);
+		}
+		return endValue;
 	}
 
 };

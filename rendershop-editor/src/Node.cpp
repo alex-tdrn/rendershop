@@ -151,7 +151,7 @@ void Node::draw()
 	auto& currentStyle = Stylesheet::getCurrentSheet();
 
 	nodeEditorStyle.NodeBorderWidth = borderWidth.get(currentStyle.animatedNodeBorderWidth, 
-		currentStyle.nodeBorderWidth, currentStyle.animatedNodeBorderDuration);
+		currentStyle.nodeBorderWidth, currentStyle.animatedNodeBorderDuration, currentStyle.animatedNodeBorderCurve);
 	auto timesUpdateTriggered = pipe->getOutputEventPort(AbstractPipe::OutputEvents::Updated).getTimesTriggered();
 	if(timesUpdateTriggered > updateCount)
 	{

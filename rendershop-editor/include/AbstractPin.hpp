@@ -1,6 +1,7 @@
 #pragma once
 #include "UniqueID.hpp"
 #include "rendershop/base/AbstractPort.hpp"
+#include "Animation.hpp"
 
 #include <imgui_node_editor.h>
 #include <unordered_map>
@@ -14,6 +15,7 @@ private:
 protected:
 	ax::NodeEditor::PinId id = -1;
 	AbstractPort* port = nullptr;
+	Animation<float> anchorOffset; 
 
 public:
 	AbstractPin() = default;
