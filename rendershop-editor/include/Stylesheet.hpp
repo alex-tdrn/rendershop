@@ -16,12 +16,26 @@ private:
 	std::string name = "default";
 
 public:
+	
+	ImVec4 nodeCanvasBackgroundColor = ImColor(60, 60, 70, 200);
+	ImVec4 nodeCanvasGridColor = ImColor(120, 120, 120, 40);
+	ImVec4 nodeSelectionRectColor = ImColor(5, 130, 255, 64);
+	ImVec4 nodeSelectionRectBorderColor = ImColor(5, 130, 255, 128);
+	ImVec4 linkSelectionRectColor = ImColor(5, 130, 255, 64);
+	ImVec4 linkSelectionRectBorderColor = ImColor(5, 130, 255, 128);
+
+	ImVec4 nodeBackgroundColor = ImColor(32, 32, 32, 200);
+	ImVec4 nodeBorderColor = ImColor(255, 255, 255, 96);
+	ImVec4 hoveredNodeBorderColor = ImColor(50, 176, 255, 255);
+	ImVec4 selectedNodeBorderColor = ImColor(255, 176, 50, 255);
 	float nodeBorderWidth = 2;
 	float hoveredNodeBorderWidth = 3.5f;
 	float selectedNodeBorderWidth = 3.5f;
 	float nodeRounding = 0.0f;
 	ImVec4 nodePadding = {8, 8, 8, 8};
 
+	ImVec4 pinRectColor = ImColor(60, 180, 255, 100);
+	ImVec4 pinRectBorderColor = ImColor(60, 180, 255, 128);
 	ImVec4 eventColor = {1, 1, 1, 1};
 	ImVec4 eventTextColor = {1, 0.9, 0.68, 1};
 	float anchorOffset = 7;
@@ -33,6 +47,8 @@ public:
 	float pinArrowSize = 0.0f;
 	float pinArrowWidth = 0.0f;
 	
+	ImVec4 hoveredLinkBorderColor = ImColor(50, 176, 255, 255);
+	ImVec4 selectedLinkBorderColor = ImColor(255, 176, 50, 255);
 	float linkStrength = 1000;
 	float linkThickness = 2;
 	ImVec2 targetDirection = {-1.0f, 0.0f};
