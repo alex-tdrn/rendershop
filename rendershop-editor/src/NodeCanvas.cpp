@@ -23,6 +23,25 @@ void NodeCanvas::drawContents()
 		ax::NodeEditor::Begin(title.c_str());
 		ax::NodeEditor::GetStyle().LinkStrength = Stylesheet::getCurrentSheet().linkStrength;
 
+		ax::NodeEditor::GetStyle().NodePadding = Stylesheet::getCurrentSheet().nodePadding;
+		ax::NodeEditor::GetStyle().NodeRounding = Stylesheet::getCurrentSheet().nodeRounding;
+		ax::NodeEditor::GetStyle().NodeBorderWidth = Stylesheet::getCurrentSheet().nodeBorderWidth;
+		ax::NodeEditor::GetStyle().HoveredNodeBorderWidth = Stylesheet::getCurrentSheet().hoveredNodeBorderWidth;
+		ax::NodeEditor::GetStyle().SelectedNodeBorderWidth = Stylesheet::getCurrentSheet().selectedNodeBorderWidth;
+		ax::NodeEditor::GetStyle().PinRounding = Stylesheet::getCurrentSheet().pinRounding;
+		ax::NodeEditor::GetStyle().PinBorderWidth = Stylesheet::getCurrentSheet().pinBorderWidth;
+		ax::NodeEditor::GetStyle().SourceDirection = Stylesheet::getCurrentSheet().sourceDirection;
+		ax::NodeEditor::GetStyle().TargetDirection = Stylesheet::getCurrentSheet().targetDirection;
+		ax::NodeEditor::GetStyle().FlowMarkerDistance = Stylesheet::getCurrentSheet().flowMarkerDistance;
+		ax::NodeEditor::GetStyle().FlowSpeed = Stylesheet::getCurrentSheet().flowSpeed;
+		ax::NodeEditor::GetStyle().FlowDuration = Stylesheet::getCurrentSheet().flowDuration;
+		ax::NodeEditor::GetStyle().PivotAlignment = Stylesheet::getCurrentSheet().pivotAlignment;
+		ax::NodeEditor::GetStyle().PivotSize = Stylesheet::getCurrentSheet().pivotSize;
+		ax::NodeEditor::GetStyle().PivotScale = Stylesheet::getCurrentSheet().pivotScale;
+		ax::NodeEditor::GetStyle().PinRadius = Stylesheet::getCurrentSheet().pinRadius;
+		ax::NodeEditor::GetStyle().PinArrowSize = Stylesheet::getCurrentSheet().pinArrowSize;
+		ax::NodeEditor::GetStyle().PinArrowWidth = Stylesheet::getCurrentSheet().pinArrowWidth;
+
 		for(auto& node : nodes)
 			node.draw();
 		for(auto& node : nodes)
