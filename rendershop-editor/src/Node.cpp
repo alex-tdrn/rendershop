@@ -3,6 +3,7 @@
 #include "UIDebug.hpp"
 #include "rendershop/base/AbstractSink.hpp"
 #include "rendershop/base/AbstractSource.hpp"
+#include "Stylesheet.hpp"
 
 #include <algorithm>
 
@@ -67,10 +68,6 @@ void Node::initializeLayout()
 		titleOffset = (contentsWidth + centerSpacing - titleWidth) / 2;
 	}
 	contentsWidth += centerSpacing;
-
-	defaultBorderWidth = ax::NodeEditor::GetStyle().NodeBorderWidth;
-	currentBorderWidth = defaultBorderWidth;
-	maxBorderWidth = defaultBorderWidth * 3;
 
 	layoutInitialized = true;
 }
@@ -151,14 +148,15 @@ void Node::draw()
 		initializeLayout();
 	auto& nodeEditorStyle = ax::NodeEditor::GetStyle();
 	
-	nodeEditorStyle.NodeBorderWidth = currentBorderWidth;
-	nodeEditorStyle.NodeBorderWidth += (defaultBorderWidth - nodeEditorStyle.NodeBorderWidth) * 0.005f;
+	auto& currentStyle = Stylesheet::getCurrentSheet();
 
+	nodeEditorStyle.NodeBorderWidth = borderWidth.get(currentStyle.animatedNodeBorderWidth, 
+		currentStyle.nodeBorderWidth, currentStyle.animatedNodeBorderDuration);
 	auto timesUpdateTriggered = pipe->getOutputEventPort(AbstractPipe::OutputEvents::Updated).getTimesTriggered();
 	if(timesUpdateTriggered > updateCount)
 	{
+		borderWidth.play();
 		updateCount = timesUpdateTriggered;
-		nodeEditorStyle.NodeBorderWidth = maxBorderWidth;
 	}
 
 	ax::NodeEditor::BeginNode(id);
@@ -178,8 +176,6 @@ void Node::draw()
 		ImGui::SameLine();
 
 	drawOutputs();
-	currentBorderWidth = nodeEditorStyle.NodeBorderWidth;
-	nodeEditorStyle.NodeBorderWidth = defaultBorderWidth;
 
 	ax::NodeEditor::EndNode();
 }

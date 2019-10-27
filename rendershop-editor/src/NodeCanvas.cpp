@@ -21,9 +21,6 @@ void NodeCanvas::drawContents()
 		ax::NodeEditor::SetCurrentEditor(context);
 		ax::NodeEditor::Begin(title.c_str());
 
-		ax::NodeEditor::PushStyleColor(ax::NodeEditor::StyleColor_Flow, {0, 0, 0, 1.0});
-		
-
 		for(auto& node : nodes)
 			node.draw();
 		for(auto& node : nodes)
@@ -87,7 +84,6 @@ void NodeCanvas::drawContents()
 
 
 		ax::NodeEditor::End();
-		ax::NodeEditor::PopStyleColor();
 	}
 	ImGui::End();
 }

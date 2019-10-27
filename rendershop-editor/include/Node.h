@@ -3,6 +3,7 @@
 #include "OutputDataPin.h"
 #include "InputEventPin.h"
 #include "OutputEventPin.h"
+#include "Animation.hpp"
 
 #include <imgui_node_editor.h>
 #include <vector>
@@ -21,9 +22,7 @@ private:
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipe* pipe = nullptr;
 	int updateCount = 0;
-	float defaultBorderWidth;
-	float maxBorderWidth;
-	float currentBorderWidth;
+	Animation<float> borderWidth;
 	std::vector<std::unique_ptr<InputDataPin>> inputDataPins;
 	std::vector<std::unique_ptr<OutputDataPin>> outputDataPins;	
 	std::vector<std::unique_ptr<InputEventPin>> inputEventPins;

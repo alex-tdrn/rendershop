@@ -45,6 +45,7 @@
     <ClInclude Include="include\ImGuiUtilities.hpp" />
     <ClInclude Include="include\Stylesheet.hpp" />
     <ClInclude Include="include\StylesheetWindow.h" />
+    <ClInclude Include="include\Animation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />

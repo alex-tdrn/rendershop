@@ -2,6 +2,8 @@
 #include <imgui.h>
 #include <unordered_map>
 #include <string>
+#include <chrono>
+using namespace std::chrono_literals;
 
 class Stylesheet
 {
@@ -12,9 +14,12 @@ private:
 	std::string name = "default";
 
 public:
-	ImVec4 eventColor = {1, 0, 0, 1};
+	ImVec4 eventColor = {1, 1, 1, 1};
 	float anchorOffset = 7;
 	float linkThickness = 2;
+	float nodeBorderWidth = 2;
+	float animatedNodeBorderWidth = 4;
+	std::chrono::steady_clock::duration animatedNodeBorderDuration = 1s;
 
 public:
 	Stylesheet(std::string name = "default")
