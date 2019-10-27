@@ -1,6 +1,7 @@
 #include "NodeCanvas.h"
 #include "AbstractPin.hpp"
 #include "rendershop/base/AbstractPipe.hpp"
+#include "Stylesheet.hpp"
 
 NodeCanvas::NodeCanvas()
 {
@@ -20,6 +21,7 @@ void NodeCanvas::drawContents()
 	{
 		ax::NodeEditor::SetCurrentEditor(context);
 		ax::NodeEditor::Begin(title.c_str());
+		ax::NodeEditor::GetStyle().LinkStrength = Stylesheet::getCurrentSheet().linkStrength;
 
 		for(auto& node : nodes)
 			node.draw();

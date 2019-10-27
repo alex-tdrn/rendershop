@@ -15,25 +15,39 @@ void StylesheetWindow::drawContents()
 {
 	if(ImGui::Begin(title.c_str(), &visible, windowFlags))
 	{
-		ImGui::ColorEdit4("Event Color", &sheet->eventColor.x);
-		ImGui::ColorEdit4("Event Text Color", &sheet->eventTextColor.x);
-		ImGui::SliderFloat("Anchor Offset", &sheet->anchorOffset, 0.0f, 100.0f);
-		ImGui::SliderFloat("Link Thickness", &sheet->linkThickness, 1.0f, 10.0f);
-		ImGui::SliderFloat("Node Border Width", &sheet->nodeBorderWidth, 1.0f, 10.0f);
-
-		if(ImGui::CollapsingHeader("Animations", ImGuiTreeNodeFlags_DefaultOpen))
+		if(ImGui::CollapsingHeader("Global", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::Text("Anchor Offset");
-			ImGui::Separator();
-			ImGui::PushID("Anchor Offset Animation");
-			ImGui::SliderFloat("Animated", &sheet->animatedAnchorOffset, 0.0f, 100.0f);
+
+		}
+
+		if(ImGui::CollapsingHeader("Nodes", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SliderFloat("Node Border Width", &sheet->nodeBorderWidth, 1.0f, 10.0f);
+
+		}
+
+		if(ImGui::CollapsingHeader("Pins", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::ColorEdit4("Event Color", &sheet->eventColor.x);
+			ImGui::ColorEdit4("Event Text Color", &sheet->eventTextColor.x);
+			ImGui::SliderFloat("Anchor Offset", &sheet->anchorOffset, 0.0f, 100.0f);
+			ImGui::SliderFloat("Animated Anchor Offset", &sheet->animatedAnchorOffset, 0.0f, 100.0f);
 			int duration = sheet->animatedAnchorOffsetDuration.count();
-			ImGui::InputInt("Duration", &duration, 10, 100);
+			ImGui::InputInt("Duration Anchor Offset Animation", &duration, 10, 100);
 			if(duration < 0)
 				duration = 0;
 			sheet->animatedAnchorOffsetDuration = std::chrono::milliseconds(duration);
-			ImGui::PopID();
+
 		}
+
+		if(ImGui::CollapsingHeader("Links", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::SliderFloat("Link Strength", &sheet->linkStrength, 0.0f, 1000.0f);
+			ImGui::SliderFloat("Link Thickness", &sheet->linkThickness, 1.0f, 10.0f);
+
+		}
+
+
 	}
 	ImGui::End();
 }

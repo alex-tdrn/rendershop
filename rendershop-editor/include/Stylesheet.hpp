@@ -23,6 +23,7 @@ public:
 	std::chrono::milliseconds animatedAnchorOffsetDuration = 1s;
 	float linkThickness = 2;
 	float nodeBorderWidth = 2;
+	float linkStrength = 1000;
 
 public:
 	Stylesheet(std::string name = "default")

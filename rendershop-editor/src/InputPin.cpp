@@ -18,8 +18,8 @@ ImVec2 InputPin::calculateAnchorPosition() const
 	auto min = ImGui::GetItemRectMin();
 	auto max = ImGui::GetItemRectMax();
 	auto h = max.y - min.y;
-	auto x = min.x - anchorOffset.get(currentStyle.anchorOffset,
-		currentStyle.animatedAnchorOffset, currentStyle.animatedAnchorOffsetDuration, AnimationCurve::spring);
+	auto x = min.x - anchorOffset.get(currentStyle.animatedAnchorOffset,
+		currentStyle.anchorOffset, currentStyle.animatedAnchorOffsetDuration, AnimationCurve::spring);
 	auto y = min.y + h / 2;
 	return {x, y};
 }
