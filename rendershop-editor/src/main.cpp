@@ -97,8 +97,6 @@ int main(int argc, char** argv)
 
 	RootWindow rootWindow;
 	NodeCanvas* canvas = rootWindow.addChild(std::make_unique<NodeCanvas>());
-	rootWindow.addChild(std::make_unique<NodeCanvas>());
-	rootWindow.addChild(std::make_unique<NodeCanvas>());
 	canvas->setStore(&pipes);
 	rootWindow.addChild(std::make_unique<StylesheetWindow>());
 

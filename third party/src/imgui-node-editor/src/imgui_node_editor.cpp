@@ -1920,9 +1920,9 @@ void ed::EditorContext::UpdateAnimations()
     }
 }
 
-void ed::EditorContext::Flow(Link* link)
+void ed::EditorContext::Flow(Link* link, ImVec4 color)
 {
-    m_FlowAnimationController.Flow(link);
+    m_FlowAnimationController.Flow(link, color);
 }
 
 void ed::EditorContext::SetUserContext(bool globalSpace)
@@ -2607,7 +2607,7 @@ ed::FlowAnimation::FlowAnimation(FlowAnimationController* controller):
 {
 }
 
-void ed::FlowAnimation::Flow(ed::Link* link, float markerDistance, float speed, float duration)
+void ed::FlowAnimation::Flow(ed::Link* link, ImVec4 color, float markerDistance, float speed, float duration)
 {
     Stop();
 
@@ -2623,6 +2623,7 @@ void ed::FlowAnimation::Flow(ed::Link* link, float markerDistance, float speed, 
     m_MarkerDistance = markerDistance;
     m_Speed          = speed;
     m_Link           = link;
+    m_Color          = color;
 
     Play(duration);
 }
@@ -2640,10 +2641,9 @@ void ed::FlowAnimation::Draw(ImDrawList* drawList)
     const auto progress    = GetProgress();
 
     const auto flowAlpha = 1.0f - progress * progress;
-    const auto flowColor = Editor->GetColor(StyleColor_Flow, flowAlpha);
     //const auto flowPath  = Link->GetCurve();
 
-    m_Link->Draw(drawList, flowColor, 2.0f);
+    m_Link->Draw(drawList, ImGui::GetColorU32(m_Color), 2.0f);
 
     if (IsPathValid())
     {
@@ -2651,10 +2651,9 @@ void ed::FlowAnimation::Draw(ImDrawList* drawList)
 
         const auto markerAlpha  = powf(1.0f - progress, 0.35f);
         const auto markerRadius = 4.0f * (1.0f - progress) + 2.0f;
-        const auto markerColor  = Editor->GetColor(StyleColor_FlowMarker, markerAlpha);
 
         for (float d = m_Offset; d < m_PathLength; d += m_MarkerDistance)
-            drawList->AddCircleFilled(SamplePath(d), markerRadius, markerColor);
+            drawList->AddCircleFilled(SamplePath(d), markerRadius, ImGui::GetColorU32(m_Color));
     }
 }
 
@@ -2745,7 +2744,7 @@ ed::FlowAnimationController::~FlowAnimationController()
         delete animation;
 }
 
-void ed::FlowAnimationController::Flow(Link* link)
+void ed::FlowAnimationController::Flow(Link* link, ImVec4 color)
 {
     if (!link || !link->m_IsLive)
         return;
@@ -2754,7 +2753,7 @@ void ed::FlowAnimationController::Flow(Link* link)
 
     auto animation = GetOrCreate(link);
 
-    animation->Flow(link, editorStyle.FlowMarkerDistance, editorStyle.FlowSpeed, editorStyle.FlowDuration);
+    animation->Flow(link, color, editorStyle.FlowMarkerDistance, editorStyle.FlowSpeed, editorStyle.FlowDuration);
 }
 
 void ed::FlowAnimationController::Draw(ImDrawList* drawList)

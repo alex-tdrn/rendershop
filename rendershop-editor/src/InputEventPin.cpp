@@ -51,7 +51,8 @@ void InputEventPin::drawLink()
 		
 		if(justTriggered)
 		{
-			ax::NodeEditor::Flow(linkID);
+			ax::NodeEditor::Flow(linkID, Stylesheet::getCurrentSheet().eventColor);
+
 			triggerCount = port->getTimesTriggered();
 			justTriggered = false;
 		}

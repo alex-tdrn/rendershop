@@ -211,10 +211,10 @@ bool ax::NodeEditor::Link(LinkId id, PinId startPinId, PinId endPinId, const ImV
     return s_Editor->DoLink(id, startPinId, endPinId, ImColor(color), thickness);
 }
 
-void ax::NodeEditor::Flow(LinkId linkId)
+void ax::NodeEditor::Flow(LinkId linkId, ImVec4 color)
 {
     if (auto link = s_Editor->FindLink(linkId))
-        s_Editor->Flow(link);
+        s_Editor->Flow(link, color);
 }
 
 bool ax::NodeEditor::BeginCreate(const ImVec4& color, float thickness)
