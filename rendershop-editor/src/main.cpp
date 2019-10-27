@@ -9,6 +9,7 @@
 #include "RootWindow.h"
 #include "FrameControllerPipe.h"
 #include "Stylesheet.hpp"
+#include "StylesheetWindow.h"
 
 #include <imgui.h>
 #include <imgui_node_editor.h>
@@ -99,6 +100,7 @@ int main(int argc, char** argv)
 	rootWindow.addChild(std::make_unique<NodeCanvas>());
 	rootWindow.addChild(std::make_unique<NodeCanvas>());
 	canvas->setStore(&pipes);
+	rootWindow.addChild(std::make_unique<StylesheetWindow>());
 
 	while(!glfwWindowShouldClose(window))
 	{

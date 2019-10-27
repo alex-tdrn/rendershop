@@ -44,6 +44,7 @@
     </ClInclude>
     <ClInclude Include="include\ImGuiUtilities.hpp" />
     <ClInclude Include="include\Stylesheet.hpp" />
+    <ClInclude Include="include\StylesheetWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -80,6 +81,7 @@
     <ClCompile Include="src\OutputEventPin.cpp">
       <Filter>Pins</Filter>
     </ClCompile>
+    <ClCompile Include="src\StylesheetWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pipes">

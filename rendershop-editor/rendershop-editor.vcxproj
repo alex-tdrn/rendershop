@@ -28,6 +28,7 @@
     <ClInclude Include="include\UniqueID.hpp" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\RootWindow.h" />
+    <ClInclude Include="include\StylesheetWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OutputEventPin.cpp" />
@@ -42,6 +43,7 @@
     <ClCompile Include="src\NodeCanvas.cpp" />
     <ClCompile Include="src\OutputPin.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\StylesheetWindow.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
