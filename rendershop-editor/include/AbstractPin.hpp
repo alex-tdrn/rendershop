@@ -1,6 +1,7 @@
 #pragma once
 #include "UniqueID.hpp"
 #include "rendershop/base/AbstractPort.hpp"
+#include "Animation.hpp"
 
 #include <imgui_node_editor.h>
 #include <unordered_map>
@@ -14,6 +15,7 @@ private:
 protected:
 	ax::NodeEditor::PinId id = -1;
 	AbstractPort* port = nullptr;
+	Animation<float> anchorOffset; 
 
 public:
 	AbstractPin() = default;
@@ -33,8 +35,11 @@ public:
 		portMap.erase(port);
 	}
 
+protected:
+	virtual ImVec2 calculateAnchorPosition() const = 0;
+
 public:
-	static  AbstractPin* getPinForID(ax::NodeEditor::PinId id)
+	static AbstractPin* getPinForID(ax::NodeEditor::PinId id)
 	{
 		if(pinMap.find(id.Get()) != pinMap.end())
 			return pinMap[id.Get()];
@@ -44,7 +49,11 @@ public:
 	{
 		if(portMap.find(port) != portMap.end())
 			return portMap[port];
-		return -1;
+		return {};
+	}
+	static AbstractPin* getPinForPort(AbstractPort const* port)
+	{
+		return getPinForID(getIDForPort(port));
 	}
 
 	ax::NodeEditor::PinId getID() const

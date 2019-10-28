@@ -23,7 +23,7 @@ void Timer::poll()
 {
 	if(std::chrono::steady_clock::now() >= nextActivationTime)
 	{
-		trigger("Timeout");
+		trigger(OutputEvents::Timeout);
 		nextActivationTime = std::chrono::steady_clock::now() + 5'000ms;//getInputDataPort<InputPorts::Interval>().getData();
 	}
 }

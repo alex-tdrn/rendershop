@@ -678,14 +678,15 @@ private:
 struct FlowAnimation final: Animation
 {
     FlowAnimationController* Controller;
-    Link* m_Link;
+	Link* m_Link;
+	ImVec4 m_Color;
     float m_Speed;
     float m_MarkerDistance;
     float m_Offset;
 
     FlowAnimation(FlowAnimationController* controller);
 
-    void Flow(Link* link, float markerDistance, float speed, float duration);
+    void Flow(Link* link, ImVec4 color, float markerDistance, float speed, float duration);
 
     void Draw(ImDrawList* drawList);
 
@@ -735,7 +736,7 @@ struct FlowAnimationController final : AnimationController
     FlowAnimationController(EditorContext* editor);
     virtual ~FlowAnimationController();
 
-    void Flow(Link* link);
+    void Flow(Link* link, ImVec4 color);
 
     virtual void Draw(ImDrawList* drawList) override final;
 
@@ -1347,7 +1348,7 @@ struct EditorContext
     void RegisterAnimation(Animation* animation);
     void UnregisterAnimation(Animation* animation);
 
-    void Flow(Link* link);
+    void Flow(Link* link, ImVec4 color);
 
     void SetUserContext(bool globalSpace = false);
 

@@ -1,10 +1,12 @@
 #pragma once
-#include "UniqueID.hpp"
-#include "InputPin.h"
-#include "OutputPin.h"
+#include "InputDataPin.h"
+#include "OutputDataPin.h"
+#include "InputEventPin.h"
+#include "OutputEventPin.h"
 
 #include <imgui_node_editor.h>
 #include <vector>
+#include <memory>
 
 class AbstractPipe;
 
@@ -12,13 +14,16 @@ class Node
 {
 private:
 	bool layoutInitialized = false;
+	float outputsWidth = 0;
 	float contentsWidth = 0;
 	float titleOffset = 0;
 	float centerSpacing = 0;
 	ax::NodeEditor::NodeId id = -1;
 	AbstractPipe* pipe = nullptr;
-	std::vector<InputPin> inputPins;
-	std::vector<OutputPin> outputPins;
+	std::vector<std::unique_ptr<InputDataPin>> inputDataPins;
+	std::vector<std::unique_ptr<OutputDataPin>> outputDataPins;	
+	std::vector<std::unique_ptr<InputEventPin>> inputEventPins;
+	std::vector<std::unique_ptr<OutputEventPin>> outputEventPins;
 
 public:
 	Node() = default;
@@ -30,6 +35,8 @@ public:
 	~Node() = default;
 
 private:
+	bool hasInputs() const;
+	bool hasOutputs() const;
 	void initializeLayout();
 	void drawTitle();
 	void drawInputs();

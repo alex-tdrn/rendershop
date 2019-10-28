@@ -41,7 +41,13 @@ protected:
 	{
 		bool ret = true;
 		for(auto inputDataPort : abstractInputDataPorts)
-			ret &= inputDataPort->isConnected();
+		{
+			if(!inputDataPort->isConnected())
+			{
+				inputDataPort->requestFailed();
+				ret = false;
+			}
+		}
 		return ret;
 	}
 

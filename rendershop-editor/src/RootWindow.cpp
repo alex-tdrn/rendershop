@@ -1,10 +1,10 @@
-#include "MainWidget.h"
+#include "RootWindow.h"
 
 #include <imgui.h>
 
-MainWidget::MainWidget()
+RootWindow::RootWindow()
 {
-	title = "Main Widget";
+	title = "Main Window";
 	dockspaceName = title + " Dockspace";
 	windowFlags = ImGuiWindowFlags_MenuBar;
 	windowFlags |= ImGuiWindowFlags_NoDocking;
@@ -16,13 +16,13 @@ MainWidget::MainWidget()
 	windowFlags |= ImGuiWindowFlags_NoNavFocus;
 }
 
-Widget* MainWidget::addChildImpl(std::unique_ptr<Widget>&& widget)
+Window* RootWindow::addChildImpl(std::unique_ptr<Window>&& widget)
 {
 	children.push_back(std::move(widget));
 	return children.back().get();
 }
 
-void MainWidget::drawContents()
+void RootWindow::drawContents()
 {
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);

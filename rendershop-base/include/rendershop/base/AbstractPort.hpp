@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <set>
 
 class AbstractPort
 {
@@ -20,6 +21,7 @@ public:
 	virtual bool isConnected() const = 0;
 	virtual void connect(AbstractPort* port) = 0;
 	virtual void disconnect() = 0;
+	virtual std::set<AbstractPort*> getConnections() const = 0;
 
 	std::string const& getName() const
 	{

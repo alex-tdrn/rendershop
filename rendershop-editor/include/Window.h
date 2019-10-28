@@ -3,7 +3,7 @@
 #include <string>
 #include <imgui.h>
 
-class Widget
+class Window
 {
 private:
 	static inline int idCounter = 0;
@@ -15,12 +15,12 @@ protected:
 	ImGuiWindowFlags windowFlags;
 
 public:
-	Widget() = default;
-	Widget(Widget const&) = delete;
-	Widget(Widget&&) = default;
-	Widget& operator=(Widget const&) = delete;
-	Widget& operator=(Widget&&) = default;
-	virtual ~Widget() = default;
+	Window() = default;
+	Window(Window const&) = delete;
+	Window(Window&&) = default;
+	Window& operator=(Window const&) = delete;
+	Window& operator=(Window&&) = default;
+	virtual ~Window() = default;
 
 protected:
 	virtual void drawContents() = 0;

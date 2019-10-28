@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Widget.h"
+#include "Window.h"
 #include "Node.h"
 
 #include <vector>
@@ -8,7 +8,7 @@
 
 class AbstractPipe;
 
-class NodeCanvas final : public Widget
+class NodeCanvas final : public Window
 {
 private:
 	ax::NodeEditor::EditorContext* context;
