@@ -44,8 +44,13 @@
     </ClInclude>
     <ClInclude Include="include\ImGuiUtilities.hpp" />
     <ClInclude Include="include\Stylesheet.hpp" />
-    <ClInclude Include="include\StylesheetWindow.h" />
     <ClInclude Include="include\Animation.hpp" />
+    <ClInclude Include="include\StylesheetWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OutputDataPinDelegate.h">
+      <Filter>Pins</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
@@ -82,7 +87,12 @@
     <ClCompile Include="src\OutputEventPin.cpp">
       <Filter>Pins</Filter>
     </ClCompile>
-    <ClCompile Include="src\StylesheetWindow.cpp" />
+    <ClCompile Include="src\StylesheetWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OutputDataPinDelegate.cpp">
+      <Filter>Pins</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pipes">

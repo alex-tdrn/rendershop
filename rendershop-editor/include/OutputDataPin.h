@@ -1,12 +1,17 @@
 #pragma once
 #include "OutputPin.h"
+#include "OutputDataPinDelegate.h"
+
+#include <memory>
 
 class AbstractDataPort;
+class OutputDataPinDelegate;
 
 class OutputDataPin final : public OutputPin
 {
 private:
 	AbstractDataPort* port;
+	std::unique_ptr<OutputDataPinDelegate> delegate;
 
 public:
 	OutputDataPin() = default;

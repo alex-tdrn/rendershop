@@ -30,8 +30,10 @@
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\RootWindow.h" />
     <ClInclude Include="include\StylesheetWindow.h" />
+    <ClInclude Include="include\OutputDataPinDelegate.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\OutputDataPinDelegate.cpp" />
     <ClCompile Include="src\OutputEventPin.cpp" />
     <ClCompile Include="src\InputEventPin.cpp" />
     <ClCompile Include="src\OutputDataPin.cpp" />
