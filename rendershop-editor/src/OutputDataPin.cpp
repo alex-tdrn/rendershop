@@ -1,5 +1,6 @@
 #include "OutputDataPin.h"
 #include "rendershop/base/OutputDataPort.hpp"
+#include "OutputDataPinDelegate.h"
 #include "ImGuiUtilities.hpp"
 
 #include <glm/glm.hpp>
@@ -7,21 +8,18 @@
 OutputDataPin::OutputDataPin(AbstractDataPort* port)
 	: OutputPin(port), port(port)
 {
+	delegate = OutputDataPinDelegate::create(port);
 }
 
 void OutputDataPin::draw()
 {
 
 	ax::NodeEditor::BeginPin(id, ax::NodeEditor::PinKind::Output);
-	auto o = dynamic_cast<OutputDataPort<glm::vec3> const*>(port);
 	ImGui::BeginGroup();
 	ImGui::Text(port->getName().c_str());
 
-	if(o)
-	{
-		auto const& output = o->get();
-		ImGui::ColorButton("Caca", {output.r, output.g, output.b, 1}, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, ImVec2(32, 32));
-	}
+	delegate->draw();
+	
 	ImGui::EndGroup();
 	
 	auto anchorPosition = calculateAnchorPosition();
