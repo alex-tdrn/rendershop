@@ -89,26 +89,15 @@ void graph_viewer::run_layout_solver() const
 {
 	// TODO don't run this every frame
 
-	if(_layout_solver->get_results().empty())
+	_layout_solver->clear_nodes();
+	for(auto const& node : *data())
 	{
-		for(auto const& node : *data())
-		{
-			auto id = _node_cache->widget_for(node.get()).id();
-			glm::vec2 dim = imnodes::GetNodeDimensions(id);
-			glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
-			pos += dim / 2.0f;
+		auto id = _node_cache->widget_for(node.get()).id();
+		glm::vec2 dim = imnodes::GetNodeDimensions(id);
+		glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
+		pos += dim / 2.0f;
 
-			_layout_solver->add_node(id, pos, dim.x * dim.y);
-		}
-	}
-	else
-	{
-		for(auto& result : _layout_solver->get_results())
-		{
-			glm::vec2 dim = imnodes::GetNodeDimensions(result.id);
-			result.position = imnodes::GetNodeGridSpacePos(result.id);
-			result.position += dim / 2.0f;
-		}
+		_layout_solver->add_node(id, pos, dim.x * dim.y);
 	}
 
 	_layout_solver->step();

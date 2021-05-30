@@ -142,7 +142,7 @@ inline void layout_solver::integrate()
 	{
 		node.velocity /= node.mass;
 		auto position_difference = node.velocity * seconds_elapsed;
-		if(glm::length(position_difference) > 0.05f)
+		if(glm::length(position_difference) > 0.1f)
 			node.position += position_difference;
 	}
 }
