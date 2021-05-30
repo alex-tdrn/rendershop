@@ -97,7 +97,7 @@ void graph_viewer::run_layout_solver() const
 		glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
 		pos += dim / 2.0f;
 
-		_layout_solver->add_node(id, pos, dim.x * dim.y);
+		_layout_solver->add_node(id, pos, dim.x * dim.y, {1});
 	}
 
 	_layout_solver->step();

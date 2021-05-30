@@ -12,14 +12,10 @@ public:
 	struct node
 	{
 		int id = -1;
+		std::vector<int> connected_nodes;
 		glm::vec2 position = {0.0f, 0.0f};
 		float mass = 1.0f;
 		glm::vec2 velocity = {0.0f, 0.0f};
-	};
-
-	struct black_hole
-	{
-		glm::vec2 position = {0.0f, 0.0f};
 	};
 
 	layout_solver() = default;
@@ -31,15 +27,13 @@ public:
 
 	void restart();
 	void clear_nodes();
-	void add_node(int id, glm::vec2 position, float mass);
+	void add_node(int id, glm::vec2 position, float mass, std::vector<int>&& connected_nodes);
 	void step();
 	auto get_results() -> std::vector<node>&;
 
 private:
 	using chrono = std::chrono::high_resolution_clock;
 	chrono::time_point _last_step_execution = chrono::time_point::min();
-	static constexpr float gravitational_constant = 1;
-	std::vector<black_hole> _black_holes = {black_hole{}};
 	std::vector<node> _nodes;
 
 	void apply_black_hole_forces();
@@ -58,10 +52,11 @@ inline void layout_solver::clear_nodes()
 	_nodes.clear();
 }
 
-inline void layout_solver::add_node(int id, glm::vec2 position, float mass)
+inline void layout_solver::add_node(int id, glm::vec2 position, float mass, std::vector<int>&& connected_nodes)
 {
 	node _node;
 	_node.id = id;
+	_node.connected_nodes = std::move(connected_nodes);
 	_node.position = position;
 	_node.mass = mass;
 	_nodes.push_back(_node);
@@ -76,7 +71,6 @@ inline void layout_solver::step()
 	}
 	apply_black_hole_forces();
 	apply_repulsion_forces();
-	apply_attraction_forces();
 	integrate();
 }
 
@@ -87,16 +81,12 @@ inline auto layout_solver::get_results() -> std::vector<node>&
 
 inline void layout_solver::apply_black_hole_forces()
 {
-	for(auto const& black_hole : _black_holes)
+	for(auto& node : _nodes)
 	{
-		for(auto& node : _nodes)
-		{
-			auto v = black_hole.position - node.position;
-			if(glm::length(v) > 1)
-				node.velocity = v * 100.0f;
-			else
-				node.velocity = glm::vec2{0.0f};
-		}
+		if(glm::length(node.position) > 1)
+			node.velocity = -node.position * 100.0f;
+		else
+			node.velocity = glm::vec2{0.0f};
 	}
 }
 
@@ -111,20 +101,28 @@ inline void layout_solver::apply_repulsion_forces()
 			if(distance > 1)
 			{
 				node1_to_node2 /= distance;
-				float repulsion_force = -gravitational_constant * node1->mass * node2->mass / (distance * distance);
+				float repulsion_force = node1->mass * node2->mass / (distance * distance);
 
-				// if(distance > 50)
-				//	repulsion_force *= -1;
-				node1->velocity += repulsion_force * node1_to_node2;
-				node2->velocity -= repulsion_force * node1_to_node2;
+				bool connected = false;
+				for(auto connected_id : node1->connected_nodes)
+				{
+					if(connected_id == node2->id)
+					{
+						connected = true;
+						break;
+					}
+				}
+
+				if(connected)
+				{
+					//	repulsion_force -= node1->mass * node2->mass * distance;
+				}
+
+				node1->velocity -= repulsion_force * node1_to_node2;
+				node2->velocity += repulsion_force * node1_to_node2;
 			}
 		}
 	}
-}
-
-inline void layout_solver::apply_attraction_forces()
-{
-	// TODO
 }
 
 inline void layout_solver::integrate()
