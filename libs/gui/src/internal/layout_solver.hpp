@@ -1,5 +1,6 @@
 #pragma once
 #include <chrono>
+#include <cmath>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -106,6 +107,12 @@ inline void layout_solver::add_attraction_forces()
 inline void layout_solver::integrate()
 {
 	// TODO
+	float t = static_cast<float>(
+		std::chrono::duration_cast<std::chrono::duration<float>>(chrono::now().time_since_epoch()).count());
+	for(auto& node : _nodes)
+	{
+		node.position += 20000.0f / node.mass * glm::vec2{std::cos(t), std::sin(t)};
+	}
 }
 
 } // namespace clk::gui::impl
