@@ -45,6 +45,11 @@ void graph_viewer::draw_contents() const
 	draw_graph();
 	_selection_manager->update();
 
+	if(_first_draw)
+	{
+		_first_draw = false;
+		imnodes::EditorContextResetPanning(glm::vec2(ImGui::GetItemRectSize()) / 2.0f);
+	}
 	imnodes::EditorContextSet(nullptr);
 }
 
@@ -84,17 +89,36 @@ void graph_viewer::run_layout_solver() const
 {
 	// TODO don't run this every frame
 
-	_layout_solver->clear_nodes();
-	for(auto const& node : *data())
+	if(_layout_solver->get_results().empty())
 	{
-		auto id = _node_cache->widget_for(node.get()).id();
-		_layout_solver->add_node(id, imnodes::GetNodeGridSpacePos(id), imnodes::GetNodeDimensions(id));
+		for(auto const& node : *data())
+		{
+			auto id = _node_cache->widget_for(node.get()).id();
+			glm::vec2 dim = imnodes::GetNodeDimensions(id);
+			glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
+			pos += dim / 2.0f;
+
+			_layout_solver->add_node(id, pos, dim.x * dim.y);
+		}
+	}
+	else
+	{
+		for(auto& result : _layout_solver->get_results())
+		{
+			glm::vec2 dim = imnodes::GetNodeDimensions(result.id);
+			result.position = imnodes::GetNodeGridSpacePos(result.id);
+			result.position += dim / 2.0f;
+		}
 	}
 
 	_layout_solver->step();
 
 	for(auto const& result : _layout_solver->get_results())
-		imnodes::SetNodeGridSpacePos(result.id, result.position);
+	{
+		glm::vec2 dim = imnodes::GetNodeDimensions(result.id);
+		imnodes::SetNodeGridSpacePos(result.id, result.position - dim / 2.0f);
+		// imnodes::SetNodeGridSpacePos(result.id, glm::vec2{0.0f, 0.0f} - dim / 2.0f);
+	}
 }
 
 } // namespace clk::gui
