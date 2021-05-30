@@ -2,6 +2,7 @@
 
 #include "clk/base/node.hpp"
 #include "clk/base/port.hpp"
+#include "layout_solver.hpp"
 #include "node_viewers.hpp"
 #include "port_viewers.hpp"
 #include "selection_manager.hpp"
@@ -17,6 +18,8 @@ graph_viewer::graph_viewer(clk::graph const* data, std::string_view data_name)
 		  }))
 	, _port_cache(std::make_unique<impl::widget_cache<clk::port const, impl::port_viewer>>(&impl::create_port_viewer))
 	, _selection_manager(std::make_unique<impl::selection_manager<true>>(_node_cache.get(), _port_cache.get()))
+	, _layout_solver(std::make_unique<impl::layout_solver>())
+
 {
 	disable_title();
 	_context = imnodes::EditorContextCreate();
@@ -72,7 +75,26 @@ void graph_viewer::draw_graph() const
 		}
 	}
 
+	run_layout_solver();
+
 	imnodes::EndNodeEditor();
+}
+
+void graph_viewer::run_layout_solver() const
+{
+	// TODO don't run this every frame
+
+	_layout_solver->clear_nodes();
+	for(auto const& node : *data())
+	{
+		auto id = _node_cache->widget_for(node.get()).id();
+		_layout_solver->add_node(id, imnodes::GetNodeGridSpacePos(id), imnodes::GetNodeDimensions(id));
+	}
+
+	_layout_solver->step();
+
+	for(auto const& result : _layout_solver->get_results())
+		imnodes::SetNodeGridSpacePos(result.id, result.position);
 }
 
 } // namespace clk::gui

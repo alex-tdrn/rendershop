@@ -17,9 +17,9 @@ template <typename data, typename widget>
 class widget_cache;
 class node_editor;
 class port_editor;
-
 template <bool const_data>
 class selection_manager;
+class layout_solver;
 } // namespace clk::gui::impl
 
 namespace clk::gui
@@ -54,6 +54,7 @@ private:
 	std::unique_ptr<impl::selection_manager<false>> _selection_manager;
 	mutable std::optional<connection_change> _new_connection_in_progress = std::nullopt;
 	mutable std::optional<std::function<bool()>> _modification_callback = std::nullopt; // this is smelly af
+	std::unique_ptr<impl::layout_solver> _layout_solver;
 
 	void draw_graph() const;
 	void draw_menus() const;

@@ -11,9 +11,9 @@ template <typename data, typename widget>
 class widget_cache;
 class node_viewer;
 class port_viewer;
-
 template <bool const_data>
 class selection_manager;
+class layout_solver;
 } // namespace clk::gui::impl
 
 namespace clk::gui
@@ -38,8 +38,10 @@ private:
 	std::unique_ptr<impl::widget_cache<clk::port const, impl::port_viewer>> _port_cache;
 	mutable std::vector<std::pair<clk::input const*, clk::output const*>> _connections;
 	std::unique_ptr<impl::selection_manager<true>> _selection_manager;
+	std::unique_ptr<impl::layout_solver> _layout_solver;
 
 	void draw_graph() const;
+	void run_layout_solver() const;
 };
 
 } // namespace clk::gui

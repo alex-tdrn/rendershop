@@ -6,6 +6,7 @@
 #include "clk/base/port.hpp"
 #include "clk/util/predicates.hpp"
 #include "clk/util/projections.hpp"
+#include "layout_solver.hpp"
 #include "node_editors.hpp"
 #include "port_editors.hpp"
 #include "selection_manager.hpp"
