@@ -12,10 +12,16 @@ public:
 	struct node
 	{
 		int id = -1;
-		std::vector<int> connected_nodes;
 		glm::vec2 position = {0.0f, 0.0f};
 		float mass = 1.0f;
 		glm::vec2 velocity = {0.0f, 0.0f};
+	};
+	struct port
+	{
+		int id = -1;
+		glm::vec2 position = {0.0f, 0.0f};
+		std::size_t parent_node_index = 0;
+		std::vector<std::size_t> connected_port_indices;
 	};
 
 	layout_solver() = default;
@@ -27,14 +33,15 @@ public:
 
 	void restart();
 	void clear_nodes();
-	void add_node(int id, glm::vec2 position, float mass, std::vector<int>&& connected_nodes);
+	void add_node(int id, glm::vec2 position, float mass);
 	void step();
-	auto get_results() -> std::vector<node>&;
+	auto get_results() -> const std::vector<node>&;
 
 private:
 	using chrono = std::chrono::high_resolution_clock;
 	chrono::time_point _last_step_execution = chrono::time_point::min();
 	std::vector<node> _nodes;
+	std::vector<port> _ports;
 
 	void apply_black_hole_forces();
 	void apply_repulsion_forces();
@@ -52,11 +59,10 @@ inline void layout_solver::clear_nodes()
 	_nodes.clear();
 }
 
-inline void layout_solver::add_node(int id, glm::vec2 position, float mass, std::vector<int>&& connected_nodes)
+inline void layout_solver::add_node(int id, glm::vec2 position, float mass)
 {
 	node _node;
 	_node.id = id;
-	_node.connected_nodes = std::move(connected_nodes);
 	_node.position = position;
 	_node.mass = mass;
 	_nodes.push_back(_node);
@@ -71,10 +77,11 @@ inline void layout_solver::step()
 	}
 	apply_black_hole_forces();
 	apply_repulsion_forces();
+	apply_attraction_forces();
 	integrate();
 }
 
-inline auto layout_solver::get_results() -> std::vector<node>&
+inline auto layout_solver::get_results() -> const std::vector<node>&
 {
 	return _nodes;
 }
@@ -103,23 +110,32 @@ inline void layout_solver::apply_repulsion_forces()
 				node1_to_node2 /= distance;
 				float repulsion_force = node1->mass * node2->mass / (distance * distance);
 
-				bool connected = false;
-				for(auto connected_id : node1->connected_nodes)
-				{
-					if(connected_id == node2->id)
-					{
-						connected = true;
-						break;
-					}
-				}
-
-				if(connected)
-				{
-					//	repulsion_force -= node1->mass * node2->mass * distance;
-				}
-
 				node1->velocity -= repulsion_force * node1_to_node2;
 				node2->velocity += repulsion_force * node1_to_node2;
+			}
+		}
+	}
+}
+
+inline void layout_solver::apply_attraction_forces()
+{
+	for(auto const& port1 : _ports)
+	{
+		auto& node1 = _nodes[port1.parent_node_index];
+		for(std::size_t port2_index : port1.connected_port_indices)
+		{
+			auto const& port2 = _ports[port2_index];
+			auto& node2 = _nodes[port2.parent_node_index];
+
+			auto port1_to_port2 = port2.position - port1.position;
+			float distance = glm::length(port1_to_port2);
+			if(distance > 1)
+			{
+				port1_to_port2 /= distance;
+				float attraction_force = node1.mass * node2.mass / (distance * distance);
+
+				node1.velocity -= attraction_force * port1_to_port2;
+				node2.velocity += attraction_force * port1_to_port2;
 			}
 		}
 	}
