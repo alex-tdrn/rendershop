@@ -128,10 +128,20 @@ inline void layout_solver::apply_black_hole_forces()
 {
 	for(auto& node : _nodes)
 	{
-		if(glm::length(node.position) > 1)
-			node.velocity = -node.position * 1000.0f;
+		auto direction = node.position;
+		float distance = glm::length(direction);
+		const float ideal_distance = 1000; // TODO, bounding radius for whole graph
+		if(distance > ideal_distance)
+		{
+			direction /= distance;
+			float force = what_lerp_is_this(ideal_distance, distance) * 100;
+
+			node.velocity = force * direction;
+		}
 		else
+		{
 			node.velocity = glm::vec2{0.0f};
+		}
 	}
 }
 
