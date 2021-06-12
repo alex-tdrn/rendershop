@@ -17,6 +17,7 @@ public:
 	{
 		int id = -1;
 		glm::vec2 position = {0.0f, 0.0f};
+		float bounding_radius = 1.0f;
 		float mass = 1.0f;
 		glm::vec2 velocity = {0.0f, 0.0f};
 	};
@@ -71,6 +72,7 @@ void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port
 		n.id = id;
 		n.position = pos;
 		n.mass = dim.x * dim.y;
+		n.bounding_radius = glm::length(dim) / 2.0f;
 		_nodes.push_back(n);
 
 		for(auto const& port : node->all_ports() | ranges::views::filter(&clk::port::is_connected))
@@ -127,7 +129,7 @@ inline void layout_solver::apply_black_hole_forces()
 	for(auto& node : _nodes)
 	{
 		if(glm::length(node.position) > 1)
-			node.velocity = -node.position * 100.0f;
+			node.velocity = -node.position * 1000.0f;
 		else
 			node.velocity = glm::vec2{0.0f};
 	}
@@ -141,11 +143,11 @@ inline void layout_solver::apply_repulsion_forces()
 		{
 			auto node1_to_node2 = node2->position - node1->position;
 			float distance = glm::length(node1_to_node2);
-			const float ideal_distance = 500;
+			const float ideal_distance = node1->bounding_radius * 1.5 + node2->bounding_radius * 1.5;
 			if(distance < ideal_distance)
 			{
 				node1_to_node2 /= distance;
-				float force = what_lerp_is_this(ideal_distance, distance) * 100;
+				float force = what_lerp_is_this(ideal_distance, distance) * 1000;
 
 				node1->velocity -= force * node1_to_node2;
 				node2->velocity += force * node1_to_node2;
