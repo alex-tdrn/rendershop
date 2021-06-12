@@ -12,18 +12,18 @@ namespace clk::gui::impl
 class layout_solver
 {
 public:
-	struct node
+	struct node_representation
 	{
 		int id = -1;
 		glm::vec2 position = {0.0f, 0.0f};
 		float mass = 1.0f;
 		glm::vec2 velocity = {0.0f, 0.0f};
 	};
-	struct port
+	struct port_representation
 	{
-		int id = -1;
 		glm::vec2 position = {0.0f, 0.0f};
 		std::size_t parent_node_index = 0;
+		// does not contain all indices, only indices less than the index of the current port
 		std::vector<std::size_t> connected_port_indices;
 	};
 
@@ -37,16 +37,14 @@ public:
 	template <typename T, typename U>
 	void update_cache(clk::graph const& graph, T& node_cache, U& port_cache);
 	void restart();
-	void clear_nodes();
-	void add_node(int id, glm::vec2 position, float mass);
 	void step();
-	auto get_results() -> const std::vector<node>&;
+	auto get_results() -> const std::vector<node_representation>&;
 
 private:
 	using chrono = std::chrono::high_resolution_clock;
 	chrono::time_point _last_step_execution = chrono::time_point::min();
-	std::vector<node> _nodes;
-	std::vector<port> _ports;
+	std::vector<node_representation> _nodes;
+	std::vector<port_representation> _ports;
 
 	void apply_black_hole_forces();
 	void apply_repulsion_forces();
@@ -57,7 +55,8 @@ private:
 template <typename T, typename U>
 void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port_cache)
 {
-	clear_nodes();
+	_nodes.clear();
+	std::unordered_map<int, std::size_t> port_id_to_index;
 	for(auto const& node : graph)
 	{
 		auto id = node_cache.widget_for(node.get()).id();
@@ -65,27 +64,34 @@ void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port
 		glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
 		pos += dim / 2.0f;
 
-		add_node(id, pos, dim.x * dim.y);
+		node_representation n;
+		n.id = id;
+		n.position = pos;
+		n.mass = dim.x * dim.y;
+		_nodes.push_back(n);
+
+		for(auto const& port : node->all_ports() | ranges::views::filter(&clk::port::is_connected))
+		{
+			port_representation p;
+			port_id_to_index[port_cache.widget_for(port).id()] = _ports.size();
+			p.position = n.position; // TODO
+			p.parent_node_index = _nodes.size() - 1;
+			for(auto const& connected_port : port->connected_ports())
+			{
+				int connected_id = port_cache.widget_for(connected_port).id();
+				// only add the connection if the index comes before the current port
+				if(auto it = port_id_to_index.find(connected_id); it != port_id_to_index.end())
+					p.connected_port_indices.push_back(it->second);
+			}
+
+			_ports.push_back(p);
+		}
 	}
 }
 
 inline void layout_solver::restart()
 {
 	_last_step_execution = chrono::time_point::min();
-}
-
-inline void layout_solver::clear_nodes()
-{
-	_nodes.clear();
-}
-
-inline void layout_solver::add_node(int id, glm::vec2 position, float mass)
-{
-	node _node;
-	_node.id = id;
-	_node.position = position;
-	_node.mass = mass;
-	_nodes.push_back(_node);
 }
 
 inline void layout_solver::step()
@@ -101,7 +107,7 @@ inline void layout_solver::step()
 	integrate();
 }
 
-inline auto layout_solver::get_results() -> const std::vector<node>&
+inline auto layout_solver::get_results() -> const std::vector<node_representation>&
 {
 	return _nodes;
 }
@@ -111,7 +117,7 @@ inline void layout_solver::apply_black_hole_forces()
 	for(auto& node : _nodes)
 	{
 		if(glm::length(node.position) > 1)
-			node.velocity = -node.position * 100.0f;
+			node.velocity = -node.position * 10.0f;
 		else
 			node.velocity = glm::vec2{0.0f};
 	}
@@ -152,7 +158,9 @@ inline void layout_solver::apply_attraction_forces()
 			if(distance > 1)
 			{
 				port1_to_port2 /= distance;
-				float attraction_force = node1.mass * node2.mass / (distance * distance);
+				const float repulsion_force = node1.mass * node2.mass / (distance * distance);
+
+				float attraction_force = -1000000.0f / repulsion_force;
 
 				node1.velocity -= attraction_force * port1_to_port2;
 				node2.velocity += attraction_force * port1_to_port2;
