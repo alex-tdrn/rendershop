@@ -1,6 +1,7 @@
 #pragma once
 #include "clk/base/graph.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <glm/glm.hpp>
@@ -46,6 +47,7 @@ private:
 	std::vector<node_representation> _nodes;
 	std::vector<port_representation> _ports;
 
+	constexpr static auto what_lerp_is_this(float ideal_distance, float distance) -> float;
 	void apply_black_hole_forces();
 	void apply_repulsion_forces();
 	void apply_attraction_forces();
@@ -104,7 +106,7 @@ inline void layout_solver::step()
 		return;
 	}
 	apply_black_hole_forces();
-	// apply_repulsion_forces();
+	apply_repulsion_forces();
 	apply_attraction_forces();
 	integrate();
 }
@@ -114,14 +116,20 @@ inline auto layout_solver::get_results() -> const std::vector<node_representatio
 	return _nodes;
 }
 
+inline constexpr auto layout_solver::what_lerp_is_this(float ideal_distance, float distance) -> float
+{
+	float force = ideal_distance - distance;
+	return (force < 0 ? -1.0f : 1.0f) * force * force;
+}
+
 inline void layout_solver::apply_black_hole_forces()
 {
 	for(auto& node : _nodes)
 	{
-		// if(glm::length(node.position) > 1)
-		// 	node.velocity = -node.position;
-		// else
-		node.velocity = glm::vec2{0.0f};
+		if(glm::length(node.position) > 1)
+			node.velocity = -node.position * 100.0f;
+		else
+			node.velocity = glm::vec2{0.0f};
 	}
 }
 
@@ -133,15 +141,14 @@ inline void layout_solver::apply_repulsion_forces()
 		{
 			auto node1_to_node2 = node2->position - node1->position;
 			float distance = glm::length(node1_to_node2);
-			const float ideal_distance = 100;
+			const float ideal_distance = 500;
 			if(distance < ideal_distance)
 			{
 				node1_to_node2 /= distance;
-				float repulsion_force = distance - ideal_distance;
-				repulsion_force = repulsion_force * repulsion_force;
+				float force = what_lerp_is_this(ideal_distance, distance) * 100;
 
-				node1->velocity -= repulsion_force * node1_to_node2;
-				node2->velocity += repulsion_force * node1_to_node2;
+				node1->velocity -= force * node1_to_node2;
+				node2->velocity += force * node1_to_node2;
 			}
 		}
 	}
@@ -163,11 +170,10 @@ inline void layout_solver::apply_attraction_forces()
 			if(distance > 1)
 			{
 				port1_to_port2 /= distance;
-				float attraction_force = ideal_distance - distance;
-				attraction_force = -1 * (attraction_force * attraction_force);
+				float force = what_lerp_is_this(ideal_distance, distance) * 100;
 
-				node1.velocity -= attraction_force * port1_to_port2;
-				node2.velocity += attraction_force * port1_to_port2;
+				node1.velocity -= force * port1_to_port2;
+				node2.velocity += force * port1_to_port2;
 			}
 		}
 	}
@@ -181,13 +187,12 @@ inline void layout_solver::integrate()
 	float seconds_elapsed =
 		std::chrono::duration_cast<std::chrono::duration<float>>(current_time - _last_step_execution).count();
 
-	// seconds_elapsed *= 1000;
 	_last_step_execution = current_time;
 
 	for(auto& node : _nodes)
 	{
 		node.velocity /= node.mass;
-		auto position_difference = node.velocity * seconds_elapsed * 1000.0f;
+		auto position_difference = node.velocity * seconds_elapsed;
 		if(glm::length(position_difference) > 0.1f)
 			node.position += position_difference;
 	}
