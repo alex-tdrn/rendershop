@@ -153,7 +153,7 @@ inline void layout_solver::apply_repulsion_forces()
 		{
 			auto node1_to_node2 = node2->position - node1->position;
 			float distance = glm::length(node1_to_node2);
-			const float ideal_distance = node1->bounding_radius * 1.5 + node2->bounding_radius * 1.5;
+			const float ideal_distance = node1->bounding_radius * 1.5f + node2->bounding_radius * 1.5f;
 			if(distance < ideal_distance)
 			{
 				node1_to_node2 /= distance;
@@ -193,7 +193,6 @@ inline void layout_solver::apply_attraction_forces()
 
 inline void layout_solver::integrate()
 {
-	// TODO
 	auto current_time = chrono::now();
 
 	float seconds_elapsed =
