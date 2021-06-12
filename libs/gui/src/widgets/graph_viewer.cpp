@@ -90,16 +90,7 @@ void graph_viewer::run_layout_solver() const
 	// TODO expensive caching, conditional on a future graph timestamp
 	// if(true)
 	{
-		_layout_solver->clear_nodes();
-		for(auto const& node : *data())
-		{
-			auto id = _node_cache->widget_for(node.get()).id();
-			glm::vec2 dim = imnodes::GetNodeDimensions(id);
-			glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
-			pos += dim / 2.0f;
-
-			_layout_solver->add_node(id, pos, dim.x * dim.y);
-		}
+		_layout_solver->update_cache(*data(), *_node_cache, *_port_cache);
 	}
 
 	_layout_solver->step();

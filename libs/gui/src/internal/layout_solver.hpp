@@ -1,7 +1,10 @@
 #pragma once
+#include "clk/base/graph.hpp"
+
 #include <chrono>
 #include <cmath>
 #include <glm/glm.hpp>
+#include <imnodes.h>
 #include <vector>
 
 namespace clk::gui::impl
@@ -31,6 +34,8 @@ public:
 	auto operator=(layout_solver&&) -> layout_solver& = delete;
 	~layout_solver() = default;
 
+	template <typename T, typename U>
+	void update_cache(clk::graph const& graph, T& node_cache, U& port_cache);
 	void restart();
 	void clear_nodes();
 	void add_node(int id, glm::vec2 position, float mass);
@@ -48,6 +53,21 @@ private:
 	void apply_attraction_forces();
 	void integrate();
 };
+
+template <typename T, typename U>
+void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port_cache)
+{
+	clear_nodes();
+	for(auto const& node : graph)
+	{
+		auto id = node_cache.widget_for(node.get()).id();
+		glm::vec2 dim = imnodes::GetNodeDimensions(id);
+		glm::vec2 pos = imnodes::GetNodeGridSpacePos(id);
+		pos += dim / 2.0f;
+
+		add_node(id, pos, dim.x * dim.y);
+	}
+}
 
 inline void layout_solver::restart()
 {
