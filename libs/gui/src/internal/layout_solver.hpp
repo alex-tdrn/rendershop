@@ -56,6 +56,7 @@ template <typename T, typename U>
 void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port_cache)
 {
 	_nodes.clear();
+	_ports.clear();
 	std::unordered_map<int, std::size_t> port_id_to_index;
 	for(auto const& node : graph)
 	{
@@ -73,8 +74,9 @@ void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port
 		for(auto const& port : node->all_ports() | ranges::views::filter(&clk::port::is_connected))
 		{
 			port_representation p;
-			port_id_to_index[port_cache.widget_for(port).id()] = _ports.size();
-			p.position = n.position; // TODO
+			auto const& widget = port_cache.widget_for(port);
+			port_id_to_index[widget.id()] = _ports.size();
+			p.position = widget.position();
 			p.parent_node_index = _nodes.size() - 1;
 			for(auto const& connected_port : port->connected_ports())
 			{
@@ -102,7 +104,7 @@ inline void layout_solver::step()
 		return;
 	}
 	apply_black_hole_forces();
-	apply_repulsion_forces();
+	// apply_repulsion_forces();
 	apply_attraction_forces();
 	integrate();
 }
@@ -116,10 +118,10 @@ inline void layout_solver::apply_black_hole_forces()
 {
 	for(auto& node : _nodes)
 	{
-		if(glm::length(node.position) > 1)
-			node.velocity = -node.position * 10.0f;
-		else
-			node.velocity = glm::vec2{0.0f};
+		// if(glm::length(node.position) > 1)
+		// 	node.velocity = -node.position;
+		// else
+		node.velocity = glm::vec2{0.0f};
 	}
 }
 
@@ -131,10 +133,12 @@ inline void layout_solver::apply_repulsion_forces()
 		{
 			auto node1_to_node2 = node2->position - node1->position;
 			float distance = glm::length(node1_to_node2);
-			if(distance > 1)
+			const float ideal_distance = 100;
+			if(distance < ideal_distance)
 			{
 				node1_to_node2 /= distance;
-				float repulsion_force = node1->mass * node2->mass / (distance * distance);
+				float repulsion_force = distance - ideal_distance;
+				repulsion_force = repulsion_force * repulsion_force;
 
 				node1->velocity -= repulsion_force * node1_to_node2;
 				node2->velocity += repulsion_force * node1_to_node2;
@@ -155,12 +159,12 @@ inline void layout_solver::apply_attraction_forces()
 
 			auto port1_to_port2 = port2.position - port1.position;
 			float distance = glm::length(port1_to_port2);
+			const float ideal_distance = 0;
 			if(distance > 1)
 			{
 				port1_to_port2 /= distance;
-				const float repulsion_force = node1.mass * node2.mass / (distance * distance);
-
-				float attraction_force = -1000000.0f / repulsion_force;
+				float attraction_force = ideal_distance - distance;
+				attraction_force = -1 * (attraction_force * attraction_force);
 
 				node1.velocity -= attraction_force * port1_to_port2;
 				node2.velocity += attraction_force * port1_to_port2;
@@ -177,13 +181,13 @@ inline void layout_solver::integrate()
 	float seconds_elapsed =
 		std::chrono::duration_cast<std::chrono::duration<float>>(current_time - _last_step_execution).count();
 
-	seconds_elapsed *= 1000;
+	// seconds_elapsed *= 1000;
 	_last_step_execution = current_time;
 
 	for(auto& node : _nodes)
 	{
 		node.velocity /= node.mass;
-		auto position_difference = node.velocity * seconds_elapsed;
+		auto position_difference = node.velocity * seconds_elapsed * 1000.0f;
 		if(glm::length(position_difference) > 0.1f)
 			node.position += position_difference;
 	}
