@@ -7,6 +7,7 @@ add_library(
 	"include/clk/gui/widgets/editor.hpp"
 	"include/clk/gui/widgets/graph_viewer.hpp"
 	"include/clk/gui/widgets/graph_editor.hpp"
+	"include/clk/gui/widgets/performance_overlay.hpp"
 	"src/init.cpp"
 	"src/panel.cpp"
 	"src/widgets/graph_viewer.cpp"

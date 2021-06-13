@@ -5,6 +5,7 @@
 #include "clk/gui/init.hpp"
 #include "clk/gui/panel.hpp"
 #include "clk/gui/widgets/editor.hpp"
+#include "clk/gui/widgets/performance_overlay.hpp"
 #include "clk/gui/widgets/viewer.hpp"
 #include "clk/util/color_rgba.hpp"
 
@@ -113,6 +114,7 @@ auto main(int /*argc*/, char** /*argv*/) -> int
 
 		panels.push_back(std::move(graph_viewer));
 		panels.push_back(std::move(graph_editor));
+		clk::gui::performance_overlay overlay;
 
 		while(glfwWindowShouldClose(window) == 0)
 		{
@@ -168,6 +170,9 @@ auto main(int /*argc*/, char** /*argv*/) -> int
 			ImGui::End();
 			for(auto& panel : panels)
 				panel.draw();
+
+			overlay.record_frame();
+			overlay.draw();
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
