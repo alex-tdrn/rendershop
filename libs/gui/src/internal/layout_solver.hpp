@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include <glm/glm.hpp>
+#include <imgui.h>
 #include <imnodes.h>
 #include <vector>
 
@@ -13,6 +14,25 @@ namespace clk::gui::impl
 class layout_solver
 {
 public:
+	layout_solver() = default;
+	layout_solver(layout_solver const&) = delete;
+	layout_solver(layout_solver&&) = delete;
+	auto operator=(layout_solver const&) -> layout_solver& = delete;
+	auto operator=(layout_solver&&) -> layout_solver& = delete;
+	~layout_solver() = default;
+
+	template <typename T, typename U>
+	void update_cache(clk::graph const& graph, T& node_cache, U& port_cache);
+	void step();
+	void set_time_multiplier(float multiplier);
+	void set_gravity_distance_multiplier(float multiplier);
+	void set_gravity_intensity_multiplier(float multiplier);
+	void set_repulsion_distance_multiplier(float multiplier);
+	void set_repulsion_intensity_multiplier(float multiplier);
+	void set_attraction_distance_multiplier(float multiplier);
+	void set_attraction_intensity_multiplier(float multiplier);
+
+private:
 	struct node_representation
 	{
 		int id = -1;
@@ -29,30 +49,25 @@ public:
 		std::vector<std::size_t> connected_port_indices;
 	};
 
-	layout_solver() = default;
-	layout_solver(layout_solver const&) = delete;
-	layout_solver(layout_solver&&) = delete;
-	auto operator=(layout_solver const&) -> layout_solver& = delete;
-	auto operator=(layout_solver&&) -> layout_solver& = delete;
-	~layout_solver() = default;
-
-	template <typename T, typename U>
-	void update_cache(clk::graph const& graph, T& node_cache, U& port_cache);
-	void restart();
-	void step();
-	auto get_results() -> const std::vector<node_representation>&;
-
-private:
 	using chrono = std::chrono::high_resolution_clock;
 	chrono::time_point _last_step_execution = chrono::time_point::min();
 	std::vector<node_representation> _nodes;
 	std::vector<port_representation> _ports;
+	float _bounding_radius_graph = 1.0f;
+	float _time_multiplier = 1.0f;
+	float _gravity_distance_multiplier = 1.0f;
+	float _gravity_intensity_multiplier = 1.0f;
+	float _repulsion_distance_multiplier = 2.0f;
+	float _repulsion_intensity_multiplier = 1.0f;
+	float _attraction_distance_multiplier = 1.0f;
+	float _attraction_intensity_multiplier = 1.0f;
 
-	constexpr static auto what_lerp_is_this(float ideal_distance, float distance) -> float;
-	void apply_black_hole_forces();
+	constexpr static auto calculate_force(float ideal_distance, float distance) -> float;
+	void apply_gravity();
 	void apply_repulsion_forces();
 	void apply_attraction_forces();
 	void integrate();
+	void write_out_results() const;
 };
 
 template <typename T, typename U>
@@ -71,10 +86,10 @@ void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port
 		node_representation n;
 		n.id = id;
 		n.position = pos;
-		n.mass = dim.x * dim.y;
+		n.mass = dim.x * dim.y / 100.0f;
 		n.bounding_radius = glm::length(dim) / 2.0f;
 		_nodes.push_back(n);
-
+		_bounding_radius_graph += n.bounding_radius * n.bounding_radius;
 		for(auto const& port : node->all_ports() | ranges::views::filter(&clk::port::is_connected))
 		{
 			port_representation p;
@@ -93,11 +108,8 @@ void layout_solver::update_cache(clk::graph const& graph, T& node_cache, U& port
 			_ports.push_back(p);
 		}
 	}
-}
 
-inline void layout_solver::restart()
-{
-	_last_step_execution = chrono::time_point::min();
+	_bounding_radius_graph = std::sqrt(_bounding_radius_graph);
 }
 
 inline void layout_solver::step()
@@ -107,36 +119,67 @@ inline void layout_solver::step()
 		_last_step_execution = chrono::now();
 		return;
 	}
-	apply_black_hole_forces();
+	apply_gravity();
 	apply_repulsion_forces();
 	apply_attraction_forces();
 	integrate();
+	write_out_results();
 }
 
-inline auto layout_solver::get_results() -> const std::vector<node_representation>&
+inline void layout_solver::set_time_multiplier(float multiplier)
 {
-	return _nodes;
+	_time_multiplier = multiplier;
 }
 
-inline constexpr auto layout_solver::what_lerp_is_this(float ideal_distance, float distance) -> float
+inline void layout_solver::set_gravity_distance_multiplier(float multiplier)
+{
+	_gravity_distance_multiplier = multiplier;
+}
+
+inline void layout_solver::set_gravity_intensity_multiplier(float multiplier)
+{
+	_gravity_intensity_multiplier = multiplier;
+}
+
+inline void layout_solver::set_repulsion_distance_multiplier(float multiplier)
+{
+	_repulsion_distance_multiplier = multiplier;
+}
+
+inline void layout_solver::set_repulsion_intensity_multiplier(float multiplier)
+{
+	_repulsion_intensity_multiplier = multiplier;
+}
+
+inline void layout_solver::set_attraction_distance_multiplier(float multiplier)
+{
+	_attraction_distance_multiplier = multiplier;
+}
+
+inline void layout_solver::set_attraction_intensity_multiplier(float multiplier)
+{
+	_attraction_intensity_multiplier = multiplier;
+}
+
+inline constexpr auto layout_solver::calculate_force(float ideal_distance, float distance) -> float
 {
 	float force = ideal_distance - distance;
 	return (force < 0 ? -1.0f : 1.0f) * force * force;
 }
 
-inline void layout_solver::apply_black_hole_forces()
+inline void layout_solver::apply_gravity()
 {
 	for(auto& node : _nodes)
 	{
 		auto direction = node.position;
 		float distance = glm::length(direction);
-		const float ideal_distance = 1000; // TODO, bounding radius for whole graph
+		const float ideal_distance = _bounding_radius_graph * _gravity_distance_multiplier;
 		if(distance > ideal_distance)
 		{
 			direction /= distance;
-			float force = what_lerp_is_this(ideal_distance, distance) * 100;
+			float force = calculate_force(ideal_distance, distance) * _gravity_intensity_multiplier;
 
-			node.velocity = force * direction;
+			node.velocity = force * direction / node.mass;
 		}
 		else
 		{
@@ -153,14 +196,15 @@ inline void layout_solver::apply_repulsion_forces()
 		{
 			auto node1_to_node2 = node2->position - node1->position;
 			float distance = glm::length(node1_to_node2);
-			const float ideal_distance = node1->bounding_radius * 1.5f + node2->bounding_radius * 1.5f;
+			const float ideal_distance =
+				(node1->bounding_radius + node2->bounding_radius) * _repulsion_distance_multiplier;
 			if(distance < ideal_distance)
 			{
 				node1_to_node2 /= distance;
-				float force = what_lerp_is_this(ideal_distance, distance) * 1000;
+				float force = calculate_force(ideal_distance, distance) * _repulsion_intensity_multiplier;
 
-				node1->velocity -= force * node1_to_node2;
-				node2->velocity += force * node1_to_node2;
+				node1->velocity -= force * node1_to_node2 / node1->mass;
+				node2->velocity += force * node1_to_node2 / node2->mass;
 			}
 		}
 	}
@@ -178,15 +222,12 @@ inline void layout_solver::apply_attraction_forces()
 
 			auto port1_to_port2 = port2.position - port1.position;
 			float distance = glm::length(port1_to_port2);
-			const float ideal_distance = 0;
-			if(distance > 1)
-			{
-				port1_to_port2 /= distance;
-				float force = what_lerp_is_this(ideal_distance, distance) * 100;
+			const float ideal_distance = _attraction_distance_multiplier;
+			port1_to_port2 /= distance;
+			float force = calculate_force(ideal_distance, distance) * _attraction_intensity_multiplier;
 
-				node1.velocity -= force * port1_to_port2;
-				node2.velocity += force * port1_to_port2;
-			}
+			node1.velocity -= force * port1_to_port2 / node1.mass;
+			node2.velocity += force * port1_to_port2 / node2.mass;
 		}
 	}
 }
@@ -196,16 +237,25 @@ inline void layout_solver::integrate()
 	auto current_time = chrono::now();
 
 	float seconds_elapsed =
-		std::chrono::duration_cast<std::chrono::duration<float>>(current_time - _last_step_execution).count();
+		std::chrono::duration_cast<std::chrono::duration<float>>(current_time - _last_step_execution).count() *
+		_time_multiplier;
 
 	_last_step_execution = current_time;
 
 	for(auto& node : _nodes)
 	{
-		node.velocity /= node.mass;
 		auto position_difference = node.velocity * seconds_elapsed;
 		if(glm::length(position_difference) > 0.1f)
 			node.position += position_difference;
+	}
+}
+
+inline void layout_solver::write_out_results() const
+{
+	for(auto const& node : _nodes)
+	{
+		glm::vec2 dim = imnodes::GetNodeDimensions(node.id);
+		imnodes::SetNodeGridSpacePos(node.id, node.position - dim / 2.0f);
 	}
 }
 

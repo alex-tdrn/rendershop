@@ -94,11 +94,6 @@ void graph_viewer::run_layout_solver() const
 	}
 
 	_layout_solver->step();
-	for(auto const& result : _layout_solver->get_results())
-	{
-		glm::vec2 dim = imnodes::GetNodeDimensions(result.id);
-		imnodes::SetNodeGridSpacePos(result.id, result.position - dim / 2.0f);
-	}
 }
 
 } // namespace clk::gui
