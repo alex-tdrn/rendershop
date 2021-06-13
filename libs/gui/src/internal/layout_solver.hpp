@@ -63,9 +63,9 @@ private:
 	float _attraction_intensity_multiplier = 1.0f;
 
 	constexpr static auto calculate_force(float ideal_distance, float distance) -> float;
-	void apply_gravity();
-	void apply_repulsion_forces();
-	void apply_attraction_forces();
+	void calculate_gravity();
+	void calculate_repulsion();
+	void calculate_attraction();
 	void integrate();
 	void write_out_results() const;
 };
@@ -119,9 +119,10 @@ inline void layout_solver::step()
 		_last_step_execution = chrono::now();
 		return;
 	}
-	apply_gravity();
-	apply_repulsion_forces();
-	apply_attraction_forces();
+
+	calculate_gravity();
+	calculate_repulsion();
+	calculate_attraction();
 	integrate();
 	write_out_results();
 }
@@ -167,7 +168,7 @@ inline constexpr auto layout_solver::calculate_force(float ideal_distance, float
 	return (force < 0 ? -1.0f : 1.0f) * force * force;
 }
 
-inline void layout_solver::apply_gravity()
+inline void layout_solver::calculate_gravity()
 {
 	for(auto& node : _nodes)
 	{
@@ -188,7 +189,7 @@ inline void layout_solver::apply_gravity()
 	}
 }
 
-inline void layout_solver::apply_repulsion_forces()
+inline void layout_solver::calculate_repulsion()
 {
 	for(auto node1 = _nodes.begin(); node1 != _nodes.end(); ++node1)
 	{
@@ -210,7 +211,7 @@ inline void layout_solver::apply_repulsion_forces()
 	}
 }
 
-inline void layout_solver::apply_attraction_forces()
+inline void layout_solver::calculate_attraction()
 {
 	for(auto const& port1 : _ports)
 	{
