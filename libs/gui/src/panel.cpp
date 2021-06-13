@@ -1,12 +1,16 @@
 #include "clk/gui/panel.hpp"
-#include "clk/gui/widgets/widget.hpp"
 
 #include <algorithm>
 #include <iterator>
 
 namespace clk::gui
 {
-panel::panel(std::string title) : _title(std::move(title))
+panel::panel(std::unique_ptr<clk::gui::widget>&& widget) : _widget(std::move(widget)), _title(_widget->data_name())
+{
+}
+
+panel::panel(std::unique_ptr<clk::gui::widget>&& widget, std::string_view title)
+	: _widget(std::move(widget)), _title(std::string(title))
 {
 }
 
@@ -19,22 +23,17 @@ auto panel::operator=(panel const& other) -> panel&
 {
 	if(this != &other)
 	{
-		_title = "Copy of" + other._title;
+		_title = "Copy of " + other._title;
 		_visible = other._visible;
 		_flags = other._flags;
-		_widgets.clear();
-		_widgets.reserve(other._widgets.size());
-		std::transform(
-			other._widgets.cbegin(), other._widgets.cend(), std::back_inserter(_widgets), [](auto const& widget) {
-				return widget->clone();
-			});
+		_widget = other._widget->clone();
 	}
 	return *this;
 }
 
-void panel::add_widget(std::unique_ptr<clk::gui::widget>&& widget)
+void panel::set_widget(std::unique_ptr<clk::gui::widget>&& widget)
 {
-	_widgets.push_back(std::move(widget));
+	_widget = std::move(widget);
 }
 
 void panel::draw()
@@ -43,17 +42,17 @@ void panel::draw()
 		return;
 	ImGui::PushID(this);
 	if(ImGui::Begin(_title.c_str(), &_visible, _flags))
-	{
-		for(auto& widget : _widgets)
-			widget->draw();
-	}
+		_widget->draw();
 	ImGui::End();
 	ImGui::PopID();
 }
 
-void panel::set_title(std::string title)
+void panel::set_title(std::string_view title)
 {
-	_title = std::move(title);
+	if(title.empty() && _widget != nullptr)
+		_title = _widget->data_name();
+	else
+		_title = std::string(title);
 }
 
 auto panel::title() const -> std::string_view

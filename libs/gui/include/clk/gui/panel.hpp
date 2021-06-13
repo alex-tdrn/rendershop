@@ -6,23 +6,25 @@
 #include <string_view>
 #include <vector>
 
+#include "clk/gui/widgets/widget.hpp"
+
 namespace clk::gui
 {
-class widget;
 class panel final
 {
 public:
 	panel() = default;
-	explicit panel(std::string title);
+	explicit panel(std::unique_ptr<clk::gui::widget>&& widget);
+	panel(std::unique_ptr<clk::gui::widget>&& widget, std::string_view title);
 	panel(panel const& other);
 	panel(panel&&) noexcept = default;
 	auto operator=(panel const& other) -> panel&;
 	auto operator=(panel&&) noexcept -> panel& = default;
 	~panel() = default;
 
-	void add_widget(std::unique_ptr<clk::gui::widget>&& widget);
+	void set_widget(std::unique_ptr<clk::gui::widget>&& widget);
 	void draw();
-	void set_title(std::string title);
+	void set_title(std::string_view title);
 	auto title() const -> std::string_view;
 	auto visible() const -> bool;
 	void toggle_visibility();
@@ -30,10 +32,10 @@ public:
 	void hide();
 
 private:
+	std::unique_ptr<clk::gui::widget> _widget;
 	std::string _title;
 	bool _visible = true;
 	ImGuiWindowFlags _flags = ImGuiWindowFlags_None;
-	std::vector<std::unique_ptr<clk::gui::widget>> _widgets;
 };
 
 } // namespace clk::gui

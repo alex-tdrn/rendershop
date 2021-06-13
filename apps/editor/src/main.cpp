@@ -105,11 +105,8 @@ auto main(int /*argc*/, char** /*argv*/) -> int
 		}();
 
 		std::vector<clk::gui::panel> panels;
-		auto graph_viewer = clk::gui::panel("graph viewer");
-		auto graph_editor = clk::gui::panel("graph editor");
-
-		graph_viewer.add_widget(clk::gui::viewer::create(&graph1, "graph1 viewer"));
-		graph_editor.add_widget(clk::gui::editor::create(&graph1, "graph1 editor"));
+		auto graph_viewer = clk::gui::panel(clk::gui::viewer::create(&graph1, "graph1 viewer"));
+		auto graph_editor = clk::gui::panel(clk::gui::editor::create(&graph1, "graph1 editor"));
 
 		panels.push_back(std::move(graph_viewer));
 		panels.push_back(std::move(graph_editor));
