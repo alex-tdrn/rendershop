@@ -30,12 +30,20 @@ public:
 	void toggle_visibility();
 	void show();
 	void hide();
+	void toggle_title_bar();
+	void show_title_bar();
+	void hide_title_bar();
+	auto title_bar_visible() const -> bool;
 
 private:
 	std::unique_ptr<clk::gui::widget> _widget;
 	std::string _title;
 	bool _visible = true;
 	ImGuiWindowFlags _flags = ImGuiWindowFlags_None;
+	float _opacity = 1.0f;
+
+	void handle_context_menu();
+	void handle_key_presses();
 };
 
 } // namespace clk::gui

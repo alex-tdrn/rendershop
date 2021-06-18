@@ -41,9 +41,15 @@ void panel::draw()
 	if(!_visible)
 		return;
 	ImGui::PushID(this);
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, _opacity);
 	if(ImGui::Begin(_title.c_str(), &_visible, _flags))
+	{
+		handle_context_menu();
+		handle_key_presses();
 		_widget->draw();
+	}
 	ImGui::End();
+	ImGui::PopStyleVar();
 	ImGui::PopID();
 }
 
@@ -78,6 +84,69 @@ void panel::show()
 void panel::hide()
 {
 	_visible = false;
+}
+
+void panel::toggle_title_bar()
+{
+	if(title_bar_visible())
+		hide_title_bar();
+	else
+		show_title_bar();
+}
+
+void panel::show_title_bar()
+{
+	_flags &= ~ImGuiWindowFlags_NoTitleBar;
+}
+
+void panel::hide_title_bar()
+{
+	_flags |= ImGuiWindowFlags_NoTitleBar;
+}
+
+auto panel::title_bar_visible() const -> bool
+{
+	return (_flags & ImGuiWindowFlags_NoTitleBar) == 0;
+}
+
+void panel::handle_key_presses()
+{
+	if(ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows))
+	{
+		if(ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Tab)))
+		{
+			toggle_title_bar();
+		}
+	}
+}
+
+void panel::handle_context_menu()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
+
+	if(ImGui::BeginPopupContextItem("Context menu"))
+	{
+		static char todo[100];
+		ImGui::InputText("Rename", todo, 100);
+		ImGui::SliderFloat("Opacity", &_opacity, 0.05f, 1.0f, "%.2f");
+		if(title_bar_visible())
+		{
+			if(ImGui::MenuItem("Hide Title Bar"))
+			{
+				hide_title_bar();
+			}
+		}
+		else
+		{
+			if(ImGui::MenuItem("Show Title Bar"))
+			{
+				show_title_bar();
+			}
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::PopStyleVar();
 }
 
 } // namespace clk::gui
