@@ -38,6 +38,7 @@ public:
 private:
 	int _window_id = generate_window_id();
 	std::unique_ptr<clk::gui::widget> _widget;
+	std::string _title_with_id;
 	std::string _title;
 	bool _visible = true;
 	ImGuiWindowFlags _flags = ImGuiWindowFlags_None;
@@ -45,6 +46,7 @@ private:
 
 	static auto generate_window_id() -> int;
 
+	void update_title_with_id();
 	void handle_context_menu();
 	void handle_key_presses();
 };
