@@ -36,11 +36,14 @@ public:
 	auto title_bar_visible() const -> bool;
 
 private:
+	int _window_id = generate_window_id();
 	std::unique_ptr<clk::gui::widget> _widget;
 	std::string _title;
 	bool _visible = true;
 	ImGuiWindowFlags _flags = ImGuiWindowFlags_None;
 	float _opacity = 1.0f;
+
+	static auto generate_window_id() -> int;
 
 	void handle_context_menu();
 	void handle_key_presses();

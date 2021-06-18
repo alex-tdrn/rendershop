@@ -1,6 +1,7 @@
 #include "clk/gui/panel.hpp"
 
 #include <algorithm>
+#include <imgui_stdlib.h>
 #include <iterator>
 
 namespace clk::gui
@@ -42,7 +43,7 @@ void panel::draw()
 		return;
 	ImGui::PushID(this);
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, _opacity);
-	if(ImGui::Begin(_title.c_str(), &_visible, _flags))
+	if(ImGui::Begin((_title + "###" + std::to_string(_window_id)).c_str(), &_visible, _flags))
 	{
 		handle_context_menu();
 		handle_key_presses();
@@ -120,14 +121,19 @@ void panel::handle_key_presses()
 	}
 }
 
+auto panel::generate_window_id() -> int
+{
+	static int next_available_id = 0;
+	return next_available_id++;
+}
+
 void panel::handle_context_menu()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
 
 	if(ImGui::BeginPopupContextItem("Context menu"))
 	{
-		static char todo[100];
-		ImGui::InputText("Rename", todo, 100);
+		ImGui::InputText("Rename", &_title, ImGuiInputTextFlags_AutoSelectAll);
 		ImGui::SliderFloat("Opacity", &_opacity, 0.05f, 1.0f, "%.2f");
 		if(title_bar_visible())
 		{
