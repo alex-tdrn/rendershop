@@ -2,6 +2,7 @@ add_library(
 	gui
 	"include/clk/gui/init.hpp"
 	"include/clk/gui/panel.hpp"
+	"include/clk/gui/main_window.hpp"
 	"include/clk/gui/widgets/widget.hpp"
 	"include/clk/gui/widgets/viewer.hpp"
 	"include/clk/gui/widgets/editor.hpp"
@@ -9,6 +10,7 @@ add_library(
 	"include/clk/gui/widgets/graph_editor.hpp"
 	"src/init.cpp"
 	"src/panel.cpp"
+	"src/main_window.cpp"
 	"src/widgets/graph_viewer.cpp"
 	"src/widgets/graph_editor.cpp"
 	"src/internal/widget_cache.hpp"
