@@ -3,7 +3,6 @@
 #include "clk/base/algorithm_node.hpp"
 #include "clk/base/graph.hpp"
 #include "clk/gui/init.hpp"
-#include "clk/gui/main_window.hpp"
 #include "clk/gui/panel.hpp"
 #include "clk/gui/widgets/editor.hpp"
 #include "clk/gui/widgets/viewer.hpp"
@@ -108,10 +107,6 @@ auto main(int /*argc*/, char** /*argv*/) -> int
 		auto graph_viewer = clk::gui::panel(clk::gui::viewer::create(&graph1, "graph1 viewer"));
 		auto graph_editor = clk::gui::panel(clk::gui::editor::create(&graph1, "graph1 editor"));
 
-		clk::gui::main_window main_window;
-		main_window.add_panel(std::move(graph_viewer));
-		main_window.add_panel(std::move(graph_editor));
-
 		while(glfwWindowShouldClose(window) == 0)
 		{
 			glfwPollEvents();
@@ -126,7 +121,7 @@ auto main(int /*argc*/, char** /*argv*/) -> int
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			main_window.draw();
+			clk::gui::draw();
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

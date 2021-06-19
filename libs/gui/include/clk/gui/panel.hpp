@@ -12,16 +12,28 @@ namespace clk::gui
 {
 class panel final
 {
+	friend void draw();
+
 public:
-	panel() = default;
+	enum class action_type
+	{
+		duplicate,
+		remove
+	};
+
+	panel();
 	explicit panel(std::unique_ptr<clk::gui::widget>&& widget);
 	panel(std::unique_ptr<clk::gui::widget>&& widget, std::string_view title);
 	panel(panel const& other);
-	panel(panel&&) noexcept = default;
+	panel(panel&&) noexcept;
 	auto operator=(panel const& other) -> panel&;
-	auto operator=(panel&&) noexcept -> panel& = default;
-	~panel() = default;
+	auto operator=(panel&&) noexcept -> panel&;
+	~panel();
 
+	auto operator==(panel const& other) const -> bool;
+
+	void queue(action_type action_type) const;
+	void remove();
 	void set_widget(std::unique_ptr<clk::gui::widget>&& widget);
 	void draw();
 	void set_title(std::string_view title);
@@ -36,7 +48,11 @@ public:
 	auto title_bar_visible() const -> bool;
 
 private:
-	int _window_id = generate_window_id();
+	inline static std::vector<panel*> _all_panels; // NOLINT
+	inline static std::vector<panel> _orphaned_panels; // NOLINT
+	inline static std::vector<std::pair<int, action_type>> _queued_actions; // NOLINT
+
+	int _id = generate_id();
 	std::unique_ptr<clk::gui::widget> _widget;
 	std::string _title_with_id;
 	std::string _title;
@@ -44,8 +60,10 @@ private:
 	ImGuiWindowFlags _flags = ImGuiWindowFlags_None;
 	float _opacity = 1.0f;
 
-	static auto generate_window_id() -> int;
+	static auto generate_id() -> int;
 
+	void register_self();
+	void deregister_self();
 	void update_title_with_id();
 	void handle_context_menu();
 	void handle_key_presses();

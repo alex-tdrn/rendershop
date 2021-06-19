@@ -1,25 +1,41 @@
 #include "clk/gui/panel.hpp"
 
-#include <algorithm>
 #include <imgui_stdlib.h>
-#include <iterator>
+#include <range/v3/algorithm.hpp>
 
 namespace clk::gui
 {
+panel::panel() : _title("Unnamed panel")
+{
+	update_title_with_id();
+	register_self();
+}
+
 panel::panel(std::unique_ptr<clk::gui::widget>&& widget) : _widget(std::move(widget)), _title(_widget->data_name())
 {
 	update_title_with_id();
+	register_self();
 }
 
 panel::panel(std::unique_ptr<clk::gui::widget>&& widget, std::string_view title)
 	: _widget(std::move(widget)), _title(std::string(title))
 {
 	update_title_with_id();
+	register_self();
 }
 
 panel::panel(panel const& other)
 {
 	*this = other;
+	update_title_with_id();
+	register_self();
+}
+
+panel::panel(panel&& other) noexcept
+{
+	*this = std::move(other);
+	update_title_with_id();
+	register_self();
 }
 
 auto panel::operator=(panel const& other) -> panel&
@@ -33,6 +49,34 @@ auto panel::operator=(panel const& other) -> panel&
 		update_title_with_id();
 	}
 	return *this;
+}
+
+auto panel::operator=(panel&& other) noexcept -> panel&
+{
+	std::swap(_id, other._id);
+	std::swap(_widget, other._widget);
+	std::swap(_title_with_id, other._title_with_id);
+	std::swap(_title, other._title);
+	std::swap(_visible, other._visible);
+	std::swap(_flags, other._flags);
+	std::swap(_opacity, other._opacity);
+
+	return *this;
+}
+
+panel::~panel()
+{
+	deregister_self();
+}
+
+auto panel::operator==(panel const& other) const -> bool
+{
+	return this->_id == other._id;
+}
+
+void panel::queue(action_type action_type) const
+{
+	_queued_actions.emplace_back(_id, action_type);
 }
 
 void panel::set_widget(std::unique_ptr<clk::gui::widget>&& widget)
@@ -113,15 +157,25 @@ auto panel::title_bar_visible() const -> bool
 	return (_flags & ImGuiWindowFlags_NoTitleBar) == 0;
 }
 
-auto panel::generate_window_id() -> int
+auto panel::generate_id() -> int
 {
 	static int next_available_id = 0;
 	return next_available_id++;
 }
 
+void panel::register_self()
+{
+	_all_panels.push_back(this);
+}
+
+void panel::deregister_self()
+{
+	_all_panels.erase(ranges::remove(_all_panels, this), _all_panels.end());
+}
+
 void panel::update_title_with_id()
 {
-	_title_with_id = _title + "###" + std::to_string(_window_id);
+	_title_with_id = _title + "###" + std::to_string(_id);
 }
 
 void panel::handle_context_menu()
@@ -153,6 +207,12 @@ void panel::handle_context_menu()
 				show_title_bar();
 			}
 		}
+		if(ImGui::MenuItem("Duplicate"))
+			queue(action_type::duplicate);
+
+		if(ImGui::MenuItem("Delete"))
+			queue(action_type::remove);
+
 		ImGui::EndPopup();
 	}
 
