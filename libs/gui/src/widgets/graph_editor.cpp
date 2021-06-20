@@ -46,7 +46,6 @@ void graph_editor::draw_contents() const
 	ImNodes::EditorContextSet(_context);
 	ImNodes::PushStyleVar(ImNodesStyleVar_NodeCornerRounding, 0.0f);
 	ImNodes::PushStyleVar(ImNodesStyleVar_PinOffset, ImNodes::GetStyle().PinHoverRadius * 0.75f);
-
 	draw_graph();
 	draw_menus();
 	update_connections();
@@ -143,6 +142,7 @@ void graph_editor::draw_graph() const
 	}
 
 	ImNodes::MiniMap(0.1f);
+	_context_menu_queued = ImGui::IsMouseReleased(ImGuiMouseButton_Right) && ImNodes::IsEditorHovered();
 
 	ImNodes::EndNodeEditor();
 	ImNodes::PopAttributeFlag();
@@ -151,14 +151,14 @@ void graph_editor::draw_graph() const
 
 void graph_editor::draw_menus() const
 {
-	if(ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows) && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+	bool delet_this = false;
+	if(_context_menu_queued)
 	{
-		ImGui::OpenPopup("Context menu");
+		ImGui::OpenPopup("Context Menu");
+		_context_menu_queued = false;
 	}
 
-	bool delet_this = false;
-
-	if(ImGui::BeginPopup("Context menu"))
+	if(ImGui::BeginPopup("Context Menu"))
 	{
 		if(ImGui::BeginMenu("New node"))
 		{

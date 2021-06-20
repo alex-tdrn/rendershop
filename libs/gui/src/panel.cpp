@@ -181,7 +181,13 @@ void panel::update_title_with_id()
 void panel::handle_context_menu()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.0f);
-	if(ImGui::BeginPopupContextItem("Context menu"))
+
+	if(ImGui::IsWindowHovered(ImGuiHoveredFlags_None) && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+	{
+		ImGui::OpenPopup("Context menu");
+	}
+
+	if(ImGui::BeginPopup("Context menu"))
 	{
 		ImGui::InputText(
 			"Rename", &_title, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_CallbackAlways,
